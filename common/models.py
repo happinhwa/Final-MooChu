@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 
-class users(models.Model):
+class Users(models.Model):
     user_id = models.IntegerField()
     user_name = models.CharField(max_length=100)
     nickname = models.CharField(max_length=100)

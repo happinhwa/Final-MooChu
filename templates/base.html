@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MooChu</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+	<!-- Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script>
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css">
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="{% static 'styles.css' %}">
+	<style>
+		.carousel-image {
+		  width: 100%; /* 원하는 가로 크기로 설정 */
+		  height: 400px; /* 원하는 세로 크기로 설정 */
+		  background-position: center;
+		  background-repeat: no-repeat;
+		  background-size: cover;
+		}
+	</style>
+</head>
+<body style="background: #FFEFD7; background-size: 100% 100%;">
+	<title><img src="static/moochu_logo.jpg"></title>
+	{% if error_message %}
+        <script>
+            alert("{{ error_message }}");
+            window.location.href = "{% url 'talent:index' %}";
+        </script>
+    {% endif %}
+	<!-- Navbar1 -->
+	{% include "navbar/navbar1.html" %}
+	<!-- Navbar2 -->
+	{% include "navbar/navbar2.html" %}
+  <!-- 메인 리스트 -->
+	{% block content %}
+	{% endblock %}
+  {% block script %}
+   {% endblock %}
+	<!-- Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+	integrity="sha384-tB6Ya1gLuY0FLKbLk+cfRtXmU6N3X/l1EZyLpZ

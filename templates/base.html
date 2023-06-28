@@ -14,28 +14,13 @@
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css">
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="{% static 'styles.css' %}">
-	<style>
-		.carousel-image {
-		  width: 100%; /* 원하는 가로 크기로 설정 */
-		  height: 400px; /* 원하는 세로 크기로 설정 */
-		  background-position: center;
-		  background-repeat: no-repeat;
-		  background-size: cover;
-		}
-	</style>
+
 </head>
-<body style="background: #FFEFD7; background-size: 100% 100%;">
-	<title><img src="static/moochu_logo.jpg"></title>
-	{% if error_message %}
-        <script>
-            alert("{{ error_message }}");
-            window.location.href = "{% url 'talent:index' %}";
-        </script>
-    {% endif %}
+<body style="background: #2C2E34; background-size: 100% 100%;">
 	<!-- Navbar1 -->
-	{% include "navbar/navbar1.html" %}
+	{% include "navbar/navbar3.html" %}
 	<!-- Navbar2 -->
-	{% include "navbar/navbar2.html" %}
+
   <!-- 메인 리스트 -->
 	{% block content %}
 	{% endblock %}

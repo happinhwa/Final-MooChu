@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Singleday';
+    src: url('/static/fonts/SingleDay.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Chonburi';
+    src: url('/static/fonts/Chonburi-Regular.ttf') format('truetype');
+}

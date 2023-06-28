@@ -7,3 +7,11 @@
     font-family: 'Chonburi';
     src: url('/static/fonts/Chonburi-Regular.ttf') format('truetype');
 }
+@font-face {
+    font-family: 'NanumBarunpen';
+    src: url('/static/fonts/NanumBarunpenB.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'NanumBarunpen';
+    src: url('/static/fonts/NanumBarunpenR.ttf') format('truetype');
+}

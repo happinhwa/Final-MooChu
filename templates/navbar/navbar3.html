@@ -16,6 +16,7 @@
         width: 100%;
         position: fixed;
         top: 0;
+        border-bottom: 5px solid #FCA472; /* 원하는 색상 및 두께로 수정 가능 */
         }
 
         .nav-logo img {
@@ -80,16 +81,19 @@
 </head>
 <body>
     <!--navbar-->
-    <nav class="nav">
-        <a class="nav-logo" href="#" style="font-family: 'Chonburi';">MooChu<img src="{% static 'chuchu.png' %}"></a>
-        <!--nav/categoty_btn-->
-        <ul class="nav-links">
-          <li><a href="#"><b>Movie</b></a></li>
-          <li><a href="#"><b>TV Shows</b></a></li>
-          <li><a href="#"><b>People</b></a></li>
-          <li><a href="#"><b>Board</b></a></li>
-          <li><a href="#"><b>MyPage</b></a></li>
-        </ul>
+    <nav class="nav navbar-expand-lg">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="nav-logo" href="#" style="font-family: 'Chonburi';">MooChu<img src="{% static 'chuchu.png' %}"></a>
+      <!--nav/categoty_btn-->
+      <ul class="nav-links">
+        <li><a href="#"><b>Movie</b></a></li>
+        <li><a href="#"><b>TV Shows</b></a></li>
+        <li><a href="#"><b>People</b></a></li>
+        <li><a href="#"><b>Board</b></a></li>
+        <li><a href="#"><b>MyPage</b></a></li>
+      </ul>
     </nav>
     <br><br><br><br>
     {% block content %}{% endblock %}

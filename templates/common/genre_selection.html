@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="margin-top: 10cm;">
+  <div class="row justify-content-center">
+  {% for genre in genres %}
+    <div class="col-md-6 mb-3 d-flex justify-content-center">
+      <button class="genre-button">{{ genre.genre }}</button>
+    </div>
+    {% if forloop.counter|divisibleby:2 %}
+      </div><div class="row justify-content-center">
+    {% endif %}
+  {% endfor %}
+  </div>
+  <div class="row justify-content-center">
+    <a href="firstmovie_page.html">
+      <button id="next-button">다음</button>
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<style>
+  .selected {
+    background-color: gray;
+  }
+</style>
+<script>
+  const genreButtons = document.querySelectorAll(".genre-button");
+  const nextButton = document.getElementById("next-button");
+  let selectedGenres = [];
+
+  genreButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const genre = button.textContent;
+      if (!button.classList.contains("selected")) {
+        button.classList.add("selected");
+        selectedGenres.push(genre);
+      } else {
+        button.classList.remove("selected");
+        selectedGenres = selectedGenres.filter((item) => item !== genre);
+      }
+    });
+  });
+
+  nextButton.addEventListener("click", () => {
+    // 서버에 전송하는 코드를 여기에 작성하세요.
+    console.log(selectedGenres); // 이 배열에 선택한 장르가 저장됩니다.
+  });
+</script>
+{% endblock %}

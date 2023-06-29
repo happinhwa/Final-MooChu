@@ -4,6 +4,9 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.shortcuts import render, redirect
+from .models import Genre
+import random
+from pymongo import MongoClient
 from .forms import RegistrationForm
 
 from django.utils.encoding import force_bytes
@@ -41,3 +44,30 @@ def register(request):
 
 def registration_complete(request):
     return render(request, 'common/registration_complete.html')
+
+def genre_selection(request):
+    genres = Genre.objects.all()
+    return render(request, 'common/genre_selection.html', {'genres': genres})
+
+
+
+def get_mongo_connection():
+    client = MongoClient('mongodb://localhost:27017/')
+    db = client['test']
+    collection = db['movie']
+    return collection
+
+def get_recommended_movies(user_genres):
+    collection = get_mongo_connection()
+    movies = list(collection.find({"gen": {"$in": user_genres}})) # 회원가입시에 받은 장르들
+    random.shuffle(movies)
+    return movies[:5]
+
+def firstmovie(request):
+    # 사용자의 선택에 따른 장르를 얻어옵니다.
+    # 세션을 사용하는 경우, 아래와 같이 세션에서 장르를 가져옵니다.
+    user_genres = request.session.get('selected_genres', [])
+    recommended_movies = get_recommended_movies(user_genres)
+    return render(request, 'common/firstmovie_page.html', {'recommended_movies': recommended_movies})
+
+

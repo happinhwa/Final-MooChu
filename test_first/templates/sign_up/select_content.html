@@ -1,0 +1,31 @@
+<!-- select_content.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Select Content</title>
+  <style>
+    .selected {
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+  <form method="post" action="{% url 'select_content' %}">
+    {% csrf_token %}
+    {% for genre in selected_genres %}
+      <h3>{{ genre }}</h3>
+      <!-- 해당 장르와 연관된 컨텐츠들 표시 -->
+      {% for content in contents %}
+        <!-- 컨텐츠 표시 로직 -->
+        <label>
+          <input type="checkbox" name="content" value="{{ content }}">
+          {{ content }}
+        </label>
+        <br>
+      {% endfor %}
+    {% endfor %}
+    <button type="submit">Next</button>
+  </form>
+</body>
+</html>

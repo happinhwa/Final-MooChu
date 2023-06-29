@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
+{% block title %}register{% endblock %}
+{% load static %}
 
 {% block content %}
+<<<<<<< HEAD
   <h2>회원가입</h2>
   <form class="signup-box" method="POST" action="{% url 'common:register' %}" enctype="multipart/form-data">
     {% csrf_token %}
@@ -55,4 +58,20 @@
         </div>
     </hr>
 </form>
+=======
+<head>
+  <link rel="stylesheet" href="{% static '/fonts/font.css'%}">
+  <link rel="stylesheet" href="{% static 'style-register.css'%}">
+</head>
+<body>  
+  <div id="container">
+      <form method="post" class="register-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">가입하기</button>
+      </form>
+  </div>
+</body>
+>>>>>>> 869e11180e60373cf3ea2dc62816de7af4b50892
 {% endblock %}
+ 

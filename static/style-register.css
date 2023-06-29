@@ -1,0 +1,44 @@
+
+#container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:auto;
+  margin-top: 30px;
+}
+.register-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; 
+  max-width: 600px;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  }
+  
+  .register-form h2 {
+    text-align: center;
+    font-size: 24px;
+  }
+  
+  .register-form input[type="text"],
+  .register-form input[type="password"],
+  .register-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .register-form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .register-form button:hover {
+    background-color: #45a049;
+  }
+  

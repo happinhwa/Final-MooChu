@@ -1,7 +1,7 @@
 
 from django.shortcuts import render, redirect
 from .forms import RegistrationForm
-
+from .models import Genre
 
 def register(request):
     if request.method == 'POST':
@@ -20,3 +20,8 @@ def registration_complete(request):
 ## 로그인 함수
 def login(request):
     return render(request, 'common/login.html')
+
+## 관심 장르 선택 함수
+def genre_selection(request):
+    genres = Genre.objects.all()
+    return render(request, 'common/genre_selection.html', {'genres': genres})

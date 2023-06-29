@@ -41,3 +41,8 @@ def register(request):
 
 def registration_complete(request):
     return render(request, 'common/registration_complete.html')
+
+
+## 로그인 함수
+def login(request):
+    return render(request, 'common/login.html')

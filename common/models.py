@@ -29,8 +29,10 @@ class User(AbstractUser):
             return self.profile_img.url
         else:
             return settings.DEFAULT_PROFILE_IMAGE
+        
+
     def __str__(self):
-        return self.email
+        return self.username
 
 class follow(models.Model):
     follower = models.IntegerField()

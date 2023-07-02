@@ -14,12 +14,7 @@ class RegistrationForm(UserCreationForm):
     birth = forms.DateField(label='생년월일', widget=forms.DateInput(attrs={'type': 'date'}), required=False)
     gender = forms.ChoiceField(label='성별', choices=(('male', '남성'), ('female', '여성')), required=False)
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        if commit:
-            user.is_active=False
-            user.save()
-        return user
+    
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -39,6 +34,13 @@ class RegistrationForm(UserCreationForm):
             raise ValidationError('이미 사용 중인 닉네임입니다.')
         return nickname
     
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.is_active=False
+            user.save()
+        return user
+
     class Meta:
         model = User
         fields = ['username', 'password1', 'password2', 'nickname', 'birth', 'gender','email']

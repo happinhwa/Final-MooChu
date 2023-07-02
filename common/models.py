@@ -37,3 +37,11 @@ class User(AbstractUser):
 class follow(models.Model):
     follower = models.IntegerField()
     following = models.IntegerField()
+
+class Genre(models.Model):
+    id = models.IntegerField(primary_key=True)
+    genre = models.CharField(max_length=10, unique=True)  # 테이블 열 이름과 일치하도록 변경
+    class Meta:
+        db_table = 'genres2'  # 원래 있던 final.genres2를 메타로 설정
+    def __str__(self):
+        return self.name

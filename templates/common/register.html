@@ -29,56 +29,60 @@
             <div style="display: flex; align-items: center;">
             </div>
         </div>
-        <div class="form-group">
-            <div class="login-font">
-                <label>비밀번호</label>
-            </div>
-            <input class="form-control" type="password"  name="password1" placeholder="비밀번호">
+        {% if form.username.errors %}
+             <div class="error-message">
+                {{ form.username.errors.as_text }}
+              </div>
+        {% endif %}
+        <div class="register-font">
+            <label>비밀번호</label>
         </div>
         <div class="form-group">
-            <div class="login-font">
-                <label>비밀번호 확인</label>
-            </div>
+            <input class="form-control" type="password" name="password1" placeholder="비밀번호">
+        </div>
+        <div class="register-font">
+            <label>비밀번호 확인</label>
+        </div>
+        <div class="form-group">
             <input class="form-control" type="password" name="password2" placeholder="비밀번호 확인">
         </div>
+        <div class="register-font">
+            <label>닉네임</label>
+        </div>
         <div class="form-group">
-            <div class="login-font">
-                <label>닉네임</label>
-            </div>
             <input class="form-control" type="text" name="nickname" placeholder="닉네임">
         </div>
-        <div class="form-group">
-            <div class="login-font">
-                <label>성별</label>
-            </div>
-            <select class="form-control_select" id="gender" name="gender" style="width: 100px; height: 50px;">
-                <option value="" disabled selected>- 선택 -</option>
-                <option value="male">남자</option>
-                <option value="female">여자</option>
-            </select>
+        <div class="register-font">
+            <label for="gender">성별</label>
         </div>
-        <div class="form-group-bir">
-            <div class="login-font">
-                <label>생년월일</label>
-            </div>
+        <div class="form-group">
+            <select name="gender" id="gender" class="select">
+              <option disabled selected> -- 성별 선택 -- </option>
+              <option value="male">남자</option>
+              <option value="female">여자</option>
+            </select>
+          </div>
+        <div class="register-font">
+            <label>생년월일</label>
+        </div>
+        <div class="form-group">
             <input class="form-control" type="date" name="birth" >
         </div>
-        <div class="form-group">
-          <div class="login-font">
+        <div class="register-font">
             <label>이메일</label>
         </div>
-          <input class="form-control" type="email" id="email" name="email" placeholder="xxxxx@xxxxxx.xxxxx">
+        <div class="form-group">
+          <input class="form-control" type="email" name="email" placeholder="xxxxx@xxxxxx.xxxxx">
           <div style="display: flex; align-items: center;">
           </div>
-        </div>   
-        <div class ="login-btn" >
-            <div><input type="submit" id="btnsignup" value="회원가입" class="login-btn"></div>
+      </div>   
+        <div class="button-group" style="margin-top: 20px;">
+            <div><input type="submit" id="btnRegister" value="회원가입" class="register-btn"></div>
         </div>
-        <div class="form-group" style="text-align: right; margin-top: 10px;">
-            <a href="#" style="font-size: 1.5rem;">로그인 화면으로 이동하시겠습니까 ? </a>
+        <div class="form-group">
+            <a class="a-1" href="{% url 'common:login' %}" style="text-align: right; margin-top: 20px;">로그인 화면으로 이동하시겠습니까 ? </a>
         </div>
     </div>
     </hr>
 </form>
 {% endblock %}
- 

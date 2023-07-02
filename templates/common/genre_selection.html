@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}genre select{% endblock %}
+{% load static %}
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{% static '/fonts/font.css'%}">
+  <link rel="stylesheet" href="{% static 'style-genre.css'%}">
+</head>
+
+<div class="container" style="margin-top: 20px;">
+  <div class="row justify-content-center">
+    <h1 style="font-family: 'NanumBarunpen'; color:#96FC72; margin-bottom: 50px; text-align: center;">관심 장르 선택</h1>
+    {% for genre in genres %}
+      <div class="col-md-4 mb-3 d-flex justify-content-center">
+        <button class="genre-button">{{ genre.genre }}</button>
+      </div>
+      {% if forloop.counter|divisibleby:3 and not forloop.last %}
+        </div><div class="row justify-content-center">
+      {% endif %}
+    {% endfor %}
+  </div>
+
+
+  <br><br><br>
+  <div class="row justify-content-end">
+    <div class="col-auto">
+      <a href="#">
+        <button class="next-btn" id="next-button">다음</button>
+      </a>
+    </div>
+  </div>  
+</div>
+{% endblock %}
+
+{% comment %} {% block script %}
+<style>
+  .selected {
+    background-color: #96FC72;
+  }
+</style>
+<script>
+  const genreButtons = document.querySelectorAll(".genre-button");
+  const nextButton = document.getElementById("next-button");
+  let selectedGenres = [];
+
+  genreButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const genre = button.textContent;
+      if (!button.classList.contains("selected")) {
+        button.classList.add("selected");
+        selectedGenres.push(genre);
+      } else {
+        button.classList.remove("selected");
+        selectedGenres = selectedGenres.filter((item) => item !== genre);
+      }
+    });
+  });
+
+  nextButton.addEventListener("click", () => {
+    // 서버에 전송하는 코드를 여기에 작성하세요.
+    console.log(selectedGenres); // 이 배열에 선택한 장르가 저장됩니다.
+  });
+</script>
+{% endblock %} {% endcomment %}

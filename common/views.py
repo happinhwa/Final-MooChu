@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .forms import RegistrationForm
 
 ## 회원가입 
+from .models import Genre
+
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -37,3 +39,7 @@ def mypage_note(request):
 
 def mypage_edit(requset):
     pass
+## 관심 장르 선택 함수
+def genre_selection(request):
+    genres = Genre.objects.all()
+    return render(request, 'common/genre_selection.html', {'genres': genres})

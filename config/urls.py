@@ -20,4 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('common/', include('common.urls', namespace='common')),  # 수정된 부분
+    
 ]

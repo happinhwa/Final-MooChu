@@ -1,0 +1,93 @@
+{% load static %}
+<!-- Navbar -->
+{% include "navbar/navbar1.html" %}
+.
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My page-note</title>
+    <link rel="stylesheet" href="{% static 'font.css' %}">
+    <link rel="stylesheet" href="{% static 'mypage.css' %}">
+
+  </head>
+  <body>
+
+    <div class="bookcover">
+      <div class="bookdot">
+        <div class="page">
+           <!-- 왼쪽 프로필 페이지 구성요소 -->
+           {% include "mypage/profile.html" %}
+
+
+
+
+          <div class="content-container">
+            <div class="header content-title">
+              <div class="content-title-name">00님의 마이페이지</div>
+            </div>
+              <!-- 오른쪽 페이지 구성 -->
+            <div class="box content-box"> 
+              <div class="scroll-box">
+                <div class="box-title">"남도일"님의 방명록 ~</div>
+                {% for i in list_ %}
+                <div class="content-note main-section">
+                  <div class="guest-note">
+                      <div class="guest-info">no.순서&nbsp;
+                        <span class="span-note">방명록 남긴 사용자</span>&nbsp;
+                        방명록 남긴 시간
+                        <div class="guest-buttons">
+                          <button class="modify-button">수정</button>
+                          <button class="delete-button">삭제</button>
+                        </div>
+                      </div>
+                      <div class="guest-content">
+                          <div class="guest-profile">
+                              <img class="guest-image" src="#" alt="남긴 사람의 프로필">
+                          </div>
+                          <div class="guest-message">
+                              갑자기 미안한데 나도 참다참다 말한다.<br>
+                              너 자꾸 사람 화나게 하는 구석이 있다?<br>
+                              자꾸 이런식이여서 나한테 감정이 쌓이고 쌓이고 쌓이면<br><br>
+                              싸이먼 도미닉<br>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="content-note main-section">
+                  <div class="guest-note">
+                      <div class="guest-info">no.152&nbsp;
+                        <span class="span-note">개미</span>&nbsp;
+                        (2010.01.24 19:44)
+                        <div class="guest-buttons">
+                          <button class="modify-button">수정</button>
+                          <button class="delete-button">삭제</button>
+                        </div>
+                      </div>
+                      <div class="guest-content">
+                          <div class="guest-profile">
+                              <img class="guest-image" src="/static/abc.jpeg" alt="방명록 프로필">
+                          </div>
+                          <div class="guest-message">
+                              갑자기 미안한데 나도 참다참다 말한다.<br>
+                              너 자꾸 사람 화나게 하는 구석이 있다?<br>
+                              자꾸 이런식이여서 나한테 감정이 쌓이고 쌓이고 쌓이면<br><br>
+                              싸이먼 도미닉<br>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                {% endfor %}
+
+              </div>
+            </div>
+          </div>
+          <!-- 메뉴 버튼 구성 요소-->
+          {% include "mypage/menu.html" %}
+
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+```

@@ -340,6 +340,7 @@ body {
   width: 100%;
   flex: 1;
   padding: 0.75rem;
+  margin-top:15px;
 }
 .main-section{
   overflow-y: auto;
@@ -382,14 +383,14 @@ body {
 }
 
 .guest-image{
-  width: 70%;
-}
-.guest-buttons {
-  display: flex;
-  margin-left: auto;
+  width: 200ßpx;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-bottom: 5px;
 }
 
-.modify-button,
+
 .delete-button {
   padding: 8px 16px;
   background-color: skyblue;
@@ -398,9 +399,35 @@ body {
   border-radius: 4px;
   cursor: pointer;
   margin-right: 5px;
+  display: flex;
+  margin-left: auto;
 }
 
-.modify-button:hover,
+
 .delete-button:hover {
   background-color: #4caf50;
+}
+.profile-card {
+  flex-direction: column;
+  align-items: center;
+  height: 200px;
+  width: 200px;
+  padding: 10px;
+  /* border: 1px solid #ccc; */
+  border-radius: 5px;
+  margin-top: 15px;
+  display: inline-block; /* 추가 */
+  margin-right:1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.profile-card-text {
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  font-size: 15px;
 }

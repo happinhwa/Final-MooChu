@@ -87,6 +87,18 @@ DATABASES = {
         'PASSWORD':'1234',
         'HOST':'127.0.0.1',
         'PORT':'4000'
+    },
+    'test_mongo': {
+        'ENGINE': 'djongo',
+        'NAME': 'final_db',
+        'CLIENT': {
+            'host': 'localhost',
+            'port': '4001',
+            'username': 'root',
+            'password': 'root',
+            'authSource': 'admin',
+            'authMechanism': 'SCRAM-SHA-1'
+        }
     }
 }
 

@@ -173,7 +173,9 @@ AUTHENTICATION_BACKENDS = [
 # # Email sending
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-
+LOGIN_REDIRECT_URL = "/moochu/mainpage"
+LOGOUT_REDIRECT_URL = "/moochu/mainpage"
+ACCOUNT_LOGOUT_ON_GET = True
 # EMAIL_HOST = 'smtp.gmail.com'
 # # 메일을 호스트하는 서버
 # EMAIL_PORT = '587'

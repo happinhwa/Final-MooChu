@@ -54,6 +54,7 @@
 /* 아이디, 비밀번호 글씨 폰트 */
 label{
     font-family: NanumBarunpen;
+    color: #96FC72;
 }
 
 /* 아직 회원가입 아니십니까~ 에 대한 css */

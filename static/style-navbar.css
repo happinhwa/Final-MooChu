@@ -58,7 +58,8 @@ li {
 }
 
 /* 로고 기본 모양*/
-a {  
+/* 마이페이지 a 태그랑 겹쳐서 변경 */
+.a-nav {  
   font-size: 50px;
   text-decoration: none;
   color: #96FC72;

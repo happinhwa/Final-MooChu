@@ -45,3 +45,13 @@ class Genre(models.Model):
         db_table = 'genres2'  # 원래 있던 final.genres2를 메타로 설정
     def __str__(self):
         return self.name
+    
+
+# class GuestNote(models.Model):
+#     main = models.ForeignKey(User, on_delete=models.CASCADE)
+#     writer = models.ForeignKey(User, on_delete=models.RESTRICT)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     content = models.TextField()
+
+#     def __str__(self):
+#         return self.main

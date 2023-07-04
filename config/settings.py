@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from django.conf import settings
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -91,6 +93,18 @@ DATABASES = {
         'PASSWORD':'1234',
         'HOST':'127.0.0.1',
         'PORT':'4000'
+    },
+    'test_mongo': {
+        'ENGINE': 'djongo',
+        'NAME': 'final_db',
+        'CLIENT': {
+            'host': 'localhost',
+            'port': '4001',
+            'username': 'root',
+            'password': 'root',
+            'authSource': 'admin',
+            'authMechanism': 'SCRAM-SHA-1'
+        }
     }
 }
 
@@ -172,3 +186,5 @@ AUTHENTICATION_BACKENDS = [
 # # TLS 보안 방법
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # # 사이트와 관련한 자동응답을 받을 이메일 주소,'webmaster@localhost'
+# 기본 프로필 이미지 경로 설정
+DEFAULT_PROFILE_IMAGE = 'static/chuchu.png'  # 기본 이미지 파일의 경로

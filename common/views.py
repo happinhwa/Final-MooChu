@@ -33,6 +33,23 @@ def user_login(request):
     else:
         return render(request, 'common/login.html', {'error': ''})
 
+def mypage_home(request):
+    return render(request, 'mypage/mypage.html')
+
+def mypage_mylist(request):
+    return render(request, 'mypage/mylist.html')
+
+def mypage_reviews(request):
+    return render(request, 'mypage/reviews.html')
+
+def mypage_note(request):
+    list_=[1,2,3]
+    form = {"list_":list_}
+    return render(request, 'mypage/note.html', form)
+
+
+def mypage_edit(requset):
+    pass
 ## 관심 장르 선택 함수
 def genre_selection(request):
     genres = Genre.objects.all()

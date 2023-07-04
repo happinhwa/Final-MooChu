@@ -14,6 +14,8 @@ class RegistrationForm(UserCreationForm):
     birth = forms.DateField(label='생년월일', widget=forms.DateInput(attrs={'type': 'date'}), required=False)
     gender = forms.ChoiceField(label='성별', choices=(('male', '남성'), ('female', '여성')), required=False)
 
+    
+
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
@@ -35,7 +37,7 @@ class RegistrationForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         if commit:
-            user.is_active = False
+            user.is_active=False
             user.save()
         return user
 

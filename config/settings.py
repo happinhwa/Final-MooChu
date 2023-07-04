@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     "common",
     "board",
     "moochu",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
 ]
 
 MIDDLEWARE = [
@@ -58,7 +61,10 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'templates'],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'), 
+            os.path.join(BASE_DIR, 'templates', 'accounts')
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -129,14 +135,40 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-
 # 장고디비에 이미지 파일올리기
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# ACCOUNT_EMAIL_REQUIRED = True
+# # ACCOUNT_AUTHENTICATION_METHOD = "email"
+# ACCOUNT_EMAIL_CONFIRMATION_EMAIL_TEMPLATE = 'account/email_confirmation.html'
+
+# # Email sending
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
+# EMAIL_HOST = 'smtp.gmail.com'
+# # 메일을 호스트하는 서버
+# EMAIL_PORT = '587'
+# # gmail과의 통신하는 포트
+# EMAIL_HOST_USER = '----'
+# # 발신할 이메일
+# EMAIL_HOST_PASSWORD = '-----'
+# # 발신할 메일의 비밀번호
+# EMAIL_USE_TLS = True
+# # TLS 보안 방법
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# # 사이트와 관련한 자동응답을 받을 이메일 주소,'webmaster@localhost'

@@ -1,14 +1,31 @@
 {% extends 'base.html' %}
 {% block title %}register{% endblock %}
 {% load static %}
+
 {% block content %}
 <head>
   <link rel="stylesheet" href="{% static '/fonts/font.css'%}">
   <link rel="stylesheet" href="{% static 'style-register.css'%}">
 </head>
+
+<div class="row justify-content-center">
+    <h1 style="font-family: 'NanumBarunpen'; color:#96FC72; margin-top:50px; text-align: center;">회원 가입</h1>
+</div>
 <div id="container">
-    <form class="register" method="POST" action="{% url 'common:register' %}" enctype="multipart/form-data">
+    <form class="login" method="POST" action="{% url 'common:register' %}" enctype="multipart/form-data">
     {% csrf_token %}
+    <!-- 사용자오류 표시 -->
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li style="font-size: 14px;"> {{ field }} :{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
     <div class="register-box">
         <div class="register-font">
             <label>아이디</label>
@@ -19,9 +36,9 @@
             </div>
         </div>
         {% if form.username.errors %}
-             <div class="error-message">
+            <div class="error-message">
                 {{ form.username.errors.as_text }}
-              </div>
+            </div>
         {% endif %}
         <div class="register-font">
             <label>비밀번호</label>
@@ -39,7 +56,7 @@
             <label>닉네임</label>
         </div>
         <div class="form-group">
-            <input class="form-control" type="text" name="username" placeholder="닉네임">
+            <input class="form-control" type="text" name="nickname" placeholder="닉네임">
         </div>
         <div class="register-font">
             <label for="gender">성별</label>
@@ -50,7 +67,7 @@
               <option value="male">남자</option>
               <option value="female">여자</option>
             </select>
-          </div>
+        </div>
         <div class="register-font">
             <label>생년월일</label>
         </div>
@@ -62,14 +79,12 @@
         </div>
         <div class="form-group">
           <input class="form-control" type="email" name="email" placeholder="xxxxx@xxxxxx.xxxxx">
-          <div style="display: flex; align-items: center;">
-          </div>
-      </div>   
+        </div>   
         <div class="button-group" style="margin-top: 20px;">
-            <div><input type="submit" id="btnRegister" value="회원가입" class="register-btn"></div>
+            <input type="submit" id="btnRegister" value="회원가입" class="register-btn">
         </div>
         <div class="form-group">
-            <a class="a-1" href="{% url 'common:login' %}" style="text-align: right; margin-top: 20px;">로그인 화면으로 이동하시겠습니까 ? </a>
+            <a class="a-1" href="{% url 'common:login' %}" style="text-align: right; margin-top: 20px;">로그인 화면으로 이동하시겠습니까 ?</a>
         </div>
     </div>
     </form>

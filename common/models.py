@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
 # Create your models here.
 
@@ -23,8 +24,15 @@ class User(AbstractUser):
     last_login = None
     date_joined = None
     
+    def get_profile_image_url(self):
+        if self.profile_img:
+            return self.profile_img.url
+        else:
+            return settings.DEFAULT_PROFILE_IMAGE
+        
+
     def __str__(self):
-        return self.email
+        return self.username
 
 class follow(models.Model):
     follower = models.IntegerField()

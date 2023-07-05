@@ -1,3 +1,32 @@
+.news-flex-box {
+  flex: 0 0 auto;
+  margin-bottom: 2rem;
+  display: flex;
+  font-size: 0.8rem;
+}
+.news-row {
+  display: flex;
+  font-size: 1.5rem;
+  border-bottom: 1px dashed grey;
+  
+  margin: 3px 0;
+}
+.news-box {
+  flex: 1;
+}
+.update-box {
+  flex: 1;
+}
+.menu-row {
+  display: flex;
+  font-size: 1.5rem;
+  border-bottom: 1px dashed grey;
+  border-left: 1px solid black;
+  margin: 3px 0;
+}
+.follower-text {
+  text-align: center;
+}
 
 /* news-flex-box -> box-right-flex */
 .box-right {
@@ -78,7 +107,7 @@
 
 body {
   background-color: #2C2E34;
-  position: fixed;
+  position:absolute;
   left: 0;
   top: 0;
   right: 0;
@@ -95,7 +124,7 @@ body {
   border: 1px solid #738186;
   width: 1400px;
   height: 900px;
-  margin: 100px auto;
+  margin: 10px auto;
   position: relative;
 }
 
@@ -144,7 +173,7 @@ body {
 }
 
 .menu-container {
-  margin-top: 3rem;
+  margin-top: 5rem;
   display: flex;
   flex-direction: column;
   
@@ -152,7 +181,7 @@ body {
 
 .menu-container > a {
   padding: 6px;
-  margin: 6px 0;
+  margin: 15px 0;
   background-color: #3b87ab;
   border-bottom-right-radius: 6px; /* 우측 하단 border-radius 적용 */
   border-top-right-radius: 6px; /* 우측 상단 border-radius 적용 */
@@ -160,7 +189,8 @@ body {
   color: white;
   text-decoration: none;
   font-family: "NeoDunggeunmo";
-  font-size: 1.5rem;
+  font-size: 1.3rem;
+  text-align: center;
 }
 
 .menu-container > a:hover {
@@ -171,55 +201,7 @@ body {
 .header {
   flex: 0.1;
 }
-.profile-dropdown {
-  flex: 0;
-  border: 1px solid #c9d4da;
-  padding: 5px;
-  margin-top: 10px;
-  font-size: 1rem;
-  position: relative;
-}
 
-.triangle-down {
-  width: 0;
-  height: 0;
-  border-left: 4.5px solid transparent;
-  border-right: 4.5px solid transparent;
-  border-top: 5px solid #838383;
-}
-
-.profile-dropdown:hover > .dropdown-content {
-  display: block;
-}
-
-.dropdown-btn {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-}
-
-.dropdown-content > a {
-  display: block;
-  background-color: #f9f9f9;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  padding: 6px;
-  color: black;
-  text-decoration: none;
-  font-size: 15px;
-}
-
-.dropdown-content > a:hover {
-  background-color: #f1f1f1;
-}
 .box {
   background-color: white;
   flex: 3;
@@ -276,10 +258,10 @@ body {
   flex: 1;
 }
 .poster-img {
-  width: 218px;
-  height: 316px;
+  width: 140px;
+  height: 190px;
   object-fit: cover;
-  margin-right: 10px;
+  margin-right: 15px;
   align-items: center;
 }
 .poster-container {
@@ -327,9 +309,44 @@ body {
   margin: 0;
   font-size: 15px;
 }
+.follow-btn {
+  width: 100%;
+  height: 30px;
+  background-color: skyblue;
+  border:None;
+}
+.follow-img{
+  width: 40px;
+  height: 40px;
+}
+.follow-title {
+  font-family: "KOTRA_BOLD-Bold";
+  border-bottom: 1px solid grey;
+  color: #3b87ab;
+  margin-bottom: 15px;
+  font-size: 25px;
+}
+.thermometer {
+  width: 100%;
+  height: 20px;
+  background-color: #eee;
+  border-radius: 10px;
+  display: inline-block;
+  overflow: hidden;
+}
 
+.temperature-bar {
+  width: 100%;
+  height: 100%;
+  background-color: #ddd;
+}
 
-
+.temperature-fill {
+  height: 100%;
+  background-color: skyblue;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
 
 
 

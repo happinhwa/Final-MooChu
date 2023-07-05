@@ -24,25 +24,24 @@
 
           <div class="content-container">
             <div class="header content-title">
-              <div class="content-title-name">00님의 마이페이지</div>
+              <div class="content-title-name">{{ user.nickname }}님의 마이페이지</div>
             </div>
             
               <!-- 오른쪽 페이지 구성 -->
             <div class="box content-box"> 
               <div class="scroll-box">
-                <div class="box-title">"남도일"님의 방명록 ~</div>
+                <div class="box-title">"{{ master.nickname }}"에게 </div>
                 <div class="content-note main-section">
                   <div class="guest-note">
-                    <div class="guest-info">방명록 작성하기&nbsp;
-                      <span class="span-note">{{ note.writer.nickname }}</span>&nbsp;
+                    <div class="guest-info">작성칸&nbsp;
                     </div>
                     <div class="write-guestnote-form">
                       <div class="guest-content">
                         <div class="guest-profile">
-                            <img class="guest-image" src="{{ note.writer.profile_img }}" alt="방명록 프로필">
+                            <img class="guest-image" src="{{ writer.profile_img }}" alt="방명록 프로필">
                         </div>
                         <div class="form-container">
-                          <form method="POST" action="{% url 'common:note' %}">
+                          <form method="POST" action="{% url 'common:note' nickname=master.nickname %}">
                             {% csrf_token %}
                             <textarea name="content" rows="5" maxlength="500" required></textarea>
                             <button class="button-input"type="submit">작성 완료</button>
@@ -53,18 +52,19 @@
                     </div>
                   </div>
                 </div>
+                <div class="box-title" style="margin-top: 15px;">"{{ master.nickname }}"님의 방명록 ~</div>
                 {% if note %}
                 {% for note in note %}
                 <div class="content-note main-section">
                   <div class="guest-note">
-                      <div class="guest-info">{{ note.id }}&nbsp;
+                      <div class="guest-info">NO. {{ forloop.counter }}&nbsp;
                         <span class="span-note">{{ note.writer.nickname }}</span>&nbsp;
                         {{ note.created_at }}
                         <a href ="{% url 'common:delete' guestnote_id=note.id %}" class="delete-button"><button class="delete-button">삭제</button></a>
                       </div>
                       <div class="guest-content">
                           <div class="guest-profile">
-                              <img class="guest-image" src="{{ note.writer.profile_img }}" alt="방명록 프로필">
+                              <a href="{% url 'common:mypage' nickname=note.writer.nickname %}"><img class="guest-image" src="{{ note.writer.profile_img }}" alt="방명록 프로필"></a>
                           </div>
                           <div class="guest-message">
                               {{ note.content }}
@@ -74,54 +74,9 @@
                 </div>
                 {% endfor %}
                 {% else %}
-
                   <h3> 작성된 방명록이 없습니다.</h3>
-                
                 {% endif %}
-                <!-- {% for i in list_ %}
-                <div class="content-note main-section">
-                  <div class="guest-note">
-                      <div class="guest-info">no.순서&nbsp;
-                        방명록 남긴 시간
-                        
-                        <button class="delete-button">삭제</button>
-                        
-                      </div>
-                      <div class="guest-content">
-                        <div class="profile-card">
-                          <img class="guest-image" src="/static/images/nam.jpeg" alt="사용자프로필">
-                          <span class="profile-card-text">사용자 닉네임</span>
-                        </div>
-                        <div class="guest-message">
-                            갑자기 미안한데 나도 참다참다 말한다.<br>
-                            너 자꾸 사람 화나게 하는 구석이 있다?<br>
-                            자꾸 이런식이여서 나한테 감정이 쌓이고 쌓이고 쌓이면<br><br>
-                            싸이먼 도미닉<br>
-                        </div>
-                      </div>
-                  </div>
-                </div>
-                <div class="content-note main-section">
-                  <div class="guest-note">
-                      <div class="guest-info">no.152&nbsp;
-                        <span class="span-note">개미</span>&nbsp;
-                        (2010.01.24 19:44)
-                        <button class="delete-button">삭제</button>
-                      </div>
-                      <div class="guest-content">
-                          <div class="guest-profile">
-                              <img class="guest-image" src="/static/abc.jpeg" alt="방명록 프로필">
-                          </div>
-                          <div class="guest-message">
-                              갑자기 미안한데 나도 참다참다 말한다.<br>
-                              너 자꾸 사람 화나게 하는 구석이 있다?<br>
-                              자꾸 이런식이여서 나한테 감정이 쌓이고 쌓이고 쌓이면<br><br>
-                              싸이먼 도미닉<br>
-                          </div>
-                      </div>
-                  </div>
-                </div>
-                {% endfor %} -->
+                
                 
               </div>
             </div>

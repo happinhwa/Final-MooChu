@@ -21,26 +21,28 @@
 
           <div class="content-container">
             <div class="header content-title">
-              <div class="content-title-name">{{ user.nickname }}님의 마이페이지</div>
+              <div class="content-title-name">{{ master.nickname }}님의 마이페이지</div>
             </div>
 
             <div class="box content-box">
               <div class="scroll-box">
-                <div class="box-title">{{ user.nickname }}님이 남긴 리뷰<a class="toggle-reviews" href="#">전체보기</a></div>
-                <div class="review-container">  
+                <div class="box-title">{{ master.nickname }}님이 남긴 리뷰<a class="toggle-reviews" href="#">전체보기</a></div>
+                <div class="review-container"> 
+                  {% for review in reviews %} 
+                  <span class="review-text"><a style="font-weight: bold;">{{ review.movie_title }} :</a> {{review.content}}</span>
+                  <hr>
+                  {% endfor %}
                   <span class="review-text">이거는 진짜 너무 재밌다 저의 인생 명작입니다.</span>
                   <hr>
-                  <span class="review-text">이거는 진짜 너무 재밌다 저의 인생 명작입니다.</span>
+                  <span class="review-text">이거는 진짜 </span>
                   <hr>
-                  <span class="review-text">이거는 진짜 너무 재밌다 저의 인생 명작입니다.</span>
+                  <span class="review-text">이거는 진짜 너무 </span>
                   <hr>
-                  <span class="review-text">이거는 진짜 너무 재밌다 저의 인생 명작입니다.</span>
+                  <span class="review-text">이거는 진짜 너무 재밌다 </span>
                   <hr>
-                  <span class="review-text">이거는 진짜 너무 재밌다 저의 인생 명작입니다.</span>
+                  <span class="review-text">이거는 진짜 너무 재밌다 저의 </span>
                   <hr>
-                  <span class="review-text">이거는 진짜 너무 재밌다 저의 인생 명작입니다.</span>
-                  <hr>
-                  <span class="review-text">이거는 진짜 너무 재밌다 저의 인생 명작입니다.</span>
+                  <span class="review-text">이거는 진짜 너무 재밌다 저의 인생 </span>
                   <hr>
                   <span class="review-text">이거는 진짜 너무 재밌다 저의 인생 명작입니다.</span>
                   <hr>
@@ -48,7 +50,7 @@
                 <br />
 
 
-                <div class="box-title">{{ user.nickname }}님이 남긴 평점<a class="toggle-votes"><a href="/" id="view-all-votes">전체보기</a></div>
+                <div class="box-title">{{ master.nickname }}님이 남긴 평점<a class="toggle-votes"><a href="/" id="view-all-votes">전체보기</a></div>
                 <div class="card-container-vote">
                   <div class="card">
                     <img class="card-img" src="/static/images/1_2.jpg" alt="영화 포스터">

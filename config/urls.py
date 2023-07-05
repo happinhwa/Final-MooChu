@@ -16,9 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from allauth.account.views import ConfirmEmailView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('common/', include('common.urls', namespace='common')),  # 수정된 부분
-    
+    path('moochu/', include('moochu.urls', namespace='moochu')),  # 수정된 부분
+    path('accounts/', include('allauth.urls')),
+    path('accounts/confirm-email/<str:key>/', ConfirmEmailView.as_view(), name='account_confirm_email'),
 ]

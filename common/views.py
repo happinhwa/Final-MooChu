@@ -1,27 +1,43 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegistrationForm
+<<<<<<< HEAD
 from . import models
 from .forms import GuestNoteForm
 ## 회원가입 
+=======
+from django.contrib.auth import authenticate, login
+>>>>>>> 4c55e17b2961eab55dde14ac5359c51691b27636
 from .models import Genre
 
+## 회원가입 
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('common:registration_complete')
+            return redirect('common:register_complete')
     else:
         form = RegistrationForm()
     return render(request, 'common/register.html', {'form': form})
 
-def registration_complete(request):
-    return render(request, 'common/registration_complete.html')
-
+def register_complete(request):
+    return render(request, 'common/register_complete.html')
 
 ## 로그인 함수
-def login(request):
-    return render(request, 'common/login.html')
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('moochu:mainpage')
+        else:
+            # 로그인 실패 처리
+            return render(request, 'common/login.html', context={'error': '로그인에 실패하였습니다.'})
+
+    else:
+        return render(request, 'common/login.html', {'error': ''})
 
 def mypage_home(request):
     ## user_id=request.user.id

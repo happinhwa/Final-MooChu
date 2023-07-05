@@ -2,8 +2,10 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import User, GuestNote
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
+User = get_user_model()
 
 class RegistrationForm(UserCreationForm):
     username = forms.CharField(label="아이디", max_length=20, help_text='사용할 아이디를 입력해주세요.')

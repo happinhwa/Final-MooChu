@@ -26,11 +26,59 @@
             <div class="header content-title">
               <div class="content-title-name">00님의 마이페이지</div>
             </div>
+            
               <!-- 오른쪽 페이지 구성 -->
             <div class="box content-box"> 
               <div class="scroll-box">
                 <div class="box-title">"남도일"님의 방명록 ~</div>
-                {% for i in list_ %}
+                <div class="content-note main-section">
+                  <div class="guest-note">
+                    <div class="guest-info">방명록 작성하기&nbsp;
+                      <span class="span-note">{{ note.writer.nickname }}</span>&nbsp;
+                    </div>
+                    <div class="write-guestnote-form">
+                      <div class="guest-content">
+                        <div class="guest-profile">
+                            <img class="guest-image" src="{{ note.writer.profile_img }}" alt="방명록 프로필">
+                        </div>
+                        <div class="form-container">
+                          <form method="POST" action="{% url 'common:note' %}">
+                            {% csrf_token %}
+                            <textarea name="content" rows="5" maxlength="500" required></textarea>
+                            <button class="button-input"type="submit">작성 완료</button>
+                          </form>
+                        </div>
+                      </div>
+                    
+                    </div>
+                  </div>
+                </div>
+                {% if note %}
+                {% for note in note %}
+                <div class="content-note main-section">
+                  <div class="guest-note">
+                      <div class="guest-info">{{ note.id }}&nbsp;
+                        <span class="span-note">{{ note.writer.nickname }}</span>&nbsp;
+                        {{ note.created_at }}
+                        <a href ="{% url 'common:delete' guestnote_id=note.id %}" class="delete-button"><button class="delete-button">삭제</button></a>
+                      </div>
+                      <div class="guest-content">
+                          <div class="guest-profile">
+                              <img class="guest-image" src="{{ note.writer.profile_img }}" alt="방명록 프로필">
+                          </div>
+                          <div class="guest-message">
+                              {{ note.content }}
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                {% endfor %}
+                {% else %}
+
+                  <h3> 작성된 방명록이 없습니다.</h3>
+                
+                {% endif %}
+                <!-- {% for i in list_ %}
                 <div class="content-note main-section">
                   <div class="guest-note">
                       <div class="guest-info">no.순서&nbsp;
@@ -73,8 +121,8 @@
                       </div>
                   </div>
                 </div>
-                {% endfor %}
-
+                {% endfor %} -->
+                
               </div>
             </div>
           </div>

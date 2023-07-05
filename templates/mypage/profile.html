@@ -6,16 +6,16 @@
                   <!-- 프로필 사진 -->
   <div class="box profile-box">
     <div class="profile-image">
-      <img class="profile-image-img" src="/static/images/nam.jpeg" alt="프로필 이미지"/>
+      <img class="profile-image-img" src="{{ user.profile_img }}" alt="프로필 이미지"/>
     </div>
             <!-- 프로필 사진 밑에 내용 -->
     <div class="profile-text font-kyobohand">
-      <text>남도일</text>
+      <text>{{ user.nickname }} 닉네임 </text>
     </div>
     <div class="font-kyobohand">
       <label style="font-weight: bolder;"> 한줄 소개 </label><br />
       <text>내 이름은 남도일, 미란이와 놀이공원에 갔다가 ...</text><br /><br />
-      <label style="font-weight: bolder;">온도 :</label><text> 36.5 </text><br />
+      <label style="font-weight: bolder;">온도 :</label><text> {{ user.temp }} </text><br />
       <label style="font-weight: bolder;">팔로워 :</label><text> 190명 </text><br />
       <label style="font-weight: bolder;">팔로잉 :</label><text> 150명</text>
     </div>

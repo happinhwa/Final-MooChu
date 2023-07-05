@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-3">
+  <div class="row flex-row flex-nowrap overflow-auto">
+    {% for dday_group in page_obj %}
+      <div class="col-12">
+        <h3 class="text-center">D-{{ forloop.counter }}</h3>
+      </div>
+      {% for movie in dday_group.1 %}
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+          <div class="card">
+            {% if movie.img_link %}
+              <img class="poster lazyload lazyloaded"
+                   src="{{ movie.img_link }}"
+                   alt="{{ movie.title }}">
+            {% else %}
+            <img class="poster lazyload lazyloaded"
+                 src="/static/images/moochu.png"
+                 alt="{{ movie.title }}">
+            {% endif %}
+            <div class="card-body text-center">
+              <h5 class="card-title">{{ movie.title }}</h5>
+              <p class="card-text d-day-label">D-{{ forloop.parentloop.counter }}</p> <!-- Display "D-n" as a label -->
+              <p class="card-text">{{ movie.num|date:"Y.m.d" }}</p> <!-- Display the formatted date -->
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+  <div class="row">
+    <div class="col-12 d-flex justify-content-end">
+      <button class="btn btn-primary btn-sm mr-2" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+        <i class="fa fa-chevron-left"></i>
+      </button>
+      <button class="btn btn-primary btn-sm" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+        <i class="fa fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

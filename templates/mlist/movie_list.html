@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-3">
+  <div class="row">
+    <!-- Movie Section -->
+    {% for movie in movies %}
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card mb-4">
+          <img class="poster lazyload lazyloaded"
+                src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/{{ movie.poster_path }}"
+                alt="{{ movie.title }}">
+          <div class="card-body text-center">
+            <h5 class="card-title">{{ movie.title }}</h5>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+    
+  <!-- Button Section -->
+  <div class="row">
+    <div class="col text-center" style="height: 30px; background-color: lightblue;">
+      <!-- Previous Page Button -->
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary my-3">Previous</a>
+      {% endif %}
+
+      <!-- Next Page Button -->
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary my-3">Next</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -14,6 +14,14 @@ from pathlib import Path
 import os
 from django.conf import settings
 
+import pymongo
+
+mongodb_host = 'localhost'
+mongodb_port = 27017
+mongodb_client = pymongo.MongoClient(host=mongodb_host, port=mongodb_port)
+mongodb_database_name = 'tmdb'
+mongodb_database = mongodb_client[mongodb_database_name]
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,6 +54,8 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    #tmdb 리스트
+    "mlist",
 ]
 
 MIDDLEWARE = [
@@ -85,28 +95,32 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+DATABASE_ROUTERS = ['config.router.MongoDBRouter']
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':'final_db',
-        'USER':'root',
-        'PASSWORD':'1234',
-        'HOST':'127.0.0.1',
-        'PORT':'4000'
+        'NAME': 'django_db',
+        'USER': 'root',
+        'PASSWORD': '1234',
+        'HOST': '127.0.0.1',
+        'PORT': 4000,
     },
-    'test_mongo': {
-        'ENGINE': 'djongo',
-        'NAME': 'final_db',
+    'tmdb_mongo': {
+        'ENGINE': '',
+        'NAME': 'tmdb',
         'CLIENT': {
             'host': 'localhost',
-            'port': '4001',
+            'port': 27017,
             'username': 'root',
             'password': 'root',
             'authSource': 'admin',
-            'authMechanism': 'SCRAM-SHA-1'
-        }
-    }
+            'authMechanism': 'SCRAM-SHA-1',
+        },
+    },
 }
+
 
 
 # Password validation
@@ -190,3 +204,8 @@ ACCOUNT_LOGOUT_ON_GET = True
 # # 사이트와 관련한 자동응답을 받을 이메일 주소,'webmaster@localhost'
 # 기본 프로필 이미지 경로 설정
 DEFAULT_PROFILE_IMAGE = 'static/chuchu.png'  # 기본 이미지 파일의 경로
+
+
+# 영화 정보 리스트업
+# Pagination
+PAGINATE_BY = 20 # 한 페이지당 20개의 항목이 표시되도록 설정합니다.

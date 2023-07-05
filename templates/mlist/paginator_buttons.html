@@ -1,0 +1,25 @@
+{% if page_obj.has_previous %}
+  <a href="?page=1">&laquo;</a>
+  <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+{% else %}
+  <span>&laquo;</span>
+  <span>previous</span>
+{% endif %}
+
+{% for button_page, is_current in paginator %}
+    {% if button_page == -1 %}
+        <span class="ellipsis">...</span>
+    {% else %}
+        <a href="?page={{ button_page }}" {% if is_current %}class="current"{% endif %}>{{ button_page }}</a>
+    {% endif %}
+    {{ button_page }}/<!-- 추가된 코드 -->
+{% endfor %}
+
+
+{% if page_obj.has_next %}
+  <a href="?page={{ page_obj.next_page_number }}">next</a>
+  <a href="?page={{ paginator.num_pages }}">&raquo;</a>
+{% else %}
+  <span>next</span>
+  <span>&raquo;</span>
+{% endif %}

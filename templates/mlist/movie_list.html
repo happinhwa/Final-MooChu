@@ -17,20 +17,7 @@
       </div>
     {% endfor %}
   </div>
-    
-  <!-- Button Section -->
-  <div class="row">
-    <div class="col text-center" style="height: 30px; background-color: lightblue;">
-      <!-- Previous Page Button -->
-      {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary my-3">Previous</a>
-      {% endif %}
 
-      <!-- Next Page Button -->
-      {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary my-3">Next</a>
-      {% endif %}
-    </div>
-  </div>
-</div>
+<!-- Page Buttons -->
+{% include 'mlist/paginator_buttons.html' %}
 {% endblock %}

@@ -4,6 +4,6 @@ from . import views
 app_name = 'mlist'
 
 urlpatterns = [
-    path('', views.movie_list, name='mlist'),
-    path('c_net', views.c_net, name='mlist_net'), #넷플릭스 개봉예정
+    path('page=<int:page_number>/', views.movie_list, name='mlist_page'),  # 페이지 번호를 동적 경로로 변경합니다.
+    path('comming', views.c_net, name='comming_soon'), #개봉예정
 ]

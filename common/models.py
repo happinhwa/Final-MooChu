@@ -16,7 +16,7 @@ class User(AbstractUser):
     temp = models.DecimalField(max_digits=5, decimal_places=2,default=36.5)
     profile_img = models.ImageField(upload_to="profiles/", null=True)
     # visit_count = models.IntegerField(default=0)
-    # delete colume
+    # delete column
     first_name = None
     last_name = None
     last_login = None

@@ -12,11 +12,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from django.conf import settings
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+AUTH_USER_MODEL = 'common.User'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -41,6 +43,9 @@ INSTALLED_APPS = [
     "common",
     "board",
     "moochu",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
 ]
 
 MIDDLEWARE = [
@@ -58,7 +63,10 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'templates'],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'), 
+            os.path.join(BASE_DIR, 'templates', 'accounts')
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -78,14 +86,26 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "final",
-        "USER":"root",
-        "PASSWORD" : "1234",
-        "HOST" : "127.0.0.1",
-        "PORT" : "4000",
-    }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME':'final',
+        'USER':'encore',
+        'PASSWORD':'tlrdl13!#',
+        'HOST':'127.0.0.1',
+        'PORT':'4000'
+    },
+    # 'test_mongo': {
+    #     'ENGINE': 'djongo',
+    #     'NAME': 'final_db',
+    #     'CLIENT': {
+    #         'host': 'localhost',
+    #         'port': '4001',
+    #         'username': 'root',
+    #         'password': 'root',
+    #         'authSource': 'admin',
+    #         'authMechanism': 'SCRAM-SHA-1'
+    #     }
+    # }
 }
 
 
@@ -111,9 +131,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ko-kr"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -129,14 +149,44 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-
 # 장고디비에 이미지 파일올리기
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# ACCOUNT_EMAIL_REQUIRED = True
+# # ACCOUNT_AUTHENTICATION_METHOD = "email"
+# ACCOUNT_EMAIL_CONFIRMATION_EMAIL_TEMPLATE = 'account/email_confirmation.html'
+
+# # Email sending
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+LOGIN_REDIRECT_URL = "/moochu/mainpage"
+LOGOUT_REDIRECT_URL = "/moochu/mainpage"
+ACCOUNT_LOGOUT_ON_GET = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# # 메일을 호스트하는 서버
+# EMAIL_PORT = '587'
+# # gmail과의 통신하는 포트
+# EMAIL_HOST_USER = '----'
+# # 발신할 이메일
+# EMAIL_HOST_PASSWORD = '-----'
+# # 발신할 메일의 비밀번호
+# EMAIL_USE_TLS = True
+# # TLS 보안 방법
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# # 사이트와 관련한 자동응답을 받을 이메일 주소,'webmaster@localhost'
+# 기본 프로필 이미지 경로 설정
+DEFAULT_PROFILE_IMAGE = 'static/chuchu.png'  # 기본 이미지 파일의 경로

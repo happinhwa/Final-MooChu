@@ -3,9 +3,11 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import collection, mongodb_collection1, mongodb_collection2, mongodb_collection3
 from datetime import datetime
 from .utils import render_paginator_buttons
+from django.http import Http404
 
-def movie_list(request, page_number):
-    page_number = int(page_number)  # 페이지 번호를 정수로 변환
+def movie_list(request, page_number=None):
+    if page_number is None:
+        page_number = int(request.GET.get('page', 1))  # 페이지 번호를 정수로 변환
 
     # Pagination settings
     total_movies = collection.count_documents({})
@@ -28,7 +30,12 @@ def movie_list(request, page_number):
         page_obj = paginator.page(paginator.num_pages)
     print("Current Page Number: ", page_number)
 
-    paginator_buttons = render_paginator_buttons(paginator, page_number)
+    url = f"/mlist/?page={page_number}"
+    if request.GET.get('page'):
+        return redirect(url)
+
+    paginator_buttons = render_paginator_buttons(page_obj)
+
     context = {
         'movies': page_obj,
         'page_obj': page_obj,
@@ -36,6 +43,9 @@ def movie_list(request, page_number):
         'paginator': paginator_buttons
     }
     return render(request, 'mlist/movie_list.html', context)
+
+
+
 
 
 

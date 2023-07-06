@@ -1,6 +1,8 @@
 from django import template
 from datetime import datetime
 
+
+# d -day 표시를 위한 filter
 register = template.Library()
 
 @register.filter

@@ -2,7 +2,7 @@ from django import template
 
 register = template.Library()
 
-@register.inclusion_tag('paginator_buttons.html')  # 변경된 데코레이터
+@register.inclusion_tag('paginator_buttons.html')
 def render_paginator_buttons(page_obj):
     page_number = page_obj.number
     paginator = page_obj.paginator

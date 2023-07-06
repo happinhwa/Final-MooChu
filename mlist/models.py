@@ -16,7 +16,7 @@ from pymongo import MongoClient
 mongodb_connection_uri = 'mongodb://root:root@localhost:27017/?authSource=admin'
 mongodb_client = MongoClient(mongodb_connection_uri)
 
-# Select the tmdb database
+# 몽고db에서 tmdb 컬렉션들만 가져오기
 mongodb_database_name = 'tmdb'
 mongodb_database = mongodb_client[mongodb_database_name]
 
@@ -48,18 +48,29 @@ mongodb_database3 = mongodb_client3[mongodb_database_name3]
 mongodb_collection_name3 = 'daumtheateer'
 mongodb_collection3 = mongodb_database3[mongodb_collection_name3]
 
-
 class Movie(models.Model):
     # Define your model fields here
     # ...
 
     class Meta:
-        db_table = 't2022'
+        db_table = 'collection'
         app_label = 'mongodb'
 
     def __str__(self):
         return self.title
 
+
+#class Movie(models.Model):
+#    # Define your model fields here
+#    # ...
+#
+#    class Meta:
+#        db_table = 't2022'
+#        app_label = 'mongodb'
+#
+#    def __str__(self):
+#        return self.title
+#
 
 class Movie1(models.Model):
     # Define your model fields here

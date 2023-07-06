@@ -1,0 +1,96 @@
+{% load static %}
+<!-- Navbar -->
+{% include "navbar/navbar1.html" %}
+.
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My page</title>
+  	<link rel="stylesheet" href="{% static 'font.css' %}">
+   <link rel="stylesheet" href="{% static 'mypage.css' %}">
+	  <script src="https://kit.fontawesome.com/e8d8cefab4.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div class="bookcover">
+      <div class="bookdot">
+        <div class="page">
+
+                    <!-- 왼쪽 프로필 페이지 구성요소 -->
+                    {% include "mypage/profile.html" %}
+
+
+          <div class="content-container">
+                            <!-- 오른쪽 페이지 상단 글씨  -->
+            <div class="header content-title">
+              <div class="content-title-name">"{{ user.nickname }}"님의 마이페이지</div>
+            </div>
+                            <!-- 오른쪽 페이지 구성 -->
+            <div class="box content-box">
+              <div class="scroll-box">
+                <div class="box-title">인생 명작 TOP 5</div>
+                <div class="poster-container">
+                  <a href="#"><img class="poster-img" src="/static/images/2.jpeg" ></a>
+                  <a href="#"><img class="poster-img" src="/static/images/3.jpeg" ></a>
+                  <a href="#"><img class="poster-img" src="/static/images/4.jpeg" ></a>
+                  <a href="#"><img class="poster-img" src="/static/images/5.jpeg" ></a>
+                  <a href="#"><img class="poster-img" src="/static/images/6.jpeg" ></a>
+                </div>
+                <br />
+                <br />
+                
+                <div class="box-right-flex">
+                  <div class="news-flex-box">
+                    <div class="news-box">
+                      <div class="follow-title"> 팔로워 LIST</div>
+                      {% if follower %}
+                      {% for follow in follower%}
+                      <div class="news-row">
+                        <div>
+                          <img class="follow-img" src="{{follow.follower.profile_img}}">
+                          <a href="{% url 'common:mypage' nickname=follow.follower.nickname %}"> {{ follow.follower.nickname }}</a>
+                        </div>
+                      </div>
+                      {% endfor %}
+                      {% else %}
+                      <div>
+                        <h3> 팔로워 목록이 없습니다.</h3>
+                      </div>
+                      {% endif %}
+    
+                    </div>
+                    <div class="update-box">
+                      <div class="follow-title"> 팔로잉 LIST</div>
+                      {% if following %}
+                      {% for follow in following%}
+                      <div class="menu-row">
+                        <div>
+                          <img class="follow-img" src="{{follow.following.profile_img}}">
+                          <a href="{% url 'common:mypage' nickname=follow.following.nickname %}"> {{ follow.following.nickname }}</a>
+                        </div>
+                      </div>
+                      {% endfor %}
+                      {% else %}
+                      <div>
+                        <h3> 팔로잉 목록이 없습니다.</h3>
+                      </div>
+                      {% endif %}
+            
+                    </div>
+                    
+                  </div>
+                </div>
+                
+                
+              </div>
+            </div>
+          </div>
+                    <!-- 메뉴 버튼 구성 요소-->
+                    {% include "mypage/menu.html" %}
+
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+```

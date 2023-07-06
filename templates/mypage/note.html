@@ -1,0 +1,92 @@
+{% load static %}
+<!-- Navbar -->
+{% include "navbar/navbar1.html" %}
+.
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My page-note</title>
+    <link rel="stylesheet" href="{% static 'font.css' %}">
+    <link rel="stylesheet" href="{% static 'mypage.css' %}">
+
+  </head>
+  <body>
+
+    <div class="bookcover">
+      <div class="bookdot">
+        <div class="page">
+           <!-- 왼쪽 프로필 페이지 구성요소 -->
+           {% include "mypage/profile.html" %}
+
+
+
+
+          <div class="content-container">
+            <div class="header content-title">
+              <div class="content-title-name">{{ user.nickname }}님의 마이페이지</div>
+            </div>
+            
+              <!-- 오른쪽 페이지 구성 -->
+            <div class="box content-box"> 
+              <div class="scroll-box">
+                <div class="box-title">"{{ master.nickname }}"에게 </div>
+                <div class="content-note main-section">
+                  <div class="guest-note">
+                    <div class="guest-info">작성칸&nbsp;
+                    </div>
+                    <div class="write-guestnote-form">
+                      <div class="guest-content">
+                        <div class="guest-profile">
+                            <img class="guest-image" src="{{ writer.profile_img }}" alt="방명록 프로필">
+                        </div>
+                        <div class="form-container">
+                          <form method="POST" action="{% url 'common:note' nickname=master.nickname %}">
+                            {% csrf_token %}
+                            <textarea name="content" rows="5" maxlength="500" required></textarea>
+                            <button class="button-input"type="submit">작성 완료</button>
+                          </form>
+                        </div>
+                      </div>
+                    
+                    </div>
+                  </div>
+                </div>
+                <div class="box-title" style="margin-top: 15px;">"{{ master.nickname }}"님의 방명록 ~</div>
+                {% if note %}
+                {% for note in note %}
+                <div class="content-note main-section">
+                  <div class="guest-note">
+                      <div class="guest-info">NO. {{ forloop.counter }}&nbsp;
+                        <span class="span-note">{{ note.writer.nickname }}</span>&nbsp;
+                        {{ note.created_at }}
+                        <a href ="{% url 'common:delete' guestnote_id=note.id %}" class="delete-button"><button class="delete-button">삭제</button></a>
+                      </div>
+                      <div class="guest-content">
+                          <div class="guest-profile">
+                              <a href="{% url 'common:mypage' nickname=note.writer.nickname %}"><img class="guest-image" src="{{ note.writer.profile_img }}" alt="방명록 프로필"></a>
+                          </div>
+                          <div class="guest-message">
+                              {{ note.content }}
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                  <h3> 작성된 방명록이 없습니다.</h3>
+                {% endif %}
+                
+                
+              </div>
+            </div>
+          </div>
+          <!-- 메뉴 버튼 구성 요소-->
+          {% include "mypage/menu.html" %}
+
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+```

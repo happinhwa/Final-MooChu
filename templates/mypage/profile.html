@@ -1,0 +1,48 @@
+<!-- 왼쪽 프로필 페이지 구성요소 -->
+<div class="profile-container">
+  <div class="header profile-title **font-neo**">
+    TODAY<span class="color-red"> 28</span> | TOTAL 234918
+  </div>
+                  <!-- 프로필 사진 -->
+  <div class="box profile-box">
+    <div class="profile-image">
+      <img class="profile-image-img" src="{{ master.profile_img }}" alt="프로필 이미지"/>
+    </div>
+            <!-- 프로필 사진 밑에 내용 -->
+    <div class="profile-text font-kyobohand">
+      <text>{{ master.nickname }} </text>
+    </div>
+    <div class="font-kyobohand">
+      <label style="font-weight: bolder;"> 한줄 소개 </label><br />
+      <text>{{ master.comment }}</text><br /><br />
+      <!-- <label style="font-weight: bolder;">온도 :</label><text> {{ master.temp }} </text><br /> -->
+      <label style="font-weight: bolder;">온도:</label><text> {{ master.temp }}°C </text>
+      <div class="thermometer">
+        <div class="temperature-bar">
+          <div class="temperature-fill" style="width: {{ master.temp }}%"></div>
+        </div>
+      </div>
+      <br />
+      <label style="font-weight: bolder;">팔로워 :</label><text> {{ follower_count }} 명</text><br />
+      <label style="font-weight: bolder;">팔로잉 :</label><text> {{ following_count }} 명</text>
+    </div>
+
+                <!-- 소개글 밑에 나오는 구성 -->
+            <!-- 팔로우 버튼을 넣으면 어떨지 고민중 -->
+    {% if writer.id != master.id %}
+      {% if allow %}        
+        <form action="{% url 'common:follow_de' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="master_id" value="{{ master.id }}">
+          <button class="follow-btn" type="submit">팔로우 취소</button>
+        </form>
+      {% else %}     
+        <form action="{% url 'common:follow' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="master_id" value="{{ master.id }}">
+          <button class="follow-btn" type="submit">팔로우</button>
+        </form>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>

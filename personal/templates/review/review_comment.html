@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>{{ review.title }}</h1>
+
+  <!-- 리뷰 내용 상자 추가 -->
+  <h3>리뷰 내용:</h3>
+  <div style="border: 1px solid black; padding: 10px; margin: 10;">
+    {{ review.content }}
+  </div>
+
+  <!-- 댓글 목록 -->
+  <h3>댓글 목록:</h3>
+  <div id="comment-list">
+    {% for comment in all_comments %}
+      <div>
+        {{ comment.user }} : {{ comment.content }}
+      </div>
+    {% endfor %}
+  </div>
+  
+  <!-- 댓글 작성 -->
+  <h3>댓글 작성하기:</h3>
+  <form method="post" idcomment-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button id="submit-comment" type="submit">댓글 작성하기</button>
+  </form>
+{% endblock %}
+
+<!-- 나머지 JavaScript 코드는 이전과 동일하 유지 -->
+{% block extra_js %}
+{% endblock %}

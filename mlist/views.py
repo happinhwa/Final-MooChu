@@ -5,14 +5,11 @@ from datetime import datetime
 from .utils import render_paginator_buttons
 from django.http import Http404
 
+# 전체 페이지 보여주기
 def redirect_to_movie_list(request):
     return redirect('mlist:mlist_page', page_number=1)
 #페이지 1으로 바로 리다이렉트하기 위함.
 
-from django.shortcuts import render, redirect
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import collection
-from .utils import render_paginator_buttons
 def movie_list(request, page_number=None):
     if page_number is None:
         page_number = int(request.GET.get('page', 1))
@@ -23,7 +20,7 @@ def movie_list(request, page_number=None):
     if page_number < 1:
         page_number = 1
 
-    movies = collection.find({}, {"overview": 1, "title": 1, "poster_path": 1})
+    movies = collection.find({}, {"genres": 1, "title": 1, "poster_path": 1, "overview": 1, "release_date": 1})
     movies = list(movies)
     paginator = Paginator(movies, per_page)
 
@@ -52,7 +49,23 @@ def movie_list(request, page_number=None):
 
 
 
+# 영화 디테일 보여주기
+from django.shortcuts import render
+from .models import collection
 
+def movie_detail(request, movie_id):
+    movie = collection.find_one({"_id": movie_id}, {"genres": 1, "title": 1, "poster_path": 1, "overview": 1, "release_date": 1})
+
+    if movie is None:
+        # 영화를 찾을 수 없는 경우 예외 처리
+        return render(request, 'mlist/movie_not_found.html')
+
+    context = {
+        'movie': movie
+    }
+    return render(request, 'mlist/movie_detail.html', context)
+
+    
 
 
 

@@ -1,73 +1,169 @@
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from .models import Genre
-import random
+from .forms import RegistrationForm,GenreSelectForm
+from django.contrib.auth import authenticate, login
+from .models import Genre,SelectedGenre,MovieRating
 from pymongo import MongoClient
-from .forms import RegistrationForm
+from bson.objectid import ObjectId
+from django.forms import ValidationError
 
-from django.utils.encoding import force_bytes
-
-try:
-    from django.utils.encoding import force_text
-except ImportError:
-    from django.utils.encoding import force_str as force_text
-
-
+## 회원가입 
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            # 이메일 인증 링크 생성
-            token = default_token_generator.make_token(user)
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-            domain = get_current_site(request).domain
-            link = f'http://{domain}/activate/{uid}/{token}/'
-            
-            # 이메일 전송
-            mail_subject = '회원가입 확인 이메일'
-            message = render_to_string('common/activation_email.html', {
-                'user': user,
-                'link': link,
-            })
-            email = EmailMessage(mail_subject, message, to=[user.email])
-            email.send()
-            
-            return redirect('registration_complete')
+            form.save()
+            return redirect('moochu:mainpage')
     else:
         form = RegistrationForm()
     return render(request, 'common/register.html', {'form': form})
 
-def registration_complete(request):
-    return render(request, 'common/registration_complete.html')
+def register_complete(request):
+    return render(request, 'common/register_complete.html')
 
-def genre_selection(request):
-    genres = Genre.objects.all()
-    return render(request, 'common/genre_selection.html', {'genres': genres})
+## 로그인 함수
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('moochu:mainpage')
+        else:
+            # 로그인 실패 처리
+            return render(request, 'common/login.html', context={'error': '로그인에 실패하였습니다.'})
+
+    else:
+        return render(request, 'common/login.html', {'error': ''})
+
+def mypage_home(request):
+    return render(request, 'mypage/mypage.html')
+
+def mypage_mylist(request):
+    return render(request, 'mypage/mylist.html')
+
+def mypage_reviews(request):
+    return render(request, 'mypage/reviews.html')
+
+def mypage_note(request):
+    list_=[1,2,3]
+    form = {"list_":list_}
+    return render(request, 'mypage/note.html', form)
 
 
+def mypage_edit(requset):
+    pass
+## 관심 장르 선택 함수
 
-def get_mongo_connection():
+GENRE_CHOICES = {
+    1: '액션',
+    2: '코미디',
+    3:'드라마',
+    4:'공포',
+    5:'스릴러',
+    6:'로맨스',
+    7:'전쟁'
+
+    # 나머지 번호와 장르를 추가하세요.
+}
+
+def get_genre_name(genre_id):
+    return GENRE_CHOICES.get(genre_id, 'Unknown')
+
+@login_required
+def movie_selection(request):
+    if request.method == 'POST':
+        message = ""
+        user = request.user
+
+        db = get_mongo_db()  # 기존에 사용된 MongoDB 접속 함수를 가져옵니다.
+
+        movies = db['movie'].find({})  # MongoDB에 저장된 모든 영화 정보를 가져옵니다.
+
+        for movie in movies:
+            movie_id = str(movie['_id'])
+            movie_title_key = f"movie_title_{movie_id}"
+            rating_key = f"rating_{movie_id}"
+            if movie_title_key in request.POST and rating_key in request.POST:
+                movie_title = request.POST[movie_title_key]
+                rating = request.POST[rating_key]
+
+                try:
+                    movie_rating = MovieRating(user=user, movie_title=movie_title, rating=rating)
+                    movie_rating.save()
+                    message = "영화 평점 저장이 완료되었습니다."
+                except ValidationError:
+                    message = "영화 평점 저장에 실패했습니다. 다시 시도해 주세요."
+            else:
+                message = "영화 평점 정보가 누락되었습니다."
+
+        return render(request, 'common/register_complete.html', {'message': message})
+    else:
+        client = MongoClient('mongodb://localhost:27017/')
+        db = client['test']
+        collection = db['movie']
+        #select_genres = SelectedGenre.objects.values_list('genre', flat=True)
+        select_genres = SelectedGenre.objects.filter(user=request.user).values_list('genre', flat=True)  # 가져온 필드를 사용하여 장르를 선택
+        select_genre_names = [get_genre_name(int(g)) for g in select_genres]  # 선택된 장르 번호를 이름으로 매핑
+
+        # 수정할 부분: 선택한 장르와 관련된 영화
+        movies = collection.find({"gen": {"$elemMatch": {"$in": select_genre_names}}})  
+        print(select_genres)
+
+        #movies = collection.find({"gen": {"$elemMatch": {"$in": list(select_genres)}}})
+        print(movies)
+
+        movie_str = []
+        for movie in movies:
+            movie['m_id'] = str(movie['_id'])
+            movie_str.append(movie)
+
+        return render(request, 'common/movie_selection.html', {'movies': movie_str})
+    
+def get_mongo_db():
     client = MongoClient('mongodb://localhost:27017/')
     db = client['test']
-    collection = db['movie']
-    return collection
-
-def get_recommended_movies(user_genres):
-    collection = get_mongo_connection()
-    movies = list(collection.find({"gen": {"$in": user_genres}})) # 회원가입시에 받은 장르들
-    random.shuffle(movies)
-    return movies[:5]
-
-def firstmovie(request):
-    # 사용자의 선택에 따른 장르를 얻어옵니다.
-    # 세션을 사용하는 경우, 아래와 같이 세션에서 장르를 가져옵니다.
-    user_genres = request.session.get('selected_genres', [])
-    recommended_movies = get_recommended_movies(user_genres)
-    return render(request, 'common/firstmovie_page.html', {'recommended_movies': recommended_movies})
+    return db
 
 
+def genre_selection(request):
+    if request.method == 'POST':
+        form = GenreSelectForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            selected_genres = form.cleaned_data.get('selected_genres')
+
+            for genre in selected_genres: 
+                # 이미 Genre 객체이므로 genre_id를 사용할 필요가 없습니다.
+                selected_genre = SelectedGenre(user=user, genre=genre) 
+                selected_genre.save()
+
+            return redirect('common:movie_selection')
+    else:
+        form = GenreSelectForm()
+        genres = Genre.objects.all()
+
+        return render(request, 'common/genre_selection.html', {'form': form, 'genres': genres})
+
+
+
+
+@login_required
+def save_genre(request):
+    all_genres = get_all_genres()
+
+    if request.method == 'POST':
+      form = GenreSelectForm(request.POST, genre_choices=all_genres)
+      if form.is_valid():
+            selected_genres = form.cleaned_data['selected_genres']
+            for genre_choice_id in selected_genres:
+                choice_text = form.fields['selected_genres'].choices_dict.get(genre_choice_id)
+                selected_genre = SelectedGenre(genre=choice_text)
+                selected_genre.save()
+                print(f'장르 저장 완료: {choice_text}')  
+            return render(request, 'common/genre_selection.html')
+    else:
+        form = GenreSelectForm(genre_choices=all_genres)
+
+    return render(request, 'common/genre_selection.html', {'form': form})

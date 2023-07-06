@@ -19,16 +19,16 @@ urlpatterns = [
     path('mypage/<str:nickname>/edit', views.mypage_edit, name="edit"),
 
     ## 방명록 삭제
-    path('delete/<int:guestnote_id>/', views.delete, name="delete"),
+    # path('delete/<int:guestnote_id>/', views.delete, name="delete"),
 
-    ## 사용자의 리뷰 전체 list
-    path('reviews/', views.reviews_total, name="reviews_total"),
+    # ## 사용자의 리뷰 전체 list
+    # path('reviews/', views.reviews_total, name="reviews_total"),
 
-    ## 사용자의 평점 전체 list
-    path('votes/', views.votes, name="votes"),
+    # ## 사용자의 평점 전체 list
+    # path('votes/', views.votes, name="votes"),
 
-    ## 팔로우 
-    path('follow/create', views.follow, name="follow"),
-    ## 팔로우 취소 
-    path('follow/delete', views.follow_de, name="follow_de"),
+    # ## 팔로우 
+    # path('follow/create', views.follow, name="follow"),
+    # ## 팔로우 취소 
+    # path('follow/delete', views.follow_de, name="follow_de"),
 ]

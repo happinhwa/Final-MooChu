@@ -52,7 +52,7 @@ def mypage_note(request):
     return render(request, 'mypage/note.html', form)
 
 
-def mypage_edit(requset):
+def mypage_edit(request):
     pass
 ## 관심 장르 선택 함수
 

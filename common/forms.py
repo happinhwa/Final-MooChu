@@ -1,15 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-<<<<<<< HEAD
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from .models import Genre
-=======
+from .models import Genre,User, GuestNote
 from django.contrib.auth.models import User
-from .models import User, GuestNote
-from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
->>>>>>> 83a6f906ce52793cf023ad350d400459f3115126
+
 
 User = get_user_model()
 
@@ -51,7 +46,6 @@ class RegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-<<<<<<< HEAD
         fields = ['username', 'password1', 'password2', 'nickname', 'birth', 'gender', 'email']
 
 class GenreSelectForm(forms.Form):
@@ -60,8 +54,7 @@ class GenreSelectForm(forms.Form):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-=======
-        fields = ['username', 'password1', 'password2', 'nickname', 'birth', 'gender','email']
+       
 
 class GuestNoteForm(forms.Form):
     content = forms.CharField(widget=forms.Textarea(attrs={'rows': 5}), max_length=500)
@@ -76,4 +69,3 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['nickname', 'fav_genre', 'profile_img', 'comment']
->>>>>>> 83a6f906ce52793cf023ad350d400459f3115126

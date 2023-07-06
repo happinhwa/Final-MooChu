@@ -15,7 +15,7 @@ class User(AbstractUser):
     created_at = models.DateField(auto_now_add=True)
     temp = models.DecimalField(max_digits=5, decimal_places=2,default=36.5)
     profile_img = models.ImageField(upload_to="profiles/", default="/static/abc.jpg")
-    comment = models.CharField(max_length=100, default="한줄소개가 아직 없습니다.")
+    # comment = models.CharField(max_length=100, default="한줄소개가 아직 없습니다.")
     # visit_count = models.IntegerField(default=0)
     
     

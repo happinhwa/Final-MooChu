@@ -9,7 +9,7 @@
 	<ul class="navbar-nav ml-auto">
         {% if user.is_authenticated %}
             <li class="nav-item"><a class="nav-link1" href="#">{{ user.username }} 님 환영합니다.</a></li>
-			<li class="nav-item"><a class="nav-link1" href="{% url 'account_logout' %}">로그아웃</a></li>
+			<li class="nav-item"><a class="nav-link1" href="{% url 'moochu:mainpage' %}">로그아웃</a></li>
         {% else %}
 			<li class="nav-item"><a class="nav-link1" href="{% url 'account_login' %}">로그인</a></li>
 			<li class="nav-item"><a class="nav-link1" href="{% url 'common:register' %}">회원가입</a></li>

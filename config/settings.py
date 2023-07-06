@@ -80,6 +80,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "config.wsgi.application"
+AUTH_USER_MODEL = 'common.User'
 
 
 # Database
@@ -88,24 +89,24 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':'final_db',
-        'USER':'root',
-        'PASSWORD':'1234',
+        'NAME':'final',
+        'USER':'encore',
+        'PASSWORD':'tlrdl13!#',
         'HOST':'127.0.0.1',
         'PORT':'4000'
     },
-    'test_mongo': {
-        'ENGINE': 'djongo',
-        'NAME': 'final_db',
-        'CLIENT': {
-            'host': 'localhost',
-            'port': '4001',
-            'username': 'root',
-            'password': 'root',
-            'authSource': 'admin',
-            'authMechanism': 'SCRAM-SHA-1'
-        }
-    }
+    # 'test_mongo': {
+    #     'ENGINE': 'djongo',
+    #     'NAME': 'final_db',
+    #     'CLIENT': {
+    #         'host': 'localhost',
+    #         'port': '4001',
+    #         'username': 'root',
+    #         'password': 'root',
+    #         'authSource': 'admin',
+    #         'authMechanism': 'SCRAM-SHA-1'
+    #     }
+    # }
 }
 
 

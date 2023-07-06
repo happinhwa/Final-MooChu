@@ -1,16 +1,23 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}
 Movie List
 {% endblock %}
 
-{% block extra_css %}
+{% block content %}
 <style>
+    .title-style {
+        color: #2C2E34;
+        text-shadow: -1px 0 #96FC72, 0 1px #96FC72, 1px 0 #96FC72, 0 -1px #96FC72;
+        font-size: 32px;
+        margin-top: 20px;
+    }
+    
     .movie-box {
-        border: 1px solid #ccc;
+        border: 1px solid #96FC72;
         padding: 15px;
         margin-bottom: 20px;
-        background-color: #f9f9f9;
+        background-color: #2C2E34;
         border-radius: 5px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
@@ -20,14 +27,18 @@ Movie List
     }
 
     .movie-box, .movie-box a {  /* 글자색 흰색으로 변경 */
-        color: white;
+        color: #f9f8e3;
     }
 </style>
-{% endblock %}
 
-{% block content %}
-<h1>Movie List</h1>
+<header>
+    <h1 class="'title-style">
+        Movie List
+    </h1>
+</header>
+
 <div class="movie-container">
+
     {% for movie in movies %}
         <div class="movie-box">
             <a href="{% url 'review:movie_detail' movie_id=movie.id %}">{{ movie.title }}</a>
@@ -43,5 +54,7 @@ Movie List
             <a href="{% url 'review:write_review' movie_id=movie.id %}">Write a Review</a>
         </div>
     {% endfor %}
+
 </div>
+
 {% endblock %}

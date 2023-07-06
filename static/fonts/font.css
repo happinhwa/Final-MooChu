@@ -3,7 +3,18 @@
     src: url('/static/fonts/SingleDay.ttf') format('truetype');
 }
 
+/* navbar 메뉴 영문 글씨체 */
 @font-face {
     font-family: 'Chonburi';
     src: url('/static/fonts/Chonburi-Regular.ttf') format('truetype');
+}
+
+/* 한글 글씨체 */
+@font-face {
+    font-family: 'NanumBarunpen';
+    src: url('/static/fonts/NanumBarunpenB.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'NanumBarunpen';
+    src: url('/static/fonts/NanumBarunpenR.ttf') format('truetype');
 }

@@ -2,31 +2,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>MooChu</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-	<!-- Bootstrap JS -->
-	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script>
-	<!-- Font Awesome -->
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css">
-	<!-- Custom CSS -->
-	<link rel="stylesheet" href="{% static 'styles.css' %}">
-
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'chuchu.png' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="{% static 'style-navbar.css' %}">
 </head>
-<body style="background: #2C2E34; background-size: 100% 100%;">
-	<!-- Navbar1 -->
-	{% include "navbar/navbar3.html" %}
-	<!-- Navbar2 -->
+<body style="background-color: #2C2E34;">
+    <!-- Navbar -->
+    {% include "navbar/navbar1.html" %}
+    <!-- Content -->
+    <div>
+        {% block content %}
+        {% endblock %}
+    </div>
 
-  <!-- 메인 리스트 -->
-	{% block content %}
-	{% endblock %}
-  {% block script %}
-   {% endblock %}
-	<!-- Bootstrap JS -->
-	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
-	integrity="sha384-tB6Ya1gLuY0FLKbLk+cfRtXmU6N3X/l1EZyLpZ
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+</body>
+</html>

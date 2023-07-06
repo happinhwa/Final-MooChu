@@ -1,0 +1,16 @@
+.page-button {
+    width: 200px;
+    height: 50px;
+    flex-shrink: 0;
+    background: #202020;
+    color: #96FC72;
+    border-width: 0.2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: NanumBarunpen;
+  }
+  
+
+.page-button:hover {
+    background: #7FE161;
+}

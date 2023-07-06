@@ -1,25 +1,27 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'mlist.css' %}">
+{% load i18n %}
+
 {% if page_obj.has_previous %}
-  <a href="?page=1">&laquo;</a>
-  <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+  <a href="/mlist/page=1/?page=1" class="page-button">&laquo;</a>
+  <a href="/mlist/page={{ page_obj.previous_page_number }}/?page={{ page_obj.previous_page_number }}" class="page-button">{% trans 'previous' %}</a>
 {% else %}
-  <span>&laquo;</span>
-  <span>previous</span>
+  <span class="page-button">&laquo;</span>
+  <span class="page-button">{% trans 'previous' %}</span>
 {% endif %}
 
 {% for button_page, is_current in paginator %}
     {% if button_page == -1 %}
         <span class="ellipsis">...</span>
     {% else %}
-        <a href="?page={{ button_page }}" {% if is_current %}class="current"{% endif %}>{{ button_page }}</a>
+        <a href="/mlist/page={{ button_page }}/?page={{ button_page }}" class="page-button {% if is_current %}current{% endif %}">{% if is_current %}<strong>{{ button_page }}</strong>{% else %}{{ button_page }}{% endif %}</a>
     {% endif %}
-    {{ button_page }}/<!-- 추가된 코드 -->
 {% endfor %}
 
-
 {% if page_obj.has_next %}
-  <a href="?page={{ page_obj.next_page_number }}">next</a>
-  <a href="?page={{ paginator.num_pages }}">&raquo;</a>
+  <a href="/mlist/page={{ page_obj.next_page_number }}/?page={{ page_obj.next_page_number }}" class="page-button">{% trans 'next' %}</a>
+  <a href="/mlist/page={{ paginator.num_pages }}/?page={{ paginator.num_pages }}" class="page-button">&raquo;</a>
 {% else %}
-  <span>next</span>
-  <span>&raquo;</span>
+  <span class="page-button">{% trans 'next' %}</span>
+  <span class="page-button">&raquo;</span>
 {% endif %}

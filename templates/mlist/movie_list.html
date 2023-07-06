@@ -4,7 +4,7 @@
 <div class="container mt-3">
   <div class="row">
     <!-- Movie Section -->
-    {% for movie in movies %}
+    {% for movie in page_obj %}
       <div class="col-lg-3 col-md-4 col-sm-6">
         <div class="card mb-4">
           <img class="poster lazyload lazyloaded"
@@ -16,6 +16,7 @@
         </div>
       </div>
     {% endfor %}
+
   </div>
 
 <!-- Page Buttons -->

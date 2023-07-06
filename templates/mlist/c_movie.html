@@ -2,11 +2,13 @@
 
 {% block content %}
 <div class="container mt-3">
-  <div class="row flex-row flex-nowrap overflow-auto">
-    {% for dday_group in page_obj %}
+  {% for dday_group in page_obj %}
+    <div class="row">
       <div class="col-12">
-        <h3 class="text-center d-day-{{ dday_group.0 }}">D-{{ forloop.counter }}</h3>
+        <h3 class="d-day-{{ dday_group.0 }} float-left text-white">D-{{ forloop.counter }}</h3>
       </div>
+    </div>
+    <div class="row flex-row flex-nowrap overflow-auto">
       {% for movie in dday_group.1 %}
         <div class="col-lg-3 col-md-4 col-sm-6 mb-3 d-day-{{ dday_group.0 }}">
           <div class="card">
@@ -21,16 +23,16 @@
             {% endif %}
             <div class="card-body text-center">
               <h5 class="card-title">{{ movie.title }}</h5>
-              <p class="card-text d-day-label">D-{{ forloop.parentloop.counter }}</p> <!-- Display "D-n" as a label -->
-              <p class="card-text">{{ movie.num|date:"Y.m.d" }}</p> <!-- Display the formatted date -->
+              <p class="card-text d-day-label">D-{{ forloop.parentloop.counter }}</p> <!-- "D-n"을 레이블로 표시 -->
+              <p class="card-text">{{ movie.num|date:"Y.m.d" }}</p> <!-- 포맷된 날짜를 표시 -->
             </div>
           </div>
         </div>
       {% endfor %}
-    {% endfor %}
-  </div>
-  <div class="row">
-    <div class="col-12 d-flex justify-content-end">
+    </div>
+  {% endfor %}
+  <div class="row justify-content-center" style="text-align: center;">
+    <div class="col-12 text-center"  style="text-align: center;"> <!-- 수정된 부분 -->
       <button class="btn btn-primary btn-sm mr-2" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
         <i class="fa fa-chevron-left"></i>
       </button>
@@ -40,6 +42,4 @@
     </div>
   </div>
 </div>
-
-
 {% endblock %}

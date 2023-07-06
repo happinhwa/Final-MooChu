@@ -4,7 +4,7 @@ from . import views
 app_name = 'mlist'
 
 urlpatterns = [
-    path('page=<int:page_number>/', views.movie_list, name='mlist_page'),  # 페이지 번호를 동적 경로로 변경합니다.
-    path('', views.movie_list, name='mlist'),  # 페이지 번호를 동적 경로로 변경합니다.
-    path('comming', views.c_net, name='comming_soon'), # 개봉예정
+    path('', views.redirect_to_movie_list, name='redirect_to_movie_list'),  # 새로운 URL 패턴 추가
+    path('page=<int:page_number>/', views.movie_list, name='mlist_page'),
+    path('comming', views.c_net, name='comming_soon'),
 ]

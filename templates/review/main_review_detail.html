@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>리뷰 댓글 </h2>
+
+    <div id="comment-list" style="height: 400px; overflow-y: scroll;">
+        <h2>{{ review.movie.title }} 리뷰</h2>
+        <h3>리뷰 작성자: {{ review.user.username }}</h3>
+        <p>관람일: {{ review.watched_date }}</p>
+        <p>리뷰 내용:</p>
+        <p>{{ review.content }}</p>
+        <p>작성일: {{ review.timestamp }}</p>
+    </div>
+    
+    <a href="{% url 'review:review_comment' review_id=review.pk %}">댓글 작성</a>
+
+
+{% endblock %}
+
+{% block js %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        function fetchComments() {
+            $.ajax({
+                url: '{% url "review:fetch_comments" review_id=review.pk %}',
+                type: 'GET',
+                success: function(data) {
+                    var content = '';
+                    for(var i = 0; i < data.comments.length; i++) {
+                        content += '<p><strong>' + data.comments[i].user + '</strong>: ' + data.comments[i].content + '</p>';
+                    }
+                    $('#comment-list').html(content);
+                },
+                complete: function() {
+                    setTimeout(fetchComments, 5000);
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            fetchComments();
+        });
+
+        $("#comment-form").submit(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '{% url "review:comment_review" pk=review.id %}',
+                type: 'POST',
+                data: $(this).serialize(),
+                beforeSend:function(xhr, settings){
+                    xhr.setRequestHeader("X-CSRFToken", $('input[name="csrfmiddlewaretoken"]').val());
+                }, 
+                success: function() {
+                    $("#comment-form").trigger("reset");
+                }
+            })
+        });
+    </script>
+{% endblock %}

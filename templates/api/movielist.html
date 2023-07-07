@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Movie List{% endblock %}
+
+{% block content %}
+<style>
+    .url{
+        color:white;
+    }
+</style>
+<h1>Movie List</h1>
+
+<!-- OTT 버튼들 -->
+<a class="url" href="{% url 'ott_movie_list' ott='Apple' %}">Apple</a>
+<a href="{% url 'ott_movie_list' ott='CineFox' %}">CineFox</a>
+<a href="{% url 'ott_movie_list' ott='Coupang' %}">Coupang</a>
+<a href="{% url 'ott_movie_list' ott='Disney' %}">Disney</a>
+<a href="{% url 'ott_movie_list' ott='Google' %}">Google</a>
+<a href="{% url 'ott_movie_list' ott='Laftel' %}">Laftel</a>
+<a href="{% url 'ott_movie_list' ott='Naver' %}">Naver</a>
+<a href="{% url 'ott_movie_list' ott='Netflix' %}">Netflix</a>
+<a href="{% url 'ott_movie_list' ott='Primevideo' %}">Primevideo</a>
+<a href="{% url 'ott_movie_list' ott='Tving' %}">Tving</a>
+<a href="{% url 'ott_movie_list' ott='UPlus' %}">UPlus</a>
+<a href="{% url 'ott_movie_list' ott='Watcha' %}">Watcha</a>
+<a href="{% url 'ott_movie_list' ott='Wavve' %}">Wavve</a>
+
+<!-- 다른 OTT 버튼들 추가 -->
+<div id="movie-list">
+    {% for movie in movies %}
+    <img src="{{ movie.posterImageUrl }}" alt="{{ movie.title }}">
+    {% endfor %}
+</div>
+
+<script src="{% static 'js/main.js' %}"></script> <!-- JavaScript 파일 로드 -->
+{% endblock %}
+
+{% comment %} style="color:white;" {% endcomment %}

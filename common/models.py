@@ -47,11 +47,11 @@ class Genre(models.Model):
         return self.name
     
 
-# class GuestNote(models.Model):
-#     main = models.ForeignKey(User, on_delete=models.CASCADE)
-#     writer = models.ForeignKey(User, on_delete=models.RESTRICT)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     content = models.TextField()
+class GuestNote(models.Model):
+    main = models.ForeignKey(User, on_delete=models.CASCADE, related_name='main')
+    writer = models.ForeignKey(User, on_delete=models.RESTRICT, related_name='writer')
+    created_at = models.DateTimeField(auto_now_add=True)
+    content = models.TextField()
 
-#     def __str__(self):
-#         return self.main
+    def __str__(self):
+        return str(self.main)

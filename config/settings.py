@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "common",
     "board",
     "moochu",
+    "api"
 ]
 
 MIDDLEWARE = [
@@ -80,27 +81,17 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':'final_db',
-        'USER':'root',
-        'PASSWORD':'1234',
-        'HOST':'127.0.0.1',
-        'PORT':'4000'
-    },
-    'test_mongo': {
-        'ENGINE': 'djongo',
-        'NAME': 'final_db',
-        'CLIENT': {
-            'host': 'localhost',
-            'port': '4001',
-            'username': 'root',
-            'password': 'root',
-            'authSource': 'admin',
-            'authMechanism': 'SCRAM-SHA-1'
-        }
-    }
+
 }
+
+# TMDB 데이터베이스 연결 설정
+TMDB_MONGODB_URI = 'mongodb://localhost:27017/'  # TMDB 데이터베이스의 MongoDB URI를 입력해주세요.
+TMDB_MONGODB_NAME = 'TMDB'  # TMDB 데이터베이스의 이름을 입력해주세요.
+
+
+# OTT 연결 설정
+OTT_MONGODB_URI = 'mongodb://localhost:27017/'  # OTT 데이터베이스의 MongoDB URI를 입력해주세요.
+OTT_MONGODB_NAME = 'OTT'  # OTT 데이터베이스의 이름을 입력해주세요.
 
 
 # Password validation

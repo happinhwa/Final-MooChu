@@ -41,6 +41,7 @@ class follow(models.Model):
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
     following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
 
+#장르목록 테이블
 class Genre(models.Model):
     id = models.IntegerField(primary_key=True)
     genre = models.CharField(max_length=10, unique=True)  # 테이블 열 이름과 일치하도록 변경
@@ -48,15 +49,16 @@ class Genre(models.Model):
         db_table = 'genres2'  # 원래 있던 final.genres2를 메타로 설정
     def __str__(self):
         return self.genre
-    
-class SelectedGenre(models.Model):
+
+#선택한 장르 테이블
+class SelectedGenre(models.Model): 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    genre = models.ForeignKey(Genre, on_delete=models.CASCADE)  # ForeignKey로 변경
+    genre = models.ForeignKey(Genre, on_delete=models.CASCADE) 
 
     class Meta:
         unique_together = ['user', 'genre']
 
-        
+#영화평점 테이블
 class MovieRating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE )
     movie_title = models.CharField(max_length=255)

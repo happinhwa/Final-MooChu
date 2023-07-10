@@ -1,20 +1,55 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    .reviews {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+    }
+    .reviews h2 {
+        text-align:center;
+        color:white;
+      }
+    #comment-list {
+      height: 400px; 
+      overflow-y: scroll;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    #comment-list::-webkit-scrollbar {
+      display: none;
+    }
+</style>
+<div class="reviews h2">
     <h2>리뷰 댓글 </h2>
+</div>
 
-    <div id="comment-list" style="height: 400px; overflow-y: scroll;">
-        <h2>{{ review.movie.title }} 리뷰</h2>
-        <h3>리뷰 작성자: {{ review.user.username }}</h3>
-        <p>관람일: {{ review.watched_date }}</p>
-        <p>리뷰 내용:</p>
-        <p>{{ review.content }}</p>
-        <p>작성일: {{ review.timestamp }}</p>
+<div class="reviews">
+    <h3>리뷰 작성자: {{ review.user.username }}</h3>
+    <p>작성일: {{ review.timestamp }}</p>
+    <p>리뷰 내용:</p>
+    <p>{{ review.content }}</p>
+    <hr>
+
+    <div id="comment-list">
+        {% for comment in comments %}
+            <p><strong>{{ comment.user }}</strong>: {{ comment.re_comment }}</p>
+        {% endfor %}
     </div>
+
+    <hr>
     
-    <a href="{% url 'review:review_comment' review_id=review.pk %}">댓글 작성</a>
-
-
+    <form id="comment-form" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <textarea name="content" id="content" rows="15"></textarea>
+        <button type="submit" class="btn btn-primary">작 성</button>
+    </form>
+</div>
+    
 {% endblock %}
 
 {% block js %}

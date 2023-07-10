@@ -1,10 +1,10 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import mainpage
+from . import views
 
 app_name = 'moochu'
 
 urlpatterns =[
-    path('', mainpage, name="main"),
+    path('main', views.main, name="main"),
 ]

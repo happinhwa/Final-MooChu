@@ -293,3 +293,8 @@ cython_debug/
 .DS_Store
 >>>>>>> 5678100066b68c435f637542676632b111c0c452
 >>>>>>> bb040a2dd3558d8c4a0bfaaeda1213fdb93b2fc2
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.sqlite3

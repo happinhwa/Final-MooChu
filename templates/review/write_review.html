@@ -9,19 +9,6 @@
 
 <form method="post" action="{% url 'review:write_review' movie.id %}">
     {% csrf_token %}
-    <div>
-        <img src="{{ movie.poster }}" alt="{{ movie.title }} 포스터">
-        <div>
-            <p>{{ movie.title }}</p>
-            <p>{{ movie.genre }}</p>
-            <p>{{ movie.release_date.year }}</p>
-        </div>
-    </div>
-
-    <div>
-      <label for="{{ form.watched_date.auto_id }}">언제 감상하셨나요?:</label>
-      {{ form.watched_date }}
-    </div>
 
     <div>
         <label for="{{ form.content.auto_id }}">간단히 기록하기:</label>

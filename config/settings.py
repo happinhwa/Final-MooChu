@@ -40,13 +40,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'django.contrib.sites',
     "common",
     "board",
     "moochu",
     "allauth",
     "allauth.account",
-    # "allauth.socialaccount",
+    "allauth.socialaccount",
     "review",
 ]
 
@@ -161,8 +160,8 @@ AUTHENTICATION_BACKENDS = [
 # # Email sending
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-LOGIN_REDIRECT_URL = "/moochu/mainpage"
-LOGOUT_REDIRECT_URL = "/moochu/mainpage"
+LOGIN_REDIRECT_URL = "/moochu/main"
+LOGOUT_REDIRECT_URL = "/moochu/main"
 ACCOUNT_LOGOUT_ON_GET = True
 # EMAIL_HOST = 'smtp.gmail.com'
 # # 메일을 호스트하는 서버

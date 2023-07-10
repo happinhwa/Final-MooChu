@@ -16,3 +16,13 @@ class CommentsForm(forms.ModelForm):
     class Meta:
         model = Comments
         fields = ['re_comment']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.fields["re_comment"].label = "댓글"
+        self.fields["re_comment"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "댓글을 입력하세요."
+        })
+

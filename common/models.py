@@ -43,10 +43,6 @@ class Genre(models.Model):
     def __str__(self):
         return self.name
   
-<<<<<<< HEAD
-=======
-
->>>>>>> 214b3c0ad96799390b925d4700c4ae81d8f0edb5
 class GuestNote(models.Model):
     main = models.ForeignKey(User, on_delete=models.CASCADE, related_name='main')
     writer = models.ForeignKey(User, on_delete=models.RESTRICT, related_name='writer')

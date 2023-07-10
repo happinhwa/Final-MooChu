@@ -23,10 +23,10 @@ def movie_detail(request, movie_id):
 
 # 구현해야 하는 리뷰 기능들
 
-def main_review_list(request):
-    user = request.user
-    reviews = Review.objects.filter(user=user).order_by('-timestamp')
-    context = {'reviews': reviews}
+def main_review_list(request, movie_id):
+    movie = Movie.objects.get(pk=movie_id)
+    reviews = Review.objects.filter(movie_id=movie_id).order_by('-timestamp')
+    context = {'movie':movie, 'reviews': reviews}
     return render(request, 'review/main_review_list.html', context)
 
 def main_review_detail(request, review_id):
@@ -35,6 +35,7 @@ def main_review_detail(request, review_id):
 
 
 def write_review(request, movie_id):
+    movie = Movie.objects.get(pk=movie_id)
     if request.method == "POST":
         form = ReviewForm(request.POST)
         if form.is_valid():
@@ -42,13 +43,13 @@ def write_review(request, movie_id):
             review.user = request.user
             review.movie_id = movie_id
             review.save()
-            return HttpResponseRedirect(reverse('review:main_review_list'))
+            return HttpResponseRedirect(reverse('review:main_review_list', args=[movie_id])) 
     else:
         form = ReviewForm()
-        movie = Movie.objects.get(pk=movie_id)
-        context = {'form': form, 'movie': movie}
+    context = {'form': form, 'movie': movie}
          
     return render(request, 'review/write_review.html', context)
+
 
 """
 def review_comment(request, review_id):

@@ -5,7 +5,7 @@ app_name = 'review'
 
 urlpatterns = [
     # 리뷰
-    path('main_review_list/', views.main_review_list, name='main_review_list'),
+    path('main_review_list/<int:movie_id>/', views.main_review_list, name='main_review_list'),
     path('main_review_detail/<int:review_id>/', views.main_review_detail, name='main_review_detail'),
     path('write_review/<int:movie_id>/', views.write_review, name='write_review'),
     path('movies/', views.movie_list, name='movie_list'),

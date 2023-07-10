@@ -8,7 +8,7 @@ class Movie(models.Model):
     release_date = models.DateField()
     director = models.CharField(max_length=255)
     cast = models.TextField()
-    synopsis = models.TextField(default="This is the default synopsis.")
+    synopsis = models.TextField(default="작성된 영화 줄거리가 없습니다.")
     def __str__(self):
         return self.title
     class Meta:
@@ -16,10 +16,12 @@ class Movie(models.Model):
         app_label = 'review'
 
 class Review(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    review = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review_writer')
+    review = models.TextField(default="작성된 리뷰가 없습니다.")
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(default=timezone.now)
+    liker = models.ManyToManyField(User, related_name='review_liker')
+    vote = models.FloatField()
   
     def __str__(self):
         return self.content
@@ -29,13 +31,13 @@ class Review(models.Model):
 
 class Comments(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comments')
-    review = models.ForeignKey(Review, on_delete=models.CASCADE)
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='comments')
     re_comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
   
     def __str__(self):
-        return self.content
+        return self.re_comment
     class Meta:
         db_table = 'comment'
         app_label = 'review'

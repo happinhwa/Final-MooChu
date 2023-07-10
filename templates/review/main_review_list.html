@@ -5,20 +5,56 @@
 {% endblock %}
 
 {% block content %}
-<h1>리뷰 목록</h1>
+<style>
+.reviews {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
 
-<div class="reviews">
+.reviews h1 {
+  text-align:center;
+  color:white;
+}
+.box {
+    width: 300px;
+    height: 200px;
+    border: 2px solid #FCA472;
+    padding: 20px;
+    margin: 20px auto;
+    display: block; 
+}
+</style>
+
+<div class="reviews h1">
+<h1>리뷰 목록</h1>
+</div>
+
+<div class="reviews box">
     {% for review in reviews %}
         <div class="review-box">
-            <h3>{{ review.user.username }} 님이 작성한 리뷰</h3>
-            <p>영화: {{ review.movie.title }}</p>
-            <p>관람일: {{ review.watched_date }}</p>
-            <p>리뷰 내용: {{ review.content|truncatechars:30 }}<a href="{% url 'review:main_review_detail' review_id=review.pk %}">...더보기</a></p>
-            <p>작성일: {{ review.timestamp }}</p>
+            <h3>작성자: {{ review.user.username }}</h3>
+            <p>작성일: {{review.timestamp }}</p>
+            <p>리뷰 내용:</p>
+            <p>{{ review.review |truncatechars:30 }}<a href="{% url 'review:main_review_detail' review_id=review.pk %}">...더보기</a></p>
+            <p>좋아요 수: {{ review.like }}</p>
+            <p>댓글 수: {{ review.vote }}</p>
+            <hr>
         </div>
     {% empty %}
         <p>아직 작성된 리뷰가 없습니다.</p>
     {% endfor %}
+</div>
+<div>
+    <!-- 좋아요 카운트 표시 -->
+    <p>좋아요 수: {{ review.like_count }}</p>
+
+    <!-- 댓글 카운트 표시 (Comment 모델이 있어야 함) -->
+    <p>댓글 수: {{ review.comment_count }}</p>
+
+    <!-- 투표 점수 표시 -->
+    <p>투표 점수: {{ review.vote }}</p>
 </div>
 
 {% endblock %}

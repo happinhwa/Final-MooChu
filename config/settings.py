@@ -101,7 +101,7 @@ DATABASE_ROUTERS = ['config.router.MongoDBRouter']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_db',
+        'NAME': 'mysql',
         'USER': 'root',
         'PASSWORD': '1234',
         'HOST': '127.0.0.1',

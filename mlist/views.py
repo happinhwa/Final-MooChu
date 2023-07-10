@@ -50,20 +50,20 @@ def movie_list(request, page_number=None):
 
 
 # 영화 디테일 보여주기
-from django.shortcuts import render
-from .models import collection
-
-def movie_detail(request, movie_id):
-    movie = collection.find_one({"_id": movie_id}, {"genres": 1, "title": 1, "poster_path": 1, "overview": 1, "release_date": 1})
-
-    if movie is None:
-        # 영화를 찾을 수 없는 경우 예외 처리
-        return render(request, 'mlist/movie_not_found.html')
-
-    context = {
-        'movie': movie
-    }
-    return render(request, 'mlist/movie_detail.html', context)
+#from django.shortcuts import render
+#from .models import collection
+#
+#def movie_detail(request, movie_id):
+#    movie = collection.find_one({"_id": movie_id}, {"genres": 1, "title": 1, "poster_path": 1, "overview": 1, "release_date": 1})
+#
+#    if movie is None:
+#        # 영화를 찾을 수 없는 경우 예외 처리
+#        return render(request, 'mlist/movie_not_found.html')
+#
+#    context = {
+#        'movie': movie
+#    }
+#    return render(request, 'mlist/movie_detail.html', context)
 
     
 

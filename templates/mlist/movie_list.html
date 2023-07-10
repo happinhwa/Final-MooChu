@@ -7,17 +7,16 @@
     {% for movie in page_obj %}
       <div class="col-lg-3 col-md-4 col-sm-6">
         <div class="card mb-4">
-          <a href="{% url 'mlist:movie_detail' movie_id=movie._id %}">
-            <img class="poster lazyload lazyloaded"
-                  src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/{{ movie.poster_path }}"
-                  alt="{{ movie.title }}">
-          </a>
+          <img class="poster lazyload lazyloaded"
+                src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/{{ movie.poster_path }}"
+                alt="{{ movie.title }}">
           <div class="card-body text-center">
             <h5 class="card-title">{{ movie.title }}</h5>
           </div>
         </div>
       </div>
     {% endfor %}
+
   </div>
 
 <!-- Page Buttons -->

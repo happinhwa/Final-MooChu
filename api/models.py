@@ -45,7 +45,7 @@ class OTTMovie:
 
     def save(self):
         self.collection.insert_one({
-            'posterImageUrl': self.posterImageUrl
+            'posterImageUrl': self.posterImageUrl.lower()
         })
 
     @classmethod

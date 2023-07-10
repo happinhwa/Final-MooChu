@@ -54,6 +54,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -91,7 +92,7 @@ TMDB_MONGODB_NAME = 'TMDB'  # TMDB 데이터베이스의 이름을 입력해주�
 
 # OTT 연결 설정
 OTT_MONGODB_URI = 'mongodb://localhost:27017/'  # OTT 데이터베이스의 MongoDB URI를 입력해주세요.
-OTT_MONGODB_NAME = 'OTT'  # OTT 데이터베이스의 이름을 입력해주세요.
+OTT_MONGODB_NAME = 'mydatabase'  # OTT 데이터베이스의 이름을 입력해주세요.
 
 
 # Password validation
@@ -148,3 +149,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # 기본 프로필 이미지 경로 설정
 DEFAULT_PROFILE_IMAGE = 'static/chuchu.png'  # 기본 이미지 파일의 경로
+
+APPEND_SLASH = True
+URL_CASE_INSENSITIVE = True

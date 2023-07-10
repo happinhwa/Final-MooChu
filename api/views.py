@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Movie
 from django.http import JsonResponse
 from .models import AppleMovie, CineFoxMovie, CoupangMovie, DisneyMovie, GoogleMovie, LaftelMovie, NaverMovie, NetflixMovie, PrimevideoMovie, TvingMovie, UPlusMovie, WatchaMovie, WavveMovie
+from django.core.paginator import Paginator
 
 def movielist(request):
     movies = Movie.collection.find({})
@@ -78,10 +79,16 @@ def ott_movie_list(request, ott):
             
     else:
         movies = Movie.collection.find({})  # ott 값이 없을 경우 전체 영화 데이터를 가져옵니다.
+        
+    paginator = Paginator(movie_data, 10)  # 페이지당 10개씩 영화 목록을 보여줍니다.
+    page_number = request.GET.get('page')  # 현재 페이지 번호를 가져옵니다.
+    page_obj = paginator.get_page(page_number)  # 현재 페이지에 해당하는 영화 목록을 가져옵니다.
+    
     context = {
         'ott': ott,
-        'movies': movie_data
+        'movies': page_obj
     }
+    print(type(movie_data))
     return render(request, 'api/movielist.html', context)
 
 from django.http import JsonResponse
@@ -101,6 +108,13 @@ def load_more_data(request):
         ]
     }
     return JsonResponse(data)
+
+
+def genre_filter(request, genre):
+    movies = Movie.objects.filter(genre=genre)
+    context = {'movies': movies}
+    return render(request, 'api/movielist.html', context)
+
 
     # else:
     #     movies = Movie.collection.find({})  # ott 값이 없을 경우 전체 영화 데이터를 가져옵니다.

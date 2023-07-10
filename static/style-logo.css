@@ -1,0 +1,16 @@
+.ott-item {
+    display: flex;
+    align-items: center;
+}
+
+.ott-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ott-title {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #ffffff;
+}

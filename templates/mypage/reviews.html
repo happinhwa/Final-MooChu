@@ -1,43 +1,33 @@
+{% extends 'base_my.html' %}
+{% block title %}mypage{% endblock %}
 {% load static %}
-<!-- Navbar -->
-{% include "navbar/navbar1.html" %}
-.
-<!DOCTYPE html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <title>2021 MINI HOMEPAGEEEE</title>
-    <link rel="stylesheet" href="{% static 'font.css' %}">
-    <link rel="stylesheet" href="{% static 'mypage.css' %}">
-  </head>
-  <body>
-    <div class="bookcover">
-      <div class="bookdot">
-        <div class="page">
-					<!-- 왼쪽 프로필 페이지 구성요소 -->
-          {% include "mypage/profile.html" %}
+
+{% block content %}
+<div class="bookcover">
+  <div class="bookdot">
+    <div class="page">
+      <!-- 왼쪽 프로필 페이지 구성요소 -->
+      {% include "mypage/profile.html" %}
 
 
-          <div class="content-container">
-            <div class="header content-title">
-              <div class="content-title-name">00님의 마이페이지</div>
-            </div>
+      <div class="content-container">
+        <div class="header content-title">
+          <div class="content-title-name">00님의 마이페이지</div>
+        </div>
 
-            <div class="box content-box">
-              <div class="scroll-box">
+        <div class="box content-box">
+          <div class="scroll-box">
 
-                  <h3> 여기는 이제 리뷰와 평점</h3>
-                 
-              </div>
+              <h3> 여기는 이제 리뷰와 평점</h3>
               
-            </div>
           </div>
           
-          <!-- 메뉴 버튼 구성 요소-->
-          {% include "mypage/menu.html" %}
         </div>
       </div>
+      
+      <!-- 메뉴 버튼 구성 요소-->
+      {% include "mypage/menu.html" %}
     </div>
-  </body>
-</html>
-```
+  </div>
+</div>
+{% endblock %}

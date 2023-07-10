@@ -1,95 +1,87 @@
+{% extends 'base_my.html' %}
+{% block title %}mypage{% endblock %}
 {% load static %}
-<!-- Navbar -->
-{% include "navbar/navbar1.html" %}
-.
-<!DOCTYPE html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <title>My page</title>
-    <link rel="stylesheet" href="{% static 'font.css' %}">
-    <link rel="stylesheet" href="{% static 'mypage.css' %}">
-  </head>
-  <body>
-    <div class="bookcover">
-      <div class="bookdot">
-        <div class="page">
 
-					                          <!-- 왼쪽 프로필 페이지 구성요소 -->
-          {% include "mypage/profile.html" %}
+{% block content %}
+<div class="bookcover">
+<div class="bookdot">
+  <div class="page">
+
+                              <!-- 왼쪽 프로필 페이지 구성요소 -->
+    {% include "mypage/profile.html" %}
 
 
-          <div class="content-container">
-                                    <!-- 오른쪽 페이지 상단 글씨  -->
-            <div class="header content-title">
-              <div class="content-title-name">"남도일"님의 마이페이지</div>
+    <div class="content-container">
+                              <!-- 오른쪽 페이지 상단 글씨  -->
+      <div class="header content-title">
+        <div class="content-title-name">"남도일"님의 마이페이지</div>
+      </div>
+
+      
+      <div class="box content-box">
+        <div class="scroll-box">
+          <div class="box-title">"남도일" 님의 찜 리스트 ~</div>
+
+
+          <!-- 찜 목록 리스트 표시 -->
+          <div class="poster-container">
+                
+            <div class="card">
+              <img class="card-img" src="/static/images/1_2.jpg" alt="영화 포스터">
+              <span class="card-text">스파이더맨</span>
             </div>
-
-            
-            <div class="box content-box">
-              <div class="scroll-box">
-                <div class="box-title">"남도일" 님의 찜 리스트 ~</div>
-
-
-                <!-- 찜 목록 리스트 표시 -->
-                <div class="poster-container">
-                      
-                  <div class="card">
-                    <img class="card-img" src="/static/images/1_2.jpg" alt="영화 포스터">
-                    <span class="card-text">스파이더맨</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/2.jpeg" alt="영화 포스터">
-                    <span class="card-text">엘라멘탈</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/3.jpeg" alt="영화 포스터">
-                    <span class="card-text">범죄도시3</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/4.jpeg" alt="영화 포스터">
-                    <span class="card-text">귀공자</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/5.jpeg" alt="영화 포스터">
-                    <span class="card-text">인디아나존스</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/6.jpeg" alt="영화 포스터">
-                    <span class="card-text">플래시</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/7.jpeg" alt="영화 포스터">
-                    <span class="card-text">샤이닝</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/8.jpeg" alt="영화 포스터">
-                    <span class="card-text">슬램덩크</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/9.jpeg" alt="영화 포스터">
-                    <span class="card-text">트랜스포머</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/10.jpeg" alt="영화 포스터">
-                    <span class="card-text">이거 뭐임 아는 사람 연락주세요</span>
-                  </div>
-                </div> 
-
-
-
-              </div>
+            <div class="card">
+              <img class="card-img" src="/static/images/2.jpeg" alt="영화 포스터">
+              <span class="card-text">엘라멘탈</span>
             </div>
-          </div>
-          
-          <!-- 메뉴 버튼 구성 요소-->
-          {% include "mypage/menu.html" %}
+            <div class="card">
+              <img class="card-img" src="/static/images/3.jpeg" alt="영화 포스터">
+              <span class="card-text">범죄도시3</span>
+            </div>
+            <div class="card">
+              <img class="card-img" src="/static/images/4.jpeg" alt="영화 포스터">
+              <span class="card-text">귀공자</span>
+            </div>
+            <div class="card">
+              <img class="card-img" src="/static/images/5.jpeg" alt="영화 포스터">
+              <span class="card-text">인디아나존스</span>
+            </div>
+            <div class="card">
+              <img class="card-img" src="/static/images/6.jpeg" alt="영화 포스터">
+              <span class="card-text">플래시</span>
+            </div>
+            <div class="card">
+              <img class="card-img" src="/static/images/7.jpeg" alt="영화 포스터">
+              <span class="card-text">샤이닝</span>
+            </div>
+            <div class="card">
+              <img class="card-img" src="/static/images/8.jpeg" alt="영화 포스터">
+              <span class="card-text">슬램덩크</span>
+            </div>
+            <div class="card">
+              <img class="card-img" src="/static/images/9.jpeg" alt="영화 포스터">
+              <span class="card-text">트랜스포머</span>
+            </div>
+            <div class="card">
+              <img class="card-img" src="/static/images/10.jpeg" alt="영화 포스터">
+              <span class="card-text">이거 뭐임 아는 사람 연락주세요</span>
+            </div>
+          </div> 
+
+
 
         </div>
       </div>
     </div>
-  </body>
-</html>
+    
+    <!-- 메뉴 버튼 구성 요소-->
+    {% include "mypage/menu.html" %}
+
+  </div>
+</div>
+</div>
+{% endblock %}
+
 <script>
   // 모든 card-text 요소에 대해 처리
   const cardTexts = document.querySelectorAll('.card-text');
@@ -112,4 +104,3 @@
     }
   });
 </script>
-```

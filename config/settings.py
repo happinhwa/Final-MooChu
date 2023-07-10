@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "common",
-    "board",
+    "board.apps.BoardConfig",
     "moochu",
     "allauth",
     "allauth.account",

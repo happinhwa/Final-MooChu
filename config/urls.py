@@ -24,4 +24,5 @@ urlpatterns = [
     path('moochu/', include('moochu.urls', namespace='moochu')),  # 수정된 부분
     path('accounts/', include('allauth.urls')),
     path('accounts/confirm-email/<str:key>/', ConfirmEmailView.as_view(), name='account_confirm_email'),
+    path('board/', include('board.urls', namespace='board')),  # 수정된 부분
 ]

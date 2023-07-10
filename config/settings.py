@@ -87,32 +87,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "ss": {
+    "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    },
-    #default였던것
-    'finaldb': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':'final_db',
-        'USER':'root',
-        'PASSWORD':'1234',
-        'HOST':'127.0.0.1',
-        'PORT':'4000'
-    },
-    'test_mongo': {
-        'ENGINE': 'djongo',
-        'NAME': 'final_db',
-        'CLIENT': {
-            'host': 'localhost',
-            'port': '4001',
-            'username': 'root',
-            'password': 'root',
-            'authSource': 'admin',
-            'authMechanism': 'SCRAM-SHA-1'
-        }
-    },
-    'default': {
+        "NAME": os.path.join(BASE_DIR, 'finaldb.sqlite3'),
+      },
+    'ss': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME':'MyDatabase',
         'USER':'root',

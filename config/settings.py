@@ -18,15 +18,9 @@ from django.conf import settings
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-<<<<<<< HEAD
 AUTH_USER_MODEL = 'common.User'
-=======
 
 
-AUTH_USER_MODEL = 'moochu.User'
-
-
->>>>>>> 3032e914fe1914a652206ebf0f7c3eb61199ceca
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -129,11 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-<<<<<<< HEAD
 LANGUAGE_CODE = "ko-kr"
-=======
-LANGUAGE_CODE = 'ko-kr'
->>>>>>> 3032e914fe1914a652206ebf0f7c3eb61199ceca
 
 TIME_ZONE = 'Asia/Seoul'
 

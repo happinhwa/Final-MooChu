@@ -35,6 +35,9 @@ class User(AbstractUser):
     def __str__(self):
         return self.nickname
 
+class follow(models.Model):
+    follower = models.IntegerField()
+    following = models.IntegerField()
 
 class Genre(models.Model):
     id = models.IntegerField(primary_key=True)

@@ -1,16 +1,11 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-<<<<<<< HEAD
 from django.contrib.auth.models import User
 from .models import User
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
 User = get_user_model()
-=======
-from moochu.models import User
-from django.core.exceptions import ValidationError
->>>>>>> 3032e914fe1914a652206ebf0f7c3eb61199ceca
 
 class RegistrationForm(UserCreationForm):
     username = forms.CharField(label="아이디", max_length=20, help_text='사용할 아이디를 입력해주세요.')

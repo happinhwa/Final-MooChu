@@ -22,6 +22,7 @@ class Review(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
     liker = models.ManyToManyField(User, related_name='review_liker')
     vote = models.FloatField(null=True)
+    updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
   
     def __str__(self):
         return str(self.review)
@@ -31,7 +32,7 @@ class Comments(models.Model):
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='comments')
     comment_txt = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
   
     def __str__(self):
         return str(self.comment_txt)

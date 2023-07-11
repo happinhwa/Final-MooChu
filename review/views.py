@@ -59,22 +59,60 @@ def write_comment(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
     user = request.user
     comment_txt = request.POST.get('content')
-    print(f'comment_txt: {comment_txt}')  # 로그 출력
     comment = Comments(review=review, comment_txt=comment_txt, user=user, created_at=timezone.now())
     comment.save()
     return redirect('review:main_review_detail', review_id=review.id)
 
+@login_required
+def review_update(request, review_id):
+    review = get_object_or_404(Review, pk=review_id)
+    if request.user != review.user:
+        messages.error(request, '수정권한이 없습니다')
+        return redirect('review:main_review_detail', review_id=review.id)
+    if request.method == "POST":
+        form = ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            updated_review = form.save(commit=False)
+            review.review = updated_review.review  # 리뷰 내용 업데이트
+            review.updated_at = timezone.now()  # 수정일시 저장
+            review.save()
+            return redirect('review:main_review_detail', review_id=review.id)
+    else:
+        form = ReviewForm(instance=review)
+    
+    # 이전에 작성한 리뷰 작성 페이지로 돌아가기 위해 movie_id를 가져옴
+    movie_id = review.movie.pk
+    context = {'form': form, 'movie_id': movie_id, 'review_id': review_id}
+    return render(request, 'review/review_update.html', context)
+
+@login_required
+def comment_update(request, comment_id):
+    comment = get_object_or_404(Comments, pk=comment_id)
+    if request.user != comment.user:
+        messages.error(request, '수정권한이 없습니다')
+        return redirect('review:main_review_detail', comment_id=comment.id)
+    
+    if request.method == "POST":
+        form = CommentsForm(request.POST, instance=comment)
+        if form.is_valid():
+            updated_comment = form.save(commit=False)
+            comment.comment_txt = updated_comment.comment_txt
+            comment.updated_at = timezone.now()
+            comment.save()
+            return redirect('review:main_review_detail', review_id=comment.review.pk)
+    else:
+        form = CommentsForm(instance=comment)
+    
+    context = {'form': form, 'comment_id': comment_id}
+    return render(request, 'review/comment_update.html', context)
+
 """
 @login_required
-def delete_comment(request, pk):
-    if request.method == 'POST':
-        comment_id = request.POST.get('comment_id')
-        comment = get_object_or_404(Comments, pk=comment_id)
-        if request.user == comment.user:
-            comment.delete()
-            return JsonResponse({'status': 'success'})
-        else:
-            return JsonResponse({'status': 'failed', 'message': '댓글을 삭제할 권한이 없습니다.'})
-    else:
-        return JsonResponse({'status': 'failed', 'message': '잘못된 요청입니다.'})
+def review_delete(request, review_id):
+    review = get_object_or_404(Review, pk=review_id)
+    if request.user != review.user:
+        messages.error(request, '삭제권한이 없습니다')
+        return redirect('review:main_review_detail', review_id=review.id)
+    review.delete()
+    return redirect('review:main_review_detail')
 """

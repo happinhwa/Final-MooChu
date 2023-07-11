@@ -31,7 +31,7 @@
 <h1>이 작품, 어떠셨나요?</h1>
 </div>
 
-<form action="{% url 'review:write_review' movie.id %}" method="post">
+<form action="{% url 'review:write_review' movie_id=movie.pk %}" method="post">
     {% csrf_token %}
 <div class="box">
     <div class="reviews">

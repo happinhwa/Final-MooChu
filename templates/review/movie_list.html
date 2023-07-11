@@ -52,6 +52,7 @@ Movie List
                 <li>Average Rating: {{ movie.average_rating }}</li>
             </ul>
             <a href="{% url 'review:write_review' movie_id=movie.id %}">Write a Review</a>
+            <a href="{% url 'review:main_review_list' movie_id=movie.id %}">Go to main_review_list</a>
         </div>
     {% endfor %}
 

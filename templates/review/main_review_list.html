@@ -32,6 +32,16 @@
 <h1>리뷰 목록</h1>
 </div>
 
+<div class="container my-3">
+    {% if messages %}
+    <div class="alert alert-danger my-3" role="alert">
+    {% for message in messages %}
+        <strong>{{ message.tags }}</strong>
+        <ul><li>{{ message.message }}</li></ul>
+    {% endfor %}
+    </div>
+    {% endif %}
+
 <div class="reviews">
 {% if reviews %}
     <ul>
@@ -46,6 +56,10 @@
             <a href="{% url 'review:main_review_detail' review_id=review.pk %}" class="btn btn-primary">
                 댓글 {{ review.comments.count }}
             </a>
+            {% if request.user == review.user %}
+                <a href="{% url 'review:review_update' review_id=review.id  %}" 
+                class="btn btn-sm btn-outline-secondary">수정</a>
+            {% endif %}
         </div>
     {% endfor %}
     </ul>
@@ -53,18 +67,6 @@
         <p>아직 작성된 리뷰가 없습니다.</p>
 {% endif %}
 </div>
+</div>
 
-{% endblock %}
-
-{% block script %}
-<script type='text/javascript'>
-    const recommend_elements = document.getElementsByClassName("recommend");
-    Array.from(recommend_elements).forEach(function(element) {
-        element.addEventListener('click', function() {
-            if(confirm("이 리뷰에 좋아요를 누르시겠습니까?")) {
-                location.href = this.dataset.uri;
-            };
-        });
-    });
-</script>
 {% endblock %}

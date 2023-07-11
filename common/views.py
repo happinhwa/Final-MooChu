@@ -33,7 +33,8 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            return redirect('moochu:main')
+            next_page = request.POST.get('next', 'moochu:mainpage') # 로그인 후에 다시 원래 있던 페이지로 돌아가게 하는 코드 !! 
+            return redirect(next_page) # 로그인 후에 다시 원래 있던 페이지로 돌아가게 하는 코드 !! 
         else:
             # 로그인 실패 처리
             return render(request, 'common/login.html', context={'error': '로그인에 실패하였습니다.'})
@@ -45,4 +46,3 @@ def user_login(request):
 def genre_selection(request):
     genres = Genre.objects.all()
     return render(request, 'common/genre_selection.html', {'genres': genres})
-

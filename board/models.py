@@ -1,4 +1,6 @@
 from django.db import models
+<<<<<<< HEAD
+=======
 from common.models import User
 
 
@@ -25,3 +27,4 @@ class comment(models.Model):
     writer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comment_writer', default=None)
     voter = models.ManyToManyField(User, related_name='voter_comment')
 
+>>>>>>> 0546c39ed2ec3f8bccdb5b89a32ab92669e8d244

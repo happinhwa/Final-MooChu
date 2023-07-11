@@ -1,3 +1,5 @@
+{% extends 'base_my.html' %}
+{% block title %}mypage{% endblock %}
 {% load static %}
 <!-- Navbar -->
 {% include "navbar/navbar1.html" %}
@@ -101,14 +103,14 @@
                 </div>             
               </div>
               
-            </div>
           </div>
           
-          <!-- 메뉴 버튼 구성 요소-->
-          {% include "mypage/menu.html" %}
         </div>
       </div>
+      
+      <!-- 메뉴 버튼 구성 요소-->
+      {% include "mypage/menu.html" %}
     </div>
-  </body>
-</html>
-```
+  </div>
+</div>
+{% endblock %}

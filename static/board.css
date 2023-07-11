@@ -1,0 +1,208 @@
+textarea {
+    width:100%;
+}
+
+input[type=submit] {
+    margin-top:10px;
+}
+
+.board-menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    overflow: auto;
+    justify-content: flex-end;
+}
+.board-menu a{
+    font-family: 'Chonburi';
+    color: #FCA472;
+    text-decoration: none;
+    font-size: 20px;
+    padding: 5px 5px;
+}
+
+  /* 메뉴(카테고리)에 마우스 가져다 댔을 때 변환 모양*/
+.board-menu a:hover {
+    color: #FCA472;
+    text-decoration: underline;
+}
+
+.btn-moobo{
+    color:#2C2E34;
+    background-color:#FCA472;
+    border-color:#FCA472;
+    font-family: 'NanumBarunpen';
+}
+.btn-moobo:hover{
+    color:#2C2E34;
+    background-color: white;
+    font-family: 'NanumBarunpen';
+}
+
+.btn-recommend{
+    color:#2C2E34;
+    background-color:#FCA472;
+    border-color: #D9DFF5;
+    border-width: 1px;
+    font-family: 'NanumBarunpen';
+}
+.btn-recommend:hover{
+    color:#2C2E34;
+    background-color: #D9DFF5;
+    font-family: 'NanumBarunpen';
+}
+
+h3 {
+    color: #FCA472;
+    font-family: 'Chonburi';
+    text-align: center;
+}
+
+h3 > a{
+    color: #FCA472;
+    font-family: 'Chonburi';
+    text-align: center;
+}
+h3 > a:hover{
+    color: #FCA472;
+    font-family: 'Chonburi';
+    text-align: center;
+}
+
+
+
+/* 게시글 작성 부분 게시글, 제목, 내용 부분 css */
+.form-group > label, h5{
+    color: #FCA472;
+    font-family: 'NanumBarunpen';
+}
+
+.form-control{
+    color: #2C2E34;
+}
+
+.post-title {
+    color: #FCA472;
+    font-family: 'NanumBarunpen';
+    text-align: left;
+    padding: 5px;
+}
+
+table td,.table th{padding:.75rem;vertical-align:top;border-top:1px solid #FCA472;font-family: 'NanumBarunpen';}
+.table thead th{font-size: 20px;color:#D9DFF5;vertical-align:bottom;border-bottom:1.5px solid #FCA472}
+.table tbody+tbody{border-top:1px solid #FCA472;}
+
+.table-dark th {
+    background-color: #2C2E34;
+}
+
+table tr > td{ /* '질문이 없습니다' 워딩 css */
+    color: #D9DFF5;
+    font-family: 'NanumBarunpen'
+}
+
+/* ################################## */
+/* post_detail에서 게시글 정보 보여주는 css */
+.info {
+    padding: 15px;
+    /* border-bottom: 1px solid #D9DFF5; */
+    font-size: 0;
+    border-top: 1px dashed #D9DFF5;
+    border-bottom: 1px solid #2C2E34;
+    font-size: 0;
+}
+.info dl {
+    position: relative;
+    display: inline-block;
+    padding: 0 20px;
+}
+.info dl:first-child {
+    padding-left: 0;
+}
+.info dl::before {
+    content: "";
+    position: absolute;
+    top: 1px;
+    left: 0;
+    display: block;
+    width: 1px;
+    height: 20px;
+    background: #2C2E34;
+}
+.info dt,
+.info dd {
+    display: inline-block;
+    font-size: 17px;
+    font-family: 'NanumBarunpen';
+    color: #FCA472;
+}
+.info dl dd {
+    margin-left: 10px;
+    color:#D9DFF5;
+}
+/* ################################## */
+
+.num{
+    width: 10%;
+    text-align: center;
+}
+.title{ /* post 목록에서 글 제목 css */
+    text-decoration: none ;
+    color:#D9DFF5;
+    width: 50%;
+    text-align: left;
+}
+.writer{
+    width: 10%;
+    text-align: center;
+}
+.date{
+    width: 10%;
+    text-align: center;
+}
+.count{
+    width: 10%;
+    text-align: center;
+}
+
+.content {
+    border-bottom: 1px solid #D9DFF5;
+    padding: 10px;
+    padding-bottom: 20px;
+    color:#D9DFF5;
+    margin-bottom: 10px;
+    font-family: 'NanumBarunpen';
+}
+
+
+.comment-count { /* 게시판 글에 달린 댓글 갯수 */
+    color: #FCA472;
+    font-family: 'NanumBarunpen';
+    margin-top: 20px;
+}
+
+.comments-list li {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.comment-content{
+    color: #FCA472;
+    font-family: 'NanumBarunpen';
+}
+.comment-detail{
+    color: #D9DFF5;
+    font-family: 'NanumBarunpen';
+}
+
+.vote {
+    color: #FCA472; /* Text color */
+    /* text-shadow: -1px -1px 0 #D9DFF5, 1px -1px 0 #D9DFF5, -1px 1px 0 #D9DFF5, 1px 1px 0 #D9DFF5; Text outline color */
+    font-family: 'Chonburi';
+    font-size: 20px;
+}
+
+.comment_text{ /* 댓글 작성하는 흰색 text_area css */
+    border-radius: 0.375rem;
+}

@@ -46,11 +46,15 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
+<<<<<<< HEAD
             return redirect('moochu:main')
+=======
+            next_page = request.POST.get('next', 'moochu:mainpage') # 로그인 후에 다시 원래 있던 페이지로 돌아가게 하는 코드 !! 
+            return redirect(next_page) # 로그인 후에 다시 원래 있던 페이지로 돌아가게 하는 코드 !! 
+>>>>>>> 0546c39ed2ec3f8bccdb5b89a32ab92669e8d244
         else:
             # 로그인 실패 처리
             return render(request, 'common/login.html', context={'error': '로그인에 실패하였습니다.'})
-
     else:
         return render(request, 'common/login.html', {'error': ''})
 

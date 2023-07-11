@@ -26,7 +26,11 @@ urlpatterns = [
     path('moochu/', include('moochu.urls', namespace='moochu')),  # 수정된 부분
     path('accounts/', include('allauth.urls')),
     path('accounts/confirm-email/<str:key>/', ConfirmEmailView.as_view(), name='account_confirm_email'),
+<<<<<<< HEAD
     path('mypage/', include('mypage.urls', namespace='mypage')),  # 수정된 부분
+=======
+    path('board/', include('board.urls', namespace='board')),  # 수정된 부분
+>>>>>>> 0546c39ed2ec3f8bccdb5b89a32ab92669e8d244
 ]
 
 

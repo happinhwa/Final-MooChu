@@ -97,21 +97,20 @@ def guestbook_detail(request, guestbook_id):
 
         return Response(status=200)
 
-@api_view(['PUT'])
+@api_view(['PUT','GET'])
 def edit(request, nickname):
     if request.method == 'PUT':
         form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             nickname = form.cleaned_data['nickname']
-            return redirect('mypage:home', nickname)
-    else:
+            return Response(status=200)
+            ## return redirect('mypage:home', nickname)
+    elif request.method == 'GET':
         form = ProfileUpdateForm(instance=request.user)
-    
-    context = profile_data(nickname, request)
-    context.update({"form":form})
-    return Response(status=200)
-    ## return render(request, 'mypage/edit.html', context)
+        context = profile_data(nickname, request)
+        context.update({"form":form})
+        return render(request, 'mypage/edit.html', context)
 
 
 

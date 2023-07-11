@@ -38,6 +38,7 @@ def user_login(request):
         else:
             # 로그인 실패 처리
             return render(request, 'common/login.html', context={'error': '로그인에 실패하였습니다.'})
+
     else:
         return render(request, 'common/login.html', {'error': ''})
 

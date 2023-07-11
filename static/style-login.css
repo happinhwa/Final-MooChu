@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 /* 아이디, 비밀번호 입력창 크기 */
 .form-control{
@@ -22,6 +23,24 @@
     font-family: NanumBarunpen;
 }
 /* 로그인 버튼 글씨 폰트 */
+=======
+body{
+    background: black;
+}
+.form-control{
+    width: 400px;
+    height:45px;
+    flex-shrink: 0;
+    margin-bottom: 30px;
+}
+.login-btn{
+    width: 276px;
+    height: 66px;
+    flex-shrink: 0;
+    margin-bottom: 15px;
+    background: #96FC72;
+}
+>>>>>>> 3032e914fe1914a652206ebf0f7c3eb61199ceca
 .login-font{
     display: flex;
     color: #96FC72;
@@ -31,6 +50,7 @@
     flex-direction: column;
     flex-shrink: 0;
 }
+<<<<<<< HEAD
 
 /* 로그인 관련한 전체 정보에 대한 박스 */
 #container {
@@ -58,11 +78,23 @@ label{
 }
 
 /* 아직 회원가입 아니십니까~ 에 대한 css */
+=======
+.login-box {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center; 
+}
+label{
+    font-family: NanumBarunpen;
+}
+>>>>>>> 3032e914fe1914a652206ebf0f7c3eb61199ceca
 .a-1 {
     justify-content: end;
     color: #96FC72;
     font-size: 15px;
     font-family: NanumBarunpen;
+<<<<<<< HEAD
     text-decoration: none;
 }
 /* 아직 회원가입 아니십니까~ 에 마우스 가져다 댔을 때 css */
@@ -128,3 +160,6 @@ label{
     border-width: 0 3px 3px 0;
     transform: rotate(45deg);
   }
+=======
+}
+>>>>>>> 3032e914fe1914a652206ebf0f7c3eb61199ceca

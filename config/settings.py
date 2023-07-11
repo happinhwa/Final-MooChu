@@ -16,12 +16,6 @@ from django.conf import settings
 
 import pymongo
 
-mongodb_host = 'localhost'
-mongodb_port = 27017
-mongodb_client = pymongo.MongoClient(host=mongodb_host, port=mongodb_port)
-mongodb_database_name = 'tmdb'
-mongodb_database = mongodb_client[mongodb_database_name]
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -54,7 +48,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    #tmdb 리스트
+    #영화 리스트 상세정보 등
     "mlist",
 ]
 
@@ -107,21 +101,20 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': 4000,
     },
-    'tmdb_mongo': {
-        'ENGINE': '',
-        'NAME': 'tmdb',
-        'CLIENT': {
-            'host': 'localhost',
-            'port': 27017,
-            'username': 'root',
-            'password': 'root',
-            'authSource': 'admin',
-            'authMechanism': 'SCRAM-SHA-1',
-        },
-    },
 }
 
+#mongodb 설정
+TMDB_MONGODB_URI = 'mongodb://root:root@210.114.91.91:26697/?authMechanism=DEFAULT'  # TMDB 데이터베이스의 MongoDB URI를 입력해주세요.
+TMDB_MONGODB_NAME = 'tmdb'  # TMDB 데이터베이스의 이름을 입력해주세요.
 
+
+# OTT 연결 설정
+OTT_MONGODB_URI = 'mongodb://root:root@210.114.91.91:26697/?authMechanism=DEFAULT'  # OTT 데이터베이스의 MongoDB URI를 입력해주세요.
+OTT_MONGODB_NAME = 'ott_db'  # OTT 데이터베이스의 이름을 입력해주세요.
+
+#daum db 설정
+DAUM_MONGODB_URI = 'mongodb://root:root@210.114.91.91:26697/?authMechanism=DEFAULT'  # TMDB 데이터베이스의 MongoDB URI를 입력해주세요.
+DAUM_MONGODB_NAME = 'daum'  #daum db
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

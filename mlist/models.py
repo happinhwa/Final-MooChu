@@ -1,191 +1,235 @@
 from django.db import models
+from django.utils import timezone
+from django.conf import settings
 from pymongo import MongoClient
 
+# TMDB 데이터베이스 연결 설정
+TMDB_MONGODB_URI = settings.TMDB_MONGODB_URI
+TMDB_MONGODB_NAME = settings.TMDB_MONGODB_NAME
 
-# Create a MongoDB connection
-mongodb_connection_uri = 'mongodb://root:root@localhost:27017/?authSource=admin'
-mongodb_client = MongoClient(mongodb_connection_uri)
+# OTT 데이터베이스 연결 설정
+OTT_MONGODB_URI = settings.OTT_MONGODB_URI
+OTT_MONGODB_NAME = settings.OTT_MONGODB_NAME
 
-# tmdb data
-mongodb_database_name = 'tmdb'
-mongodb_database = mongodb_client[mongodb_database_name]
-mongodb_collection_name = 't2022'
-mongodb_collection = mongodb_database[mongodb_collection_name]
+# OTT 데이터베이스 연결 설정
+DAUM_MONGODB_URI = settings.DAUM_MONGODB_URI
+DAUM_MONGODB_NAME = settings.DAUM_MONGODB_NAME
 
-# 다음영화 개봉예정작 리스트
-mongodb_database_name1 = 'daum'
-mongodb_database1 = mongodb_client[mongodb_database_name1]
-mongodb_collection_name1 = 'daumnetflix'
-mongodb_collection1 = mongodb_database1[mongodb_collection_name1]
 
-mongodb_database_name2 = 'daum'
-mongodb_database2 = mongodb_client[mongodb_database_name2]
-mongodb_collection_name2 = 'daumwatcha'
-mongodb_collection2 = mongodb_database2[mongodb_collection_name2]
+# TMDB 데이터베이스 연결
+tmdb_client = MongoClient(TMDB_MONGODB_URI) 
+tmdb_db = tmdb_client[TMDB_MONGODB_NAME]
 
-mongodb_database_name3 = 'daum'
-mongodb_database3 = mongodb_client[mongodb_database_name3]
-mongodb_collection_name3 = 'daumtheater'
-mongodb_collection3 = mongodb_database3[mongodb_collection_name3]
+# OTT 데이터베이스 연결
+ott_client = MongoClient(OTT_MONGODB_URI)
+ott_db = ott_client[OTT_MONGODB_NAME]
+# daum 데이터베이스 연결
+daum_client = MongoClient(DAUM_MONGODB_URI)
+daum_db = daum_client[DAUM_MONGODB_NAME]
 
-class Movie(models.Model):
-    title = models.CharField(max_length=255)
-    genres = models.CharField(max_length=255)
-    poster_path = models.CharField(max_length=255)
-    overview = models.TextField()
-    release_date = models.DateField()
+#tmdb에서 가져오기
+class Movie:
+    def __init__(self, id, title, release_date, runtime, poster_path, genres, overview):
+        self.id = id
+        self.title = title
+        self.release_date = release_date
+        self.runtime = runtime
+        self.poster_path = poster_path
+        self.genres = genres
+        self.overview = overview
 
-    class Meta:
-        db_table = 'collection'
-        app_label = 'mongodb'
+    def save(self):
+        collection = tmdb_db.movies
+        collection.insert_one({
+            'id': self.id,
+            'title': self.title,
+            'release_date': self.release_date,
+            'runtime' : self.runtime,
+            'poster_path' : self.poster_path,
+            'genres' : self.genres,
+            'overview' : self.overview,
+        })
 
-    def __str__(self):
-        return self.title
-
-class DaumNetflix(models.Model):
-    num = models.IntegerField()
-    title = models.CharField(max_length=255)
-    img_link = models.CharField(max_length=255)
-
-    class Meta:
-        db_table = 'daumnetflix'
-        app_label = 'mongodb1'
-
-    def __str__(self):
-        return self.title
-
-class DaumWatcha(models.Model):
-    num = models.IntegerField()
-    title = models.CharField(max_length=255)
-    img_link = models.CharField(max_length=255)
-
-    class Meta:
-        db_table = 'daumwatcha'
-        app_label = 'mongodb2'
-
-    def __str__(self):
-        return self.title
-
-class DaumTheater(models.Model):
-    num = models.IntegerField()
-    title = models.CharField(max_length=255)
-    img_link = models.CharField(max_length=255)
-
-    class Meta:
-        db_table = 'daumtheater'
-        app_label = 'mongodb3'
-
-    def __str__(self):
-        return self.title
+    @classmethod
+    def get_movie_by_id(cls, movie_id):
+        for collection_name in tmdb_db.list_collection_names():
+            collection = tmdb_db[collection_name]
+            movie = collection.find_one({'id': movie_id})
+            if movie:
+                genre_names = [genre['name'] for genre in movie['genres']]
+                movie['genres'] = genre_names
+                return Movie(
+                    movie['id'], 
+                    movie['title'], 
+                    movie['release_date'],
+                    movie['runtime'],
+                    movie['poster_path'],
+                    movie['genres'],
+                    movie['overview'],
+                )
+        return None
 
 
 
+class OTTMovie:
+    def __init__(self, posterImageUrl):
+        self.posterImageUrl = posterImageUrl
 
-#from django.db import models
-#from pymongo import MongoClient
+    def save(self):
+        self.collection.insert_one({
+            'posterImageUrl': self.posterImageUrl.lower()
+        })
+
+    @classmethod
+    def get_all_movies(cls):
+        movies = cls.collection.find({}, {'_id': 0, 'posterImageUrl': 1})
+        titles = [movie['posterImageUrl'] for movie in movies]
+        return titles
+    
+    
+class AppleMovie(OTTMovie):
+    collection = ott_db['Apple']
+    
+    def __init__(self, posterImageUrl):
+        super().__init__(posterImageUrl)
 
 
-# Create a MongoDB connection
-#mongodb_connection_uri = 'mongodb://root:root@localhost:27017/?authSource=admin'
+class CineFoxMovie(OTTMovie):
+    collection = ott_db['CineFox']
+    
+    def __init__(self, posterImageUrl):
+        super().__init__(posterImageUrl)
 
-# tmdb data
-#mongodb_client = MongoClient(mongodb_connection_uri)
-#mongodb_database_name = 'tmdb'
-#mongodb_database = mongodb_client[mongodb_database_name]
-#mongodb_collection_name = 't2022'
-#mongodb_collection = mongodb_database[mongodb_collection_name]
 
-## Create a MongoDB connection
-#mongodb_connection_uri = 'mongodb://root:root@localhost:27017/?authSource=admin'
-#mongodb_client = MongoClient(mongodb_connection_uri)
+class CoupangMovie(OTTMovie):
+    collection = ott_db['Coupang']
+    
+    def __init__(self, posterImageUrl):
+        super().__init__(posterImageUrl)
+
+
+class DisneyMovie(OTTMovie):
+    collection = ott_db['Disney']
+    
+    def __init__(self, posterImageUrl):
+        super().__init__(posterImageUrl)
+
+
+class GoogleMovie(OTTMovie):
+    collection = ott_db['Google']
+    
+    def __init__(self, posterImageUrl):
+        super().__init__(posterImageUrl)
+
+
+class LaftelMovie(OTTMovie):
+    collection = ott_db['Laftel']
+    
+    def __init__(self, posterImageUrl):
+        super().__init__(posterImageUrl)
+
+
+class NaverMovie(OTTMovie):
+    collection = ott_db['Serieson']
+    
+    def __init__(self, posterImageUrl):
+        super().__init__(posterImageUrl)
+
+
+class NetflixMovie(OTTMovie):
+    collection = ott_db['Netflix']
+    
+    def __init__(self, posterImageUrl):
+        super().__init__(posterImageUrl)
+
+
+class PrimevideoMovie(OTTMovie):
+    collection = ott_db['Primevideo']
+    
+    def __init__(self, posterImageUrl):
+        super().__init__(posterImageUrl)
+
+
+class TvingMovie(OTTMovie):
+    collection = ott_db['Tving']
+    
+    def __init__(self, posterImageUrl):
+        super().__init__(posterImageUrl)
+
+
+class UPlusMovie(OTTMovie):
+    collection = ott_db['UPlus']
+    
+    def __init__(self, posterImageUrl):
+        super().__init__(posterImageUrl)
+
+
+class WatchaMovie(OTTMovie):
+    collection = ott_db['Watcha']
+    
+    def __init__(self, posterImageUrl):
+        super().__init__(posterImageUrl)
+
+
+class WavveMovie(OTTMovie):
+    collection = ott_db['Wavve']
+    
+    def __init__(self, posterImageUrl):
+        super().__init__(posterImageUrl)
+
+    # OTTMovie 클래스에 특화된 메서드 추가
+    # 필요한 기능을 구현해주세요.
+# 연결 종료
+
+
+class DaumMovie:
+    def __init__(self, img_link):
+        self.img_link = img_link
+
+    def save(self):
+        self.collection.insert_one({
+            'img_link': self.img_link.lower()
+        })
+
+    @classmethod
+    def get_all_movies(cls):
+        movies = cls.collection.find({}, {'title': 1, 'img_link': 1})
+        titles = [movie['img_link'] for movie in movies]
+        return titles
+    
+    
+class DNetflixMovie(DaumMovie):
+    collection = daum_db['daumnetflix']
+    
+    def __init__(self, img_link):
+        super().__init__(img_link)
+
+    @classmethod
+    def get_all_movies(cls):
+        movies = cls.collection.find({}, {'num': 1, 'title': 1, 'img_link': 1})
+        return list(movies)
+
+
+class DWatchaMovie(DaumMovie):
+    collection = daum_db['daumwatcha']
+    
+    def __init__(self, img_link):
+        super().__init__(img_link)
+
+    @classmethod
+    def get_all_movies(cls):
+        movies = cls.collection.find({}, {'num': 1, 'title': 1, 'img_link': 1})
+        return list(movies)
+
+# 영화관 추가시
+#class Dtheater(DaumMovie):
+#    collection = daum_db['daumtheater']
+#    
+#    def __init__(self, posterImageUrl):
+#        super().__init__(posterImageUrl)
 #
-## 몽고db에서 tmdb 컬렉션들만 가져오기
-#mongodb_database_name = 'tmdb'
-#mongodb_database = mongodb_client[mongodb_database_name]
+
 #
-## Get a list of all collections in the database
-#collections_list = mongodb_database.list_collection_names()
-#
-## Loop through each collection and perform your desired operation
-#for collection_name in collections_list:
-#    collection = mongodb_database[collection_name]
-#    # Perform your operations using the collection variable
-#
-#
-## 다음영화 개봉예정작 리스트
-#mongodb_database_name1 = 'daum'
-#mongodb_client1 = MongoClient(mongodb_connection_uri)
-#mongodb_database1 = mongodb_client1[mongodb_database_name1]
-#mongodb_collection_name1 = 'daumnetflix'
-#mongodb_collection1 = mongodb_database1[mongodb_collection_name1]
-#
-#mongodb_database_name2 = 'daum'
-#mongodb_client2 = MongoClient(mongodb_connection_uri)
-#mongodb_database2 = mongodb_client2[mongodb_database_name2]
-#mongodb_collection_name2 = 'daumwatcha'
-#mongodb_collection2 = mongodb_database2[mongodb_collection_name2]
-#
-#mongodb_database_name3 = 'daum'
-#mongodb_client3 = MongoClient(mongodb_connection_uri)
-#mongodb_database3 = mongodb_client3[mongodb_database_name3]
-#mongodb_collection_name3 = 'daumtheateer'
-#mongodb_collection3 = mongodb_database3[mongodb_collection_name3]
-#
-#class Movie(models.Model):
-#    # Define your model fields here
-#    # ...
-#
-#    class Meta:
-#        db_table = 'collection'
-#        app_label = 'mongodb'
-#
-#    def __str__(self):
-#        return self.title
-#
-#
-##class Movie(models.Model):
-##    # Define your model fields here
-##    # ...
-##
-##    class Meta:
-##        db_table = 't2022'
-##        app_label = 'mongodb'
-##
-##    def __str__(self):
-##        return self.title
-##
-#
-#class Movie1(models.Model):
-#    # Define your model fields here
-#    # ...
-#
-#    class Meta:
-#        db_table = 'daumnetflix'
-#        app_label = 'mongodb1'
-#
-#    def __str__(self):
-#        return self.title
-#
-#
-#class Movie2(models.Model):
-#    # Define your model fields here
-#    # ...
-#
-#    class Meta:
-#        db_table = 'daumwatcha'
-#        app_label = 'mongodb2'
-#
-#    def __str__(self):
-#        return self.title
-#
-#
-#class Movie3(models.Model):
-#    # Define your model fields here
-#    # ...
-#
-#    class Meta:
-#        db_table = 'daumtheater'
-#        app_label = 'mongodb3'
-#
-#    def __str__(self):
-#        return self.title
+#tmdb_client.close()
+#ott_client.close()
+#daum_client.close()

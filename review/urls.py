@@ -10,6 +10,6 @@ urlpatterns = [
     path('write_review/<int:movie_id>/', views.write_review, name='write_review'),
     path('movies/', views.movie_list, name='movie_list'),
     path('movies/<int:movie_id>/', views.movie_detail, name='movie_detail'),
-    path('review_comment/<int:review_id>/', views.review_comment, name='review_comment'),
+    path('write_comment/<int:review_id>/', views.write_comment, name='write_comment'),
     # path('delete_comment/<int:review_id>/', views.delete_comment, name='delete_comment'),
 ]

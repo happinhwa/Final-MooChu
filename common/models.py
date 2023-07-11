@@ -35,6 +35,7 @@ class User(AbstractUser):
 class follow(models.Model):
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
     following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
+    
 class Genre(models.Model):
     id = models.IntegerField(primary_key=True)
     genre = models.CharField(max_length=10, unique=True)  # 테이블 열 이름과 일치하도록 변경
@@ -58,12 +59,14 @@ class review(models.Model):
   
     def __str__(self):
         return str(self.user_id)
+    
 class votes(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='vote_user_id')
     movie_title = models.CharField(max_length=20)
     score = models.DecimalField(max_digits=3, decimal_places=1)
     def __str__(self):
         return str(self.user_id)
+    
 class mylist(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mylist_user_id')
     movie_title = models.CharField(max_length=20)

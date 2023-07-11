@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .models import Movie, Review, Comments
+from django.db.models import Count
 from django.urls import reverse
 from .forms import ReviewForm, CommentsForm
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from django.contrib import messages
 
 
 
@@ -26,7 +29,8 @@ def movie_detail(request, movie_id):
 def main_review_list(request, movie_id):
     movie = Movie.objects.get(pk=movie_id)
     reviews = Review.objects.filter(movie_id=movie_id).order_by('-timestamp')
-    context = {'movie':movie, 'reviews': reviews}
+    counts =  reviews.annotate(num_comments=Count('review'), num_likes=Count('liker'))
+    context = {'movie':movie, 'reviews': reviews, 'counts':counts}
     return render(request, 'review/main_review_list.html', context)
 
 def main_review_detail(request, review_id):
@@ -35,54 +39,30 @@ def main_review_detail(request, review_id):
 
 
 def write_review(request, movie_id):
-    movie = Movie.objects.get(pk=movie_id)
+    movie = get_object_or_404(Movie, pk=movie_id)
     if request.method == "POST":
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
             review.user = request.user
-            review.movie_id = movie_id
+            review.movie = movie
             review.save()
-            return HttpResponseRedirect(reverse('review:main_review_list', args=[movie_id])) 
-    else:
+            return redirect('review:main_review_list', movie_id=movie.id)
+    else:   
         form = ReviewForm()
     context = {'form': form, 'movie': movie}
-         
+
     return render(request, 'review/write_review.html', context)
 
 
-"""
-def review_comment(request, review_id):
+def write_comment(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
-    if request.method == 'POST':
-        form = CommentForm(request.POST or None)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.review = review
-            comment.user = request.user
-            comment.save()
-            return redirect('review:main_review_detail', review_id=review_id)
-    else:
-        form = CommentForm()
-    return render(request, 'review/review_comment.html', {'form': form, 'review': review})
-"""
-
-def review_comment(request, review_id):
-    review = get_object_or_404(Review, pk=review_id)
-    all_comments = review.comment_set.all()
-    
-    if request.method == 'POST':
-        form = CommentsForm(request.POST or None)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.review = review
-            comment.user = request.user
-            comment.save()
-        else:
-            pass
-    else:
-        form = CommentsForm()
-    return render(request, 'review/review_comment.html', {'form': form, 'review': review, 'all_comments': all_comments})
+    user = request.user
+    comment_txt = request.POST.get('content')
+    print(f'comment_txt: {comment_txt}')  # 로그 출력
+    comment = Comments(review=review, comment_txt=comment_txt, user=user, created_at=timezone.now())
+    comment.save()
+    return redirect('review:main_review_detail', review_id=review.id)
 
 """
 @login_required

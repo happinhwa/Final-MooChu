@@ -10,7 +10,7 @@ class Movie(models.Model):
     cast = models.TextField()
     synopsis = models.TextField(default="작성된 영화 줄거리가 없습니다.")
     def __str__(self):
-        return self.title
+        return str(self.title)
     class Meta:
         db_table = 'movie'
         app_label = 'review'
@@ -21,23 +21,19 @@ class Review(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(default=timezone.now)
     liker = models.ManyToManyField(User, related_name='review_liker')
-    vote = models.FloatField()
+    vote = models.FloatField(null=True)
   
     def __str__(self):
-        return self.content
-    class Meta:
-        db_table = 'review'
-        app_label = 'review'
-
+        return str(self.review)
+        
 class Comments(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comments')
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='comments')
-    re_comment = models.TextField()
+    comment_txt = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
   
     def __str__(self):
-        return self.re_comment
-    class Meta:
-        db_table = 'comment'
-        app_label = 'review'
+        return str(self.comment_txt)
+
+    

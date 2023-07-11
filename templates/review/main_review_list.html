@@ -59,6 +59,8 @@
             {% if request.user == review.user %}
                 <a href="{% url 'review:review_update' review_id=review.id  %}" 
                 class="btn btn-sm btn-outline-secondary">수정</a>
+                <a href="{% url 'review:review_delete' review_id=review.id  %}" 
+                class="btn btn-sm btn-outline-secondary">삭제</a>
             {% endif %}
         </div>
     {% endfor %}

@@ -106,13 +106,22 @@ def comment_update(request, comment_id):
     context = {'form': form, 'comment_id': comment_id}
     return render(request, 'review/comment_update.html', context)
 
-"""
 @login_required
 def review_delete(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
     if request.user != review.user:
         messages.error(request, '삭제권한이 없습니다')
         return redirect('review:main_review_detail', review_id=review.id)
+
     review.delete()
-    return redirect('review:main_review_detail')
-"""
+    return redirect('review:main_review_list', movie_id=review.movie.pk)
+
+@login_required
+def comment_delete(request, comment_id):
+    comment = get_object_or_404(Comments, pk=comment_id)
+    if request.user != comment.user:
+        messages.error(request, '삭제권한이 없습니다')
+        return redirect('review:main_review_detail', comment_id=comment.id)
+
+    comment.delete()
+    return redirect('review:main_review_detail', review_id=comment.review.pk)

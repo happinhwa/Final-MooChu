@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}post{% endblock %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'board.css' %}">
+
+    <div class="container">
+        {% csrf_token %}
+        <h3><a href="{% url 'board:moobo' %}" style="text-decoration-line: underline; text-decoration-style: double; text-underline-offset : 5px;">MooChu Board</a></h3>
+        <ul class="board-menu">
+            <li><a href="{% url 'board:moobo' %}">Board</a></li>
+            <li><a href="{% url 'board:post' %}">Upload</a></li>
+            <li><a href="#">My Posts</a></li>
+        </ul>
+    </div>
+
+    <div class="container my-3">
+        <!-- <div class="col-2">
+            <select class="form-control so">
+                <option value="recent" {% if so == 'recent' %}selected{% endif %}>최신순</option>
+                <option value="recommend" {% if so == 'recommend' %}selected{% endif %}>추천순</option>
+                <option value="popular" {% if so == 'popular' %}selected{% endif %}>인기순</option>
+            </select>
+        </div>
+        <div class="col-4 input-group">
+            <input type="text" class="form-control kw" value="{{ kw|default_if_none:'' }}">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" id="btn_search">찾기</button>
+            </div>
+        </div>
+        <br> -->
+
+        <!-- <a href="{% url 'board:post' %}" class="btn btn-moobo" style="margin-bottom: 20px; justify-content: right;">게시글 작성</a> -->
+        <table class="table">
+            <thead>
+            <tr class="table-dark">
+                <th class="num">번호</th>
+                <th class="title" style="text-align: center;">제목</th>
+                <th class="writer">작성자</th>
+                <th class="date">작성일시</th>
+                <th class="count">조회수</th>
+                <th class="count">추천수</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if post_list %}
+                {% for post in post_list %}
+                <tr>
+                    <td class="num">{{ forloop.counter }}</td>
+                    <td>
+                        <a class="title" href="{% url 'board:post_detail' post.id %}">{{ post.title }} ({{ post.comments.count|default_if_none:"0" }})</a>
+                    </td>
+                    <td class="writer">{{ post.writer }}</td>
+                    <td class="date">{{ post.create_date }}</td>
+                    <td class="count">{{ post.n_hit}}</td> 
+                    <td class="count">{{ post.voter.all.count }}</td>
+                </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="6">글이 없습니다.</td>
+            </tr>
+            {% endif %}     
+            </tbody>
+
+        </table>
+    </div>
+    {% endblock %}

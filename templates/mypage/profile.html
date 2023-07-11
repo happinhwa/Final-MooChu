@@ -6,34 +6,70 @@
                   <!-- 프로필 사진 -->
   <div class="box profile-box">
     <div class="profile-image">
-      <img class="profile-image-img" src="/static/images/nam.jpeg" alt="프로필 이미지"/>
+      <img class="profile-image-img" src="{{ master.profile_img.url }}" alt="프로필 이미지"/>
     </div>
             <!-- 프로필 사진 밑에 내용 -->
     <div class="profile-text font-kyobohand">
-      <text>남도일</text>
+      <text>{{ master.nickname }} </text>
     </div>
     <div class="font-kyobohand">
       <label style="font-weight: bolder;"> 한줄 소개 </label><br />
-      <text>내 이름은 남도일, 미란이와 놀이공원에 갔다가 ...</text><br /><br />
-      <label style="font-weight: bolder;">온도 :</label><text> 36.5 </text><br />
-      <label style="font-weight: bolder;">팔로워 :</label><text> 190명 </text><br />
-      <label style="font-weight: bolder;">팔로잉 :</label><text> 150명</text>
+      <text>{{ master.comment }}</text><br /><br />
+      <!-- <label style="font-weight: bolder;">온도 :</label><text> {{ master.temp }} </text><br /> -->
+      <label style="font-weight: bolder;">온도:</label><text> {{ master.temp }}°C </text>
+      <div class="thermometer">
+        <div class="temperature-bar">
+          <div class="temperature-fill" style="width: {{ master.temp }}%"></div>
+        </div>
+      </div>
+      <br />
+      <label style="font-weight: bolder;">팔로워 :</label><text> {{ follower_count }} 명</text><br />
+      <label style="font-weight: bolder;">팔로잉 :</label><text> {{ following_count }} 명</text>
     </div>
 
                 <!-- 소개글 밑에 나오는 구성 -->
             <!-- 팔로우 버튼을 넣으면 어떨지 고민중 -->
-    <div class="font-kyobohand">
-      <div class="profile-dropdown">
-        <div class="dropdown-btn">
-          <div class="dropdown-title">파도타기</div>
-          <div class="triangle-down"></div>
-        </div>
-        <div class="dropdown-content">
-          <a href="#" target="_blank">코뮤니티로 가기</a>
-          <a href="#" target="_blank">인스타그램으로 가기</a>
-        </div>
-      </div>
-    </div>
-    
+    {% if writer.id != master.id %}
+      {% if allow %}        
+      <form id="follow-form" action="{% url 'mypage:follow' nickname=master.nickname %}" method="POST">
+        {% csrf_token %}
+        <button class="follow-btn" type="submit">팔로우 취소</button>
+      </form>
+      {% else %}     
+        <form action="{% url 'mypage:follow' nickname=master.nickname %}" method="post">
+          {% csrf_token %}
+          <button class="follow-btn" type="submit">팔로우</button>
+        </form>
+      {% endif %}
+    {% endif %}
   </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#follow-form').submit(function(e) {
+      e.preventDefault(); // 기본 form 제출 동작 방지
+      
+      var form = $(this);
+      var url = form.attr('action');
+      
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: form.serialize(),
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+        },
+        success: function(response) {
+          // 성공적인 응답을 처리하세요
+          // console.log('팔로우 취소되었습니다.');
+          location.reload();
+        },
+        error: function(xhr, status, error) {
+          // 에러 응답을 처리하세요
+          console.error('팔로우 취소에 실패했습니다:', error);
+        }
+      });
+    });
+  });
+</script>

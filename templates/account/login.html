@@ -14,11 +14,13 @@
 	<link rel="stylesheet" href="{% static '/fonts/font.css'%}">
 </head>	
 <body class="">
-    {% include "socialaccount/snippets/login_extra.html" %}
+    {% include "socialaccount/snippets/login_extra.html" %} 
     <div id="container">
-      <!-- login Box -->
+
+      <!-- login Box -->    
 <form class="login" method="POST" action="{% url 'account_login' %}">
   {% csrf_token %}
+  {% include "form_errors.html" %}
   <div class="login-box">
     <!-- 아이디 입력 -->
     <div class="login-font">
@@ -38,6 +40,7 @@
       <span style="color: #96FC72; font-size: 15px;">아이디 저장</span>
       <input type="checkbox" id="workSite" name="worksite" style="margin: 0px 0px 0px 10px; -webkit-transform: scale(1.5);">
     </div>
+    <input type="hidden" name="next" value="{{ request.GET.next }}"> <!-- 로그인 후에 다시 원래 있던 페이지로 돌아가게 하는 코드 !! -->
     <div class ="login-btn">
       <button type="submit" id="btnLogin" class="login-btn">로그인</button>
     </div>

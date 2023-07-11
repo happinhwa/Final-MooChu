@@ -22,27 +22,38 @@
     justify-content: right;
 }
 
-.genre-button{
-    width: 200px;
-    height: 50px;
-    flex-shrink: 0;
-    margin-bottom: 15px;
-    background: white;
-    border-radius: 0.3rem;
-    border-color: #96FC72;
-    border-width: 0.2rem;
-    font-size: 1.5rem;
-    font-family: NanumBarunpen;
+
+input[type="checkbox"] {
+/* 체크박스 스타일 지정 */
+-webkit-appearance: none;
+width: 20px;
+height: 20px;
+flex-shrink: 0;
+margin-right: 5px;
+background: white;
+border-radius: 0.3rem;
+border-color: #FCA472;
+border-width: 0.2rem;
 }
-.genre-button:hover{
-    width: 200px;
-    height: 50px;
-    flex-shrink: 0;
-    margin-bottom: 15px;
-    background: #96FC72;
-    border-radius: 0.3rem;
-    border-color: white;
-    border-width: 0.2rem;
-    font-size: 1.5rem;
-    font-family: NanumBarunpen;
+
+input[type="checkbox"]:checked {
+/* 체크된 상태의 스타일 지정 */
+-webkit-appearance: none;
+width: 20px;
+height: 20px;
+flex-shrink: 0;
+margin-right: 5px;
+background: #FCA472;
+border-radius: 0.3rem;
+border-color: white;
+border-width: 0.2rem;
 }
+
+
+.genre-checkbox {
+/* 체크박스의 실제 input 스타일 지정 */
+font-size: 1.5rem;
+font-family: NanumBarunpen;
+color: white;
+}
+

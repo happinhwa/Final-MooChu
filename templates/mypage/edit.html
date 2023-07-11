@@ -1,0 +1,97 @@
+{% load static %}
+<!-- Navbar -->
+{% include "navbar/navbar1.html" %}
+.
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My page</title>
+  	<link rel="stylesheet" href="{% static 'font.css' %}">
+   <link rel="stylesheet" href="{% static 'mypage.css' %}">
+	  <script src="https://kit.fontawesome.com/e8d8cefab4.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div class="bookcover">
+      <div class="bookdot">
+        <div class="page">
+
+                    <!-- 왼쪽 프로필 페이지 구성요소 -->
+                    {% include "mypage/profile.html" %}
+
+
+          <div class="content-container">
+                            <!-- 오른쪽 페이지 상단 글씨  -->
+            <div class="header content-title">
+              <div class="content-title-name">"{{ user.nickname }}"님의 마이페이지</div>
+            </div>
+                            <!-- 오른쪽 페이지 구성 -->
+            <div class="box content-box">
+              <div class="scroll-box">
+                <div class="box-title">프로필 수정</div>
+                <br />
+                <br />
+                <br />
+                <br />
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label style="font-weight: bolder;">닉네임:</label>
+                    <input type="text" name="nickname" value="{{ form.nickname.value }}" required><br>
+
+                    <label style="font-weight: bolder;">관심 장르:</label>
+                    <input type="text" name="fav_genre" value="{{ form.fav_genre.value }}"><br>
+
+                    <label style="font-weight: bolder;">프로필 사진:</label>
+                    <input type="file" name="profile_img"><br>
+
+                    <label style="font-weight: bolder;">한줄 소개:</label>
+                    <input type="text" name="comment" value="{{ form.comment.value }}"><br>
+                    <button type="submit">저장</button>
+                  </form>
+                
+                
+              </div>
+            </div>
+          </div>
+                    <!-- 메뉴 버튼 구성 요소-->
+                    {% include "mypage/menu.html" %}
+
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#profile-form').submit(function(e) {
+      e.preventDefault(); // Prevent the default form submission
+      
+      var form = $(this);
+      var url = form.attr('action');
+      var formData = new FormData(form[0]);
+      
+      $.ajax({
+        url: url,
+        type: 'PUT',
+        data: formData,
+        processData: false,
+        contentType: false,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+        },
+        success: function(response) {
+          // Handle the success response
+          // You can display a success message or perform any other action
+          console.log('Profile saved successfully.');
+        },
+        error: function(xhr, status, error) {
+          // Handle the error response
+          // You can display an error message or perform any other action
+          console.error('Failed to save profile:', error);
+        }
+      });
+    });
+  });
+</script>
+</html>
+```

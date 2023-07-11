@@ -14,9 +14,10 @@ class User(AbstractUser):
     fav_genre = models.CharField(max_length=100, null=True)# null을 허용해도 될까?
     created_at = models.DateField(auto_now_add=True)
     temp = models.DecimalField(max_digits=5, decimal_places=2,default=36.5)
-    profile_img = models.ImageField(upload_to="profiles/", null=True)
+    profile_img = models.ImageField(upload_to="profiles/", default="profiles/cbuchu.png")
+    comment = models.CharField(max_length=100, default="한줄소개가 아직 없습니다.")
     # visit_count = models.IntegerField(default=0)
-    # delete colume
+    # delete column
     first_name = None
     last_name = None
     last_login = None
@@ -30,6 +31,8 @@ class User(AbstractUser):
         else:
             return settings.DEFAULT_PROFILE_IMAGE
 
+    def __str__(self):
+        return self.nickname
 
 class follow(models.Model):
     follower = models.IntegerField()

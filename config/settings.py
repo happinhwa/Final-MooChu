@@ -19,6 +19,7 @@ from django.conf import settings
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 AUTH_USER_MODEL = 'common.User'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -46,6 +47,8 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "rest_framework",
+    "mypage"
 ]
 
 MIDDLEWARE = [
@@ -151,6 +154,7 @@ STATICFILES_DIRS = [
 ]
 
 # 장고디비에 이미지 파일올리기
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -174,8 +178,8 @@ AUTHENTICATION_BACKENDS = [
 # # Email sending
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-LOGIN_REDIRECT_URL = "/moochu/mainpage"
-LOGOUT_REDIRECT_URL = "/moochu/mainpage"
+LOGIN_REDIRECT_URL = "/moochu"
+LOGOUT_REDIRECT_URL = "/moochu"
 ACCOUNT_LOGOUT_ON_GET = True
 # EMAIL_HOST = 'smtp.gmail.com'
 # # 메일을 호스트하는 서버
@@ -189,5 +193,7 @@ ACCOUNT_LOGOUT_ON_GET = True
 # # TLS 보안 방법
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # # 사이트와 관련한 자동응답을 받을 이메일 주소,'webmaster@localhost'
+
+
 # 기본 프로필 이미지 경로 설정
-DEFAULT_PROFILE_IMAGE = 'static/chuchu.png'  # 기본 이미지 파일의 경로
+DEFAULT_PROFILE_IMAGE = 'media/profiles/chuchu.png'  # 기본 이미지 파일의 경로

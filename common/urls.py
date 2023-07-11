@@ -10,15 +10,4 @@ urlpatterns = [
     path('genre_selection/', views.genre_selection, name='genre_selection'), 
     path('save_genre/',views.save_genre, name='save_genre'),
     path('movie_selection/', views.movie_selection, name='movie_selection'),
-    # path('register_complete/', views.movie_rating, name='register_complete'),
-    path('mypage/', views.mypage_home, name="mypage"),
-    path('mypage/mylist', views.mypage_mylist, name="mylist"),
-    path('mypage/reviews', views.mypage_reviews, name="reviews"),
-    path('mypage/note', views.mypage_note, name="note"), 
-    ## 로그인이랑 회원가입 완료되면
-    # path('mypage/<user.id>/', views.mypage_home, name="mypage"),
-    # path('mypage/<user.id>/mylist', views.mypage_mylist, name="mylist"),
-    # path('mypage/<user.id>/reviews', views.mypage_reviews, name="reviews"),
-    # path('mypage/<user.id>/note', views.mypage_note, name="note"),
-    # path('mypage/<user.id>/edit', views.mypage_edit, name="edit")
 ]

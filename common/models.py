@@ -3,7 +3,6 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
 # Create your models here.
-<<<<<<< HEAD
 
 class User(AbstractUser):
     username = models.CharField(max_length=20, unique=True)
@@ -45,5 +44,3 @@ class Genre(models.Model):
     def __str__(self):
         return self.name
     
-=======
->>>>>>> 3032e914fe1914a652206ebf0f7c3eb61199ceca

@@ -1,14 +1,23 @@
-{% extends 'base_my.html' %}
-{% block title %}mypage{% endblock %}
 {% load static %}
+<!-- Navbar -->
+{% include "navbar/navbar1.html" %}
+.
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My page</title>
+  	<link rel="stylesheet" href="{% static 'font.css' %}">
+   <link rel="stylesheet" href="{% static 'mypage.css' %}">
+	  <script src="https://kit.fontawesome.com/e8d8cefab4.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div class="bookcover">
+      <div class="bookdot">
+        <div class="page">
 
-{% block content %}
-<div class="bookcover">
-  <div class="bookdot">
-    <div class="page">
-
-                <!-- 왼쪽 프로필 페이지 구성요소 -->
-                {% include "mypage/profile.html" %}
+                    <!-- 왼쪽 프로필 페이지 구성요소 -->
+                    {% include "mypage/profile.html" %}
 
 
           <div class="content-container">
@@ -92,11 +101,8 @@
                     {% include "mypage/menu.html" %}
 
         </div>
-                <!-- 메뉴 버튼 구성 요소-->
-                {% include "mypage/menu.html" %}
-
+      </div>
     </div>
-<<<<<<< HEAD
   </body>
   
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -129,8 +135,3 @@
 </script>
 </html>
 ```
-=======
-  </div>
-</div>
-{% endblock %}
->>>>>>> 0546c39ed2ec3f8bccdb5b89a32ab92669e8d244

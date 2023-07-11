@@ -33,47 +33,16 @@
 
                 <!-- 찜 목록 리스트 표시 -->
                 <div class="poster-container">
-                      
+                  {% if mylist %}
+                  {% for media in mylist %}    
                   <div class="card">
-                    <img class="card-img" src="/static/images/1_2.jpg" alt="영화 포스터">
-                    <span class="card-text">스파이더맨</span>
+                    <img class="card-img" src="{{ media.media_poster.url }}" alt="영화 포스터" title="{{ media.media_title }}">
+                    <span class="card-text">{{ media.media_title}}</span>
                   </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/2.jpeg" alt="영화 포스터">
-                    <span class="card-text">엘라멘탈</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/3.jpeg" alt="영화 포스터">
-                    <span class="card-text">범죄도시3</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/4.jpeg" alt="영화 포스터">
-                    <span class="card-text">귀공자</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/5.jpeg" alt="영화 포스터">
-                    <span class="card-text">인디아나존스</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/6.jpeg" alt="영화 포스터">
-                    <span class="card-text">플래시</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/7.jpeg" alt="영화 포스터">
-                    <span class="card-text">샤이닝</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/8.jpeg" alt="영화 포스터">
-                    <span class="card-text">슬램덩크</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/9.jpeg" alt="영화 포스터">
-                    <span class="card-text">트랜스포머</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/10.jpeg" alt="영화 포스터">
-                    <span class="card-text">이거 뭐임 아는 사람 연락주세요</span>
-                  </div>
+                  {% endfor %}
+                  {% else %}
+                  <h3> "{{ master.nickname }}"님의 찜 목록이 존재하지 않습니다.</h3>
+                  {% endif %}
                 </div> 
 
 

@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from common.models import User
+from common.models import User, MovieRating
 
 class Movie(models.Model):
     title = models.CharField(max_length=255)
@@ -21,11 +21,20 @@ class Review(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(default=timezone.now)
     liker = models.ManyToManyField(User, related_name='review_liker')
-    vote = models.FloatField(null=True)
+    vote = models.FloatField(null=True, blank=True)  # 평점을 저장할 필드
+    rating = models.ForeignKey(MovieRating, on_delete=models.SET_NULL, null=True, blank=True)  # MovieRating의 id 값을 받는 필드
     updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
-  
+
     def __str__(self):
         return str(self.review)
+
+    def save(self, *args, **kwargs):
+        try:
+            rating = MovieRating.objects.get(user=self.user, movie_title=self.movie.title).rating
+            self.vote = rating
+        except MovieRating.DoesNotExist:
+            self.vote = None  # 평점이 없을 경우 None으로 설정
+        super().save(*args, **kwargs)
         
 class Comments(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comments')

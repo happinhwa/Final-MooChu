@@ -15,6 +15,6 @@ urlpatterns = [
     path('comment_update/<int:comment_id>/', views.comment_update, name='comment_update'),
     path('review_delete/<int:review_id>/', views.review_delete, name='review_delete'),
     path('comment_delete/<int:comment_id>/', views.comment_delete, name='comment_delete'),
-    path('review_liker/<int:review_id>/', views.review_liker1, name='review_liker1'),
-    path('review_liker/<int:review_id>/', views.review_liker2, name='review_liker2'),
+    path('review_liker1/<int:review_id>/', views.review_liker1, name='review_liker1'),
+    path('review_liker2/<int:review_id>/', views.review_liker2, name='review_liker2'),
 ]

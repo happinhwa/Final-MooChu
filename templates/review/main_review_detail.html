@@ -37,6 +37,12 @@
     <a href="{% url 'review:review_liker2' review_id=review.id  %}" class="btn btn-sm btn-outline-secondary">
         좋아요 {{ review.liker.count }}
     </a>
+    {% if request.user == review.user %}
+        <a href="{% url 'review:review_update' review_id=review.id  %}" 
+        class="btn btn-sm btn-outline-secondary">수정</a>
+        <a href="{% url 'review:review_delete' review_id=review.id  %}" 
+        class="btn btn-sm btn-outline-secondary">삭제</a>
+    {% endif %}
     <hr>
     <h5>{{ review.comments.count }}개의 답변이 있습니다.</h5>
 
@@ -70,12 +76,6 @@
         <textarea name="content" id="content" rows="15"></textarea>
         <input type="submit" class="btn btn-primary" value="작성 완료">
     </form>
-    {% if request.user == review.user %}
-        <a href="{% url 'review:review_update' review_id=review.id  %}" 
-        class="btn btn-sm btn-outline-secondary">수정</a>
-        <a href="{% url 'review:review_delete' review_id=review.id  %}" 
-        class="btn btn-sm btn-outline-secondary">삭제</a>
-    {% endif %}
     <hr>
 </div>
 

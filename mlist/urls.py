@@ -5,6 +5,7 @@ app_name = 'mlist'
 urlpatterns = [
     path('movies/', views.movielist, name='movie_list'),
     path('movies/<str:ott>/', views.ott_movie_list, name='ott_movie_list'),
+    path('movies/movie/<int:id>/', views.movie_detail_by_id, name='movie_detail_by_id'),  # Add this line
     path('comming/', views.c_net, name='comming_soon'),
     path('detail/<int:id>/', views.moviedetail, name='moviedetail'),
 ]

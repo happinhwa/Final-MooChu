@@ -104,17 +104,17 @@ DATABASES = {
 }
 
 #mongodb 설정
-TMDB_MONGODB_URI = 'mongodb://root:root@210.114.91.91:26697/?authMechanism=DEFAULT'  # TMDB 데이터베이스의 MongoDB URI를 입력해주세요.
+MONGODB_URI = 'mongodb://root:root@210.114.91.91:26697/?authMechanism=DEFAULT'  # TMDB 데이터베이스의 MongoDB URI를 입력해주세요.
 TMDB_MONGODB_NAME = 'tmdb'  # TMDB 데이터베이스의 이름을 입력해주세요.
 
-
 # OTT 연결 설정
-OTT_MONGODB_URI = 'mongodb://root:root@210.114.91.91:26697/?authMechanism=DEFAULT'  # OTT 데이터베이스의 MongoDB URI를 입력해주세요.
 OTT_MONGODB_NAME = 'ott_db'  # OTT 데이터베이스의 이름을 입력해주세요.
 
+# ott전체 db (중복 제거)
+OTT_ALLDB_NAME ='ott_all'
 #daum db 설정
-DAUM_MONGODB_URI = 'mongodb://root:root@210.114.91.91:26697/?authMechanism=DEFAULT'  # TMDB 데이터베이스의 MongoDB URI를 입력해주세요.
 DAUM_MONGODB_NAME = 'daum'  #daum db
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

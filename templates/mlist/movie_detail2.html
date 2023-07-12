@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Movie Detail{% endblock %}
+
+{% block content %}
+<style>
+    .movie-container {
+        margin: 40px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        background-color: #333;
+        padding: 20px;
+        border: 2px solid #FCA472;
+        box-shadow: 0px 0px 10px rgba(252, 164, 114, 0.5); /* Add box shadow */
+    }
+    .poster-image {
+        flex: 0 0 auto;
+    }
+    .movie-info {
+        flex: 1 1 auto;
+        color: #fff;
+        word-break: break-word; /* Modify to break line by word */
+    }
+
+    .genres {
+        display: flex; /* Arrange elements horizontally */
+        align-items: center; /* Add for center alignment */
+    }
+    .genres h3 {
+        margin-right: 10px; /* Adjust spacing between genre title and content */
+    }
+</style>
+
+<div class="movie-container">
+    <div class="poster-image">
+        <img src="{{ movie.posterImageUrl }}" alt="Movie Poster" style="width: 600px; height: 900px;">
+    </div>
+    <div class="movie-info">
+        <h1>{{ movie.titleKr }}</h1>
+        <div class="genres">
+            <h3>Genres: {{ movie.genres|join:", " }}</h3>
+        </div>
+        <h4>Running time: {{ movie.mediaType }} minutes</h4>
+        <h4>Release Date: {{ movie.releasedAt }}</h4>
+        <h4>{{ movie.overview }}</h4>
+    </div>
+</div>
+
+<!-- 영화 정보 가져오기 -->
+<div class="daum-movies">
+  <h2>Daum Movies</h2>
+  <ul>
+    {% for movie in daum_movies %}
+      <li>{{ movie.title }} - <img src="{{ movie.img_link }}" alt="{{ movie.title }}" width="100"></li>
+    {% endfor %}
+  </ul>
+</div>
+
+{% endblock %}

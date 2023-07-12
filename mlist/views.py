@@ -14,7 +14,7 @@ def movielist(request):
     movies = list(Movie.collection.find())
     return render(request, 'mlist/movie_list.html', {'movies': movies})
 
-# 영화 디테일 관련부분
+# 영화 디테일 관련부분tmdb 기준임
 from .models import Movie
 
 def moviedetail(request, id):
@@ -25,88 +25,150 @@ def moviedetail(request, id):
     else:
         return HttpResponse('Movie not found')
 
-
 def ott_movie_list(request, ott):
     movie_data = []
     
     if ott == 'Apple':
         movies = AppleMovie.collection.find({})
-        for movie in movies:
-            movie_data.append(movie['posterImageUrl'])
-            
     elif ott == 'CineFox':
         movies = CineFoxMovie.collection.find({})
-        for movie in movies:
-            movie_data.append(movie['posterImageUrl'])
-            
     elif ott == 'Coupang':
         movies = CoupangMovie.collection.find({})
-        for movie in movies:
-            movie_data.append(movie['posterImageUrl'])
-            
     elif ott == 'Disney':
         movies = DisneyMovie.collection.find({})
-        for movie in movies:
-            movie_data.append(movie['posterImageUrl'])
-            
     elif ott == 'Google':
         movies = GoogleMovie.collection.find({})
-        for movie in movies:
-            movie_data.append(movie['posterImageUrl'])
-            
     elif ott == 'Laftel':
         movies = LaftelMovie.collection.find({})
-        for movie in movies:
-            movie_data.append(movie['posterImageUrl'])
-            
     elif ott == 'Naver':
         movies = NaverMovie.collection.find({})
-        for movie in movies:
-            movie_data.append(movie['posterImageUrl'])
-            
     elif ott == 'Netflix':
         movies = NetflixMovie.collection.find({})
-        for movie in movies:
-            movie_data.append(movie['posterImageUrl'])
-            
     elif ott == 'Primevideo':
         movies = PrimevideoMovie.collection.find({})
-        for movie in movies:
-            movie_data.append(movie['posterImageUrl'])
-            
     elif ott == 'Tving':
         movies = TvingMovie.collection.find({})
-        for movie in movies:
-            movie_data.append(movie['posterImageUrl'])
-            
     elif ott == 'UPlus':
         movies = UPlusMovie.collection.find({})
-        for movie in movies:
-            movie_data.append(movie['posterImageUrl'])
-            
     elif ott == 'Watcha':
         movies = WatchaMovie.collection.find({})
-        for movie in movies:
-            movie_data.append(movie['posterImageUrl'])
-            
     elif ott == 'Wavve':
         movies = WavveMovie.collection.find({})
-        for movie in movies:
-            movie_data.append(movie['posterImageUrl'])
-            
     else:
         movies = Movie.collection.find({})  # ott 값이 없을 경우 전체 영화 데이터를 가져옵니다.
         
-    paginator = Paginator(movie_data, 20)  # 페이지당 10개씩 영화 목록을 보여줍니다.
-    page_number = request.GET.get('page')  # 현재 페이지 번호를 가져옵니다.
-    page_obj = paginator.get_page(page_number)  # 현재 페이지에 해당하는 영화 목록을 가져옵니다.
+    for movie in movies:
+        movie_data.append({
+            'id': str(movie['id']),  # 영화의 ObjectId 값을 문자열로 변환하여 'id' 키와 함께 추가합니다.
+            'posterImageUrl': movie['posterImageUrl']
+        })
+        
+        
+    paginator = Paginator(movie_data, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     
     context = {
         'ott': ott,
         'movies': page_obj
     }
-    print(type(movie_data))
+    
     return render(request, 'mlist/movie_list.html', context)
+
+from django.http import HttpResponse
+from django.shortcuts import render
+from .models import Movie
+from bson import ObjectId  # Import the ObjectId class from the bson module
+
+def movie_detail_by_id(request, id):
+    try:
+        movie_id = ObjectId(id)
+
+        # Determine OTT based on movie ID.
+        ott = determine_ott(movie_id) # Implement logic to determine OTT based on movie ID.
+
+        if ott == 'Apple':
+            movie = AppleMovie.collection.find_one({'_id': movie_id})
+        elif ott == 'CineFox':
+            movie = CineFoxMovie.collection.find_one({'_id': movie_id})
+        elif ott == 'Coupang':
+            movie = CoupangMovie.collection.find_one({'_id': movie_id})
+        elif ott == 'Disney':
+            movie = DisneyMovie.collection.find_one({'_id': movie_id})
+        elif ott == 'Google':
+            movie = GoogleMovie.collection.find_one({'_id': movie_id})
+        elif ott == 'Laftel':
+            movie = LaftelMovie.collection.find_one({'_id': movie_id})
+        elif ott == 'Naver':
+            movie = NaverMovie.collection.find_one({'_id': movie_id})
+        elif ott == 'Netflix':
+            movie = NetflixMovie.collection.find_one({'_id': movie_id})
+        elif ott == 'Primevideo':
+            movie = PrimevideoMovie.collection.find_one({'_id': movie_id})
+        elif ott == 'Tving':
+            movie = TvingMovie.collection.find_one({'_id': movie_id})
+        elif ott == 'UPlus':
+            movie = UPlusMovie.collection.find_one({'_id': movie_id})
+        elif ott == 'Watcha':
+            movie = WatchaMovie.collection.find_one({'_id': movie_id})
+        elif ott == 'Wavve':
+            movie = WavveMovie.collection.find_one({'_id': movie_id})
+        else:
+            movie = None
+
+        if movie:
+            context = {
+                'movie': {
+                    'titleKr': movie['titleKr'],
+                    'titleEn': movie['titleEn'],
+                    'posterImageUrl': movie['posterImageUrl'],
+                    'mediaType': movie['mediaType'],
+                    'releasedAt': movie['releasedAt'],
+                }
+            }
+            return render(request, 'mlist/movie_detail2.html', context)
+        else:
+            return HttpResponse('Could not find a movie.') # If no movie was found with that ID
+
+    except:
+        return HttpResponse('Invalid ID.') # Handle if an invalid ID is provided
+
+
+def determine_ott(movie_id):
+    # 영화 ID를 기반으로 OTT를 결정하기 위한 로직을 구현합니다.
+    # 예시 구현:
+    # - 각 OTT 컬렉션에서 영화를 쿼리하고 movie_id의 존재 여부를 확인합니다.
+    # - 각 OTT 컬렉션에서 movie_id의 존재 여부에 따라 OTT를 반환합니다.
+    if AppleMovie.collection.find_one({'_id': movie_id}):
+        return 'Apple'
+    elif CineFoxMovie.collection.find_one({'_id': movie_id}):
+        return 'CineFox'
+    elif CoupangMovie.collection.find_one({'_id': movie_id}):
+        return 'Coupang'
+    elif DisneyMovie.collection.find_one({'_id': movie_id}):
+        return 'Disney'
+    elif GoogleMovie.collection.find_one({'_id': movie_id}):
+        return 'Google'
+    elif LaftelMovie.collection.find_one({'_id': movie_id}):
+        return 'Laftel'
+    elif NaverMovie.collection.find_one({'_id': movie_id}):
+        return 'Naver'
+    elif NetflixMovie.collection.find_one({'_id': movie_id}):
+        return 'Netflix'
+    elif PrimevideoMovie.collection.find_one({'_id': movie_id}):
+        return 'Primevideo'
+    elif TvingMovie.collection.find_one({'_id': movie_id}):
+        return 'Tving'
+    elif UPlusMovie.collection.find_one({'_id': movie_id}):
+        return 'UPlus'
+    elif WatchaMovie.collection.find_one({'_id': movie_id}):
+        return 'Watcha'
+    elif WavveMovie.collection.find_one({'_id': movie_id}):
+        return 'Wavve'
+    else:
+        return None
+
+
 
 from django.http import JsonResponse
 
@@ -127,11 +189,11 @@ def load_more_data(request):
     return JsonResponse(data)
 
 
-def genre_filter(request, genre):
-    movies = Movie.objects.filter(genre=genre)
-    context = {'movies': movies}
-    return render(request, 'api/movielist.html', context)
-
+#def genre_filter(request, genre):
+#    movies = Movie.objects.filter(genre=genre)
+#    context = {'movies': movies}
+#    return render(request, 'api/movielist.html', context)
+#
 #개봉예정작 관련 부분
 import json
 
@@ -167,112 +229,3 @@ def c_net(request):
     }
     return render(request, 'mlist/c_movie.html', context)
 
-
-#
-#
-#
-#
-#
-#
-## 전체 페이지 보여주기
-#def redirect_to_movie_list(request):
-#    return redirect('mlist:mlist_page', page_number=1)
-##페이지 1으로 바로 리다이렉트하기 위함.
-#
-#def movie_list(request, page_number=None):
-#    if page_number is None:
-#        page_number = int(request.GET.get('page', 1))
-#
-#    total_movies = collection.count_documents({})
-#    per_page = 20
-#
-#    if page_number < 1:
-#        page_number = 1
-#
-#    movies = collection.find({}, {"genres": 1, "title": 1, "poster_path": 1, "overview": 1, "release_date": 1})
-#    movies = list(movies)
-#    paginator = Paginator(movies, per_page)
-#
-#    try:
-#        page_obj = paginator.page(page_number)
-#    except PageNotAnInteger:
-#        page_obj = paginator.page(1)
-#    except EmptyPage:
-#        page_obj = paginator.page(paginator.num_pages)
-#
-#    url = f"/mlist/page={page_number}/"
-#    if request.GET.get('page') and int(request.GET['page']) != page_number:
-#        return redirect(url)
-#
-#    paginator_buttons = render_paginator_buttons(paginator, page_number)
-#
-#    context = {
-#        'movies': page_obj,
-#        'page_obj': page_obj,
-#        'total_movies': total_movies,
-#        'paginator': paginator_buttons
-#    }
-#
-#    return render(request, 'mlist/movie_list.html', context)
-#
-#
-#
-#
-#
-#
-#from datetime import datetime
-#
-#def c_net(request):
-#    movies = mongodb_collection1.find({}, {"num": 1, "title": 1, "img_link": 1})
-#
-#    # Group movies by dday
-#    dday_groups = {}
-#    for movie in movies:
-#        dday = movie['num']
-#        if dday in dday_groups:
-#            dday_groups[dday].append(movie)
-#        else:
-#            dday_groups[dday] = [movie]
-#
-#    # Sort the dday groups by dday in ascending order
-#    sorted_groups = sorted(dday_groups.items(), key=lambda x: x[0])
-#
-#    # Pagination settings
-#    per_page = 20  # Set a maximum of 20 movies per page
-#    page_number = request.GET.get('page', 1)
-#    paginator = Paginator(sorted_groups, per_page)
-#
-#    try:
-#        page_obj = paginator.page(page_number)
-#    except PageNotAnInteger:
-#        page_obj = paginator.page(1)
-#    except EmptyPage:
-#        page_obj = paginator.page(paginator.num_pages)
-#
-#    context = {
-#        'page_obj': page_obj,
-#    }
-#    return render(request, 'mlist/c_movie.html', context)
-#
-#
-#def render_paginator_buttons(paginator, current_page):
-#    page_buttons = []
-#    start_page = max(1, current_page - 2)
-#    end_page = min(paginator.num_pages, current_page + 2)
-#
-#    if start_page > 1:
-#        page_buttons.append((1, False))
-#        if start_page > 2:
-#            page_buttons.append((-1, False))
-#
-#    for page in range(start_page, end_page + 1):
-#        is_current = (page == current_page)
-#        page_buttons.append((page, is_current))
-#
-#    if end_page < paginator.num_pages:
-#        if end_page < paginator.num_pages - 1:
-#            page_buttons.append((-1, False))
-#        page_buttons.append((paginator.num_pages, False))
-#
-#    return page_buttons
-#

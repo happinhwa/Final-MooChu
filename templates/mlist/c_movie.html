@@ -22,8 +22,8 @@
                  alt="{{ movie.title }}">
             {% endif %}
             <div class="card-body text-center">
-              <h5 class="card-title">{{ movie.title }}</h5>
-              <p class="card-text d-day-label">D-{{ forloop.parentloop.counter }}</p> <!-- "D-n"을 레이블로 표시 -->
+              <h6 class="card-title">{{ movie.title }}</h6>
+              <p class="card-text d-day-label">{{ dday_group.0 }}</p> <!-- "D-n"을 레이블로 표시 -->
               <p class="card-text">{{ movie.num|date:"Y.m.d" }}</p> <!-- 포맷된 날짜를 표시 -->
             </div>
           </div>
@@ -37,3 +37,5 @@
   </div>
 </div>
 {% endblock %}
+
+

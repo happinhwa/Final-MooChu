@@ -45,7 +45,6 @@
   flex: 1;
 }
 
-
 .box-title {
   font-family: "KOTRA_BOLD-Bold";
   border-bottom: 1px solid grey;
@@ -107,15 +106,14 @@
 
 body {
   background-color: #2C2E34;
-  position:absolute;
+  position: absolute;
   left: 0;
   top: 0;
   right: 0;
   bottom: 0;
   font-size: 25px;
-
   /** 기본 폰트 설정 */
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: "NanumBarunpen", 'Chonburi';
 }
 
 .bookcover {
@@ -125,6 +123,7 @@ body {
   width: 1400px;
   height: 900px;
   margin: 10px auto;
+  margin-bottom: 100px;
   position: relative;
 }
 

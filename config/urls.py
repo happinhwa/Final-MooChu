@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from allauth.account.views import ConfirmEmailView
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +27,9 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('accounts/confirm-email/<str:key>/', ConfirmEmailView.as_view(), name='account_confirm_email'),
     path('review/', include('review.urls', namespace='review')),
+    path('mypage/', include('mypage.urls', namespace='mypage')),  # 수정된 부분
+    path('board/', include('board.urls', namespace='board')),  # 수정된 부분
 ]
+
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

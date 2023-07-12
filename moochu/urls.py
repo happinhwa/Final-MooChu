@@ -6,5 +6,5 @@ from . import views
 app_name = 'moochu'
 
 urlpatterns =[
-    path('main', views.main, name="main"),
+    path('', views.mainpage, name="main"),
 ]

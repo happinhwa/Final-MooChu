@@ -9,11 +9,6 @@ from urllib3 import HTTPResponse
 ## 회원가입 
 from django.contrib.auth import authenticate, login
 from rest_framework.decorators import api_view
-import logging
-
-logger = logging.getLogger(__name__)
-
-logger.info('로그내용')
 
 # from rest_framework.renderers import JSONRenderer
 # from rest_framework.views import APIView
@@ -26,15 +21,13 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('common:register_complete')
+            return redirect('moochu:mainpage')
     else:
         form = RegistrationForm()
     return render(request, 'common/register.html', {'form': form})
 
 def register_complete(request):
     return render(request, 'common/register_complete.html')
-
-
 
 ## 로그인 함수
 def user_login(request):
@@ -66,6 +59,7 @@ GENRE_CHOICES = {
     8:'전쟁',
     9:'판타지',
     10:'미스터리'
+
     # 나머지 번호와 장르를 추가하세요.
 }
 

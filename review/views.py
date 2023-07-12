@@ -125,3 +125,29 @@ def comment_delete(request, comment_id):
 
     comment.delete()
     return redirect('review:main_review_detail', review_id=comment.review.pk)
+
+
+# main_review_list로 보낼거
+@login_required
+def review_liker1(request, review_id):
+    review = get_object_or_404(Review, pk=review_id)
+    if request.user == review.user:
+        messages.error(request, '본인이 작성한 글에 좋아요를 누를 수 없습니다')
+    else:
+        if request.user in review.liker.all():
+            review.liker.remove(request.user)  # 좋아요 취소
+        else:
+            review.liker.add(request.user)  # 좋아요 추가
+    return redirect('review:main_review_list', movie_id=review.movie.id)
+# main_review_detail로 보낼거
+@login_required
+def review_liker2(request, review_id):
+    review = get_object_or_404(Review, pk=review_id)
+    if request.user == review.user:
+        messages.error(request, '본인이 작성한 글에 좋아요를 누를 수 없습니다')
+    else:
+        if request.user in review.liker.all():
+            review.liker.remove(request.user)  # 좋아요 취소
+        else:
+            review.liker.add(request.user)  # 좋아요 추가
+    return redirect('review:main_review_detail', review_id=review.id)

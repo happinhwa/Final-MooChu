@@ -34,6 +34,9 @@
     <p>작성일: {{ review.timestamp }}</p>
     <p>리뷰 내용:</p>
     <p>{{ review.review }}</p>
+    <a href="{% url 'review:review_liker2' review_id=review.id  %}" class="btn btn-sm btn-outline-secondary">
+        좋아요 {{ review.liker.count }}
+    </a>
     <hr>
     <h5>{{ review.comments.count }}개의 답변이 있습니다.</h5>
 

@@ -51,10 +51,21 @@
             <p>평점: {{ review.vote }}</p>
             <p>작성일: {{review.timestamp }}</p>
             <p>리뷰 내용:</p>
-            <p>{{ review.review |truncatechars:30 }}<a href="{% url 'review:main_review_detail' review_id=review.pk %}">...더보기</a></p>
+            <p>
+                {% if review.review|length > 30 %}
+                    {{ review.review|truncatechars:30 }}
+                    <a href="{% url 'review:main_review_detail' review_id=review.pk %}">...더보기</a>
+                {% else %}
+                    {{ review.review }}
+                    <a href="{% url 'review:main_review_detail' review_id=review.pk %}">상세</a>
+                {% endif %}
+            </p>            
             <hr>
             <a href="{% url 'review:main_review_detail' review_id=review.pk %}" class="btn btn-primary">
                 댓글 {{ review.comments.count }}
+            </a>
+            <a href="{% url 'review:review_liker1' review_id=review.id  %}" class="btn btn-sm btn-outline-secondary">
+                좋아요 {{ review.liker.count }}
             </a>
             {% if request.user == review.user %}
                 <a href="{% url 'review:review_update' review_id=review.id  %}" 

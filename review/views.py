@@ -28,10 +28,25 @@ def movie_detail(request, movie_id):
 
 def main_review_list(request, movie_id):
     movie = Movie.objects.get(pk=movie_id)
-    reviews = Review.objects.filter(movie_id=movie_id).order_by('-timestamp')
-    counts =  reviews.annotate(num_comments=Count('review'), num_likes=Count('liker'))
+    reviews = Review.objects.filter(movie_id=movie_id)
+    order = request.GET.get("order")
+    
+    if order == "newest":
+        reviews = reviews.order_by('-timestamp')
+    elif order == "likes":
+        reviews = reviews.annotate(num_likes=Count('liker')).order_by('-num_likes')
+    elif order == "rating":
+        reviews = reviews.order_by("-vote")
+    elif order == "comments":
+        reviews = reviews.annotate(num_comments=Count('comments')).order_by('-num_comments')
+    else:
+        reviews = reviews.order_by('-timestamp')
+
+    counts = reviews.annotate(num_comments=Count('review'), num_likes=Count('liker'))
     context = {'movie':movie, 'reviews': reviews, 'counts':counts}
+
     return render(request, 'review/main_review_list.html', context)
+
 
 def main_review_detail(request, review_id):
     review = get_object_or_404(Review, pk=review_id)

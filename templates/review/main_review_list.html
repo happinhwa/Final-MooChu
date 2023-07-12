@@ -41,6 +41,13 @@
     {% endfor %}
     </div>
     {% endif %}
+    
+    <div class="btn-group" role="group" aria-label="Sorting options">
+        <a href="?order=newest" class="btn btn-secondary">최신 순</a>
+        <a href="?order=likes" class="btn btn-secondary">좋아요 순</a>
+        <a href="?order=rating" class="btn btn-secondary">평점 순</a>
+        <a href="?order=comments" class="btn btn-secondary">댓글 많은 순</a>
+    </div>
 
 <div class="reviews">
 {% if reviews %}
@@ -81,5 +88,4 @@
 {% endif %}
 </div>
 </div>
-
 {% endblock %}

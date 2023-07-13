@@ -32,11 +32,7 @@ flex-shrink: 0;
 margin-right: 5px;
 background: white;
 border-radius: 0.3rem;
-<<<<<<< HEAD
-border-color: #96FC72;
-=======
 border-color: #FCA472;
->>>>>>> acf3d0cd8d453ed2edaa93e4a3382ea23379bc99
 border-width: 0.2rem;
 }
 
@@ -47,11 +43,7 @@ width: 20px;
 height: 20px;
 flex-shrink: 0;
 margin-right: 5px;
-<<<<<<< HEAD
-background: #96FC72;
-=======
 background: #FCA472;
->>>>>>> acf3d0cd8d453ed2edaa93e4a3382ea23379bc99
 border-radius: 0.3rem;
 border-color: white;
 border-width: 0.2rem;
@@ -61,12 +53,7 @@ border-width: 0.2rem;
 .genre-checkbox {
 /* 체크박스의 실제 input 스타일 지정 */
 font-size: 1.5rem;
-<<<<<<< HEAD
-font-family: 'NanumBarunpen';
-color: #96FC72;
-=======
 font-family: NanumBarunpen;
 color: white;
->>>>>>> acf3d0cd8d453ed2edaa93e4a3382ea23379bc99
 }
 

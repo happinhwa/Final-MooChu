@@ -8,11 +8,6 @@
     font-family: 'Chonburi';
     src: url('/static/fonts/Chonburi-Regular.ttf') format('truetype');
 }
-<<<<<<< HEAD
-
-/* 한글 글씨체 */
-=======
->>>>>>> 3032e914fe1914a652206ebf0f7c3eb61199ceca
 @font-face {
     font-family: 'NanumBarunpen';
     src: url('/static/fonts/NanumBarunpenB.ttf') format('truetype');

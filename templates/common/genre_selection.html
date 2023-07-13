@@ -10,22 +10,26 @@
 <form method="POST">
   {% csrf_token %}
   <div class="container" style="margin-top: 20px;">
-    <h1 style="font-family: 'NanumBarunpen'; color:#96FC72; margin-bottom: 50px; text-align: center;">관심 장르 선택</h1>
-    <ul>
-    {% for genre in genres %}
-          <li style="text-align: center;">
-            <label>
-                <input type="checkbox" class="genre-checkbox" name="selected_genres" value="{{ genre.pk }}">
-                {{ genre.genre }}
-            </label>
-          </li>
-    {% endfor %}
-    </ul>
-    <div class="row justify-content-end">
-        <div class="col-auto">
-            <input type="submit" class="next-btn" id="next-button" value="다음">
+    <div class="row justify-content-center">
+      <h1 style="font-family: 'NanumBarunpen'; color:#96FC72; margin-bottom: 50px; text-align: center;">관심 장르 선택</h1>
+      {% for genre in genres %}
+      <div class="row justify-content-center">
+        <div class="col-md-4 mb-3 d-flex justify-content-start">
+          <label class="genre-checkbox">
+            <input type="checkbox" name="selected_genres" value="{{ genre.pk }}">
+            {{ genre.genre }}
+          </label>
         </div>
+      </div>     
+      {% endfor %}
     </div>
+
+    <br><br><br>
+    <div class="row justify-content-end">
+      <div class="col-auto">
+        <button type="submit" class="next-btn" id="next-button">다음</button>
+      </div>
+    </div>  
   </div>
 </form>
 {% endblock %}

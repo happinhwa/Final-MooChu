@@ -13,6 +13,25 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from django.conf import settings
+import logging
+from django.utils import timezone
+
+class UserRequestsFilter(logging.Filter): #로그 필터
+    def filter(self, record):
+        request = getattr(record, "request", None)
+        if request is not None:
+            user_id = getattr(request.user, "id", "anonymous")
+            logging_start_time = getattr(request, "_logging_start_time", timezone.now())
+            request_time = timezone.localtime(logging_start_time).strftime('%Y-%m-%d %H:%M:%S')
+            extra_user_id = getattr(record, "user_id", None) # user_id를 extra에서 가져옵니다.
+            extra_post_id = getattr(record, "post_id", None) # post_id를 extra에서 가져옵니다.
+
+            record.user_id = user_id
+            record.extra_user_id = extra_user_id # extra_user_id 추가
+            record.extra_post_id = extra_post_id # extra_post_id 추가
+            record.request_time = request_time
+            record.path = request.path
+        return True
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -111,6 +130,79 @@ DATABASES = {
     #     }
     # }
 }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'user_requests': {
+            '()': 'config.settings.UserRequestsFilter',
+        },
+    },
+    'formatters': {
+        'detailed': {
+            'format': '{levelname} {asctime} User[{user_id}] postID[{extra_post_id}] Path[{path}] {message}',
+            'style': '{',
+        },
+    },
+        'handlers': {
+            'boardlogfile': {
+                'level': 'INFO',
+                'class': 'logging.handlers.RotatingFileHandler',
+                'filename': 'board.log',
+                'maxBytes': 1024*1024*5,
+                'backupCount': 10,
+                'filters': ['user_requests'],
+                'formatter': 'detailed',
+            },
+            'commonlogfile': {
+                'level': 'INFO',
+                'class': 'logging.handlers.RotatingFileHandler',
+                'filename': 'common.log',
+                'maxBytes': 1024*1024*5,
+                'backupCount': 10,
+                'filters': ['user_requests'],
+                'formatter': 'detailed',
+            },
+            'moochulogfile': {
+                'level': 'INFO',
+                'class': 'logging.handlers.RotatingFileHandler',
+                'filename': 'moochu.log',
+                'maxBytes': 1024*1024*5,
+                'backupCount': 10,
+                'filters': ['user_requests'],
+                'formatter': 'detailed',
+            },
+            'mypagelogfile': {
+                'level': 'INFO',
+                'class': 'logging.handlers.RotatingFileHandler',
+                'filename': 'mypage.log',
+                'maxBytes': 1024*1024*5,
+                'backupCount': 10,
+                'filters': ['user_requests'],
+                'formatter': 'detailed',
+            },
+        },
+        'loggers': {
+            'board': {
+                'handlers': ['boardlogfile'],
+                'level': 'INFO',
+            },
+            'common': {
+                'handlers': ['commonlogfile'],
+                'level': 'INFO',
+            },
+            'moochu': {
+                'handlers': ['moochulogfile'],
+                'level': 'INFO',
+            },
+            'mypage': {
+                'handlers': ['mypagelogfile'],
+                'level': 'INFO',
+            },
+        },
+    }
+
 
 
 # Password validation

@@ -166,3 +166,8 @@ def review_liker2(request, review_id):
         else:
             review.liker.add(request.user)  # 좋아요 추가
     return redirect('review:main_review_detail', review_id=review.id)
+
+def newest_review_list(request):
+    reviews = Review.objects.all()
+    context= {'reviews': reviews}
+    return render(request, 'review/newest_review_list.html',context)

@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% load static %}
 
@@ -33,29 +34,29 @@
     }
 </style>
 
+<!-- Get movie information -->
+<div class="movie-info">
+    <h1>{{ movie.titleKr }}</h1>
+    <h4>Title (English): {{ movie.titleEn }}</h4>
+    <img src="{{ movie.posterImageUrl }}" alt="Movie Poster" style="width: 600px; height: 900px;">
+    <h4>Media Type: {{ movie.mediaType }}</h4>
+    <h4>Release Date: {{ movie.releasedAt }}</h4>
+</div>
+
 <div class="movie-container">
     <div class="poster-image">
         <img src="{{ movie.posterImageUrl }}" alt="Movie Poster" style="width: 600px; height: 900px;">
     </div>
     <div class="movie-info">
         <h1>{{ movie.titleKr }}</h1>
+        {% comment %} <h4>{{ movie.overview }}</h4> {% endcomment %}
         <div class="genres">
             <h3>Genres: {{ movie.genres|join:", " }}</h3>
         </div>
-        <h4>Running time: {{ movie.mediaType }} minutes</h4>
+        <h4>Running time: {{ movie.runtime }} minutes</h4>
         <h4>Release Date: {{ movie.releasedAt }}</h4>
         <h4>{{ movie.overview }}</h4>
     </div>
-</div>
-
-<!-- 영화 정보 가져오기 -->
-<div class="daum-movies">
-  <h2>Daum Movies</h2>
-  <ul>
-    {% for movie in daum_movies %}
-      <li>{{ movie.title }} - <img src="{{ movie.img_link }}" alt="{{ movie.title }}" width="100"></li>
-    {% endfor %}
-  </ul>
 </div>
 
 {% endblock %}

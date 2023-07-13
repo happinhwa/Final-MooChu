@@ -59,9 +59,10 @@ def ott_movie_list(request, ott):
         
     for movie in movies:
         movie_data.append({
-            'id': str(movie['id']),  # 영화의 ObjectId 값을 문자열로 변환하여 'id' 키와 함께 추가합니다.
-            'posterImageUrl': movie['posterImageUrl']
-        })
+            'id': str(movie['_id']),  # Convert the movie's ObjectId value to a string and append it with the 'id' key.
+            'posterImageUrl': movie['posterImageUrl'],
+            'titleKr': movie['titleKr']
+    })
         
         
     paginator = Paginator(movie_data, 20)
@@ -75,14 +76,14 @@ def ott_movie_list(request, ott):
     
     return render(request, 'mlist/movie_list.html', context)
 
-from django.http import HttpResponse
 from django.shortcuts import render
-from .models import Movie
-from bson import ObjectId  # Import the ObjectId class from the bson module
+from bson import ObjectId
+from django.http import Http404
+from bson.errors import InvalidId
 
 def movie_detail_by_id(request, id):
     try:
-        movie_id = ObjectId(id)
+        movie_id = ObjectId(str(id))
 
         # Determine OTT based on movie ID.
         ott = determine_ott(movie_id) # Implement logic to determine OTT based on movie ID.
@@ -128,12 +129,45 @@ def movie_detail_by_id(request, id):
             }
             return render(request, 'mlist/movie_detail2.html', context)
         else:
-            return HttpResponse('Could not find a movie.') # If no movie was found with that ID
+            raise Http404('Could not find a movie.') # If no movie was found with that ID
 
-    except:
-        return HttpResponse('Invalid ID.') # Handle if an invalid ID is provided
+    except InvalidId:
+        raise Http404('Invalid ID.') # Handle if an invalid ID is provided
 
+# 디테일 뷰
+from django.shortcuts import render
+from .models import Ott_detail
 
+def movie_detail2(request, id):
+    movie = Ott_detail.get_movie_by_id(id)
+
+    return render(request, 'mlist/movie_detail2.html', {'movie': movie})
+#def moviedetail(request, id):
+#    movie = Movie.get_movie_by_id(id)
+#    if movie:
+#        poster_url = 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/' + movie.poster_path
+#        return render(request, 'mlist/movie_detail.html', {'movie': movie, 'poster_url': poster_url})
+#    else:
+#        return HttpResponse('Movie not found')
+
+#
+#        context = {
+#            'movie': {
+#                'titleKr': movie['titleKr'],
+#                'titleEn': movie['titleEn'],
+#                'posterImageUrl': movie['posterImageUrl'],
+#                'mediaType': movie['mediaType'],
+#                'releasedAt': movie['releasedAt'],
+#            }
+#        }
+#        return render(request, 'mlist/movie_detail2.html', context)
+##        else:
+##            return HttpResponse('Could not find a movie.') # If no movie was found with that ID
+##
+#    except:
+#        return HttpResponse('Invalid ID.') # Handle if an invalid ID is provided
+#
+#
 def determine_ott(movie_id):
     # 영화 ID를 기반으로 OTT를 결정하기 위한 로직을 구현합니다.
     # 예시 구현:

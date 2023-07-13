@@ -196,7 +196,6 @@ class WavveMovie(OTTMovie):
     # 필요한 기능을 구현해주세요.
 # 연결 종료
 
-
 class Ott_detail:
     collection = ottall_db.all
     
@@ -204,48 +203,42 @@ class Ott_detail:
     def get_collection(cls):
         return ottall_db
 
-    def __init__(self, id, titleKr, releasedAt, runtime, posterImageUrl, mediaType, overview):
+    def __init__(self, id, titleKr, titleEn, runtime, posterImageUrl, mediaType, releasedAt):
         self.id = id
-        self.title = titleKr
-        self.release_date = releasedAt
+        self.titleKr = titleKr
+        self.titleEn = titleEn
         self.runtime = runtime
-        self.poster_url = posterImageUrl
+        self.posterImageUrl = posterImageUrl
         self.mediaType = mediaType
-        self.overview = overview
+        self.releasedAt = releasedAt
 
     def save(self):
-        collection = self.get_collection().movies
+        collection = self.get_collection()
         collection.insert_one({
             'id': self.id,
-            'title': self.title,
-            'release_date': self.release_date,
+            'titleKr': self.titleKr,
+            'titleEn': self.titleEn,
             'runtime': self.runtime,
-            'poster_path': self.poster_url,
+            'posterImageUrl': self.posterImageUrl,
             'mediaType': self.mediaType,
-            'overview': self.overview,
+            'releasedAt': self.releasedAt,
         })
 
     @classmethod
     def get_movie_by_id(cls, id):
-        datail_db = cls.get_collection()
-        for collection_name in datail_db.list_collection_names():
-            collection = datail_db[collection_name]
-            movie = collection.find_one({'id': id})
-            if movie:
-                genre_names = [genre['name'] for genre in movie['genres']]
-                movie['genres'] = genre_names
-                return Movie(
-                    movie['id'],
-                    movie['title'],
-                    movie['release_date'],
-                    movie['runtime'],
-                    movie['poster_path'],
-                    movie['genres'],
-                    movie['overview'],
-                )
+        collection = cls.get_collection().all
+        movie = collection.find_one({'id': id})
+        if movie:
+            return Ott_detail(
+                movie['id'],
+                movie['titleKr'],
+                movie['titleEn'],
+                movie['runtime'],
+                movie['posterImageUrl'],
+                movie['mediaType'],
+                movie['releasedAt'],
+            )
         return None
-
-
 
 
 

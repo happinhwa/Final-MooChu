@@ -5,12 +5,13 @@ app_name = 'mlist'
 urlpatterns = [
     path('movies/', views.movielist, name='movie_list'),
     path('movies/<str:ott>/', views.ott_movie_list, name='ott_movie_list'),
-    path('movies/movie/<int:id>/', views.movie_detail_by_id, name='movie_detail_by_id'),  # Add this line
+    path('movies/movie/<int:id>/', views.movie_detail_by_id, name='movie_detail_by_id'),
+    path('movie_detail2/<int:id>/', views.movie_detail2, name='movie_detail2'),
     path('comming/', views.c_net, name='comming_soon'),
     path('detail/<int:id>/', views.moviedetail, name='moviedetail'),
 ]
 
-
+path('movie_detail2/', views.movie_detail2, name='movie_detail2')
 #from django.urls import path, include
 #from . import views
 #

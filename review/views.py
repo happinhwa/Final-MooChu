@@ -168,6 +168,6 @@ def review_liker2(request, review_id):
     return redirect('review:main_review_detail', review_id=review.id)
 
 def newest_review_list(request):
-    reviews = Review.objects.all()
+    reviews = Review.objects.all().order_by('-timestamp')
     context= {'reviews': reviews}
     return render(request, 'review/newest_review_list.html',context)

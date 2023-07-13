@@ -23,7 +23,7 @@ class Review(models.Model):
     liker = models.ManyToManyField(User, related_name='review_liker')
     vote = models.FloatField(null=True, blank=True)  # 평점을 저장할 필드
     rating = models.ForeignKey(MovieRating, on_delete=models.SET_NULL, null=True, blank=True)  # MovieRating의 id 값을 받는 필드
-    updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return str(self.review)
@@ -34,16 +34,24 @@ class Review(models.Model):
             self.vote = rating
         except MovieRating.DoesNotExist:
             self.vote = None  # 평점이 없을 경우 None으로 설정
+
+        if self.pk is not None:
+            self.updated_at = timezone.now() # 수정되었을 경우 updated_at 필드를 업데이트합니다.
         super().save(*args, **kwargs)
+
+        
         
 class Comments(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comments')
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='comments')
     comment_txt = models.TextField(null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(null=True, blank=True, auto_now=True)
+    timestamp = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(null=True, blank=True)
   
     def __str__(self):
         return str(self.comment_txt)
 
-    
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            self.updated_at = timezone.now() # 수정되었을 경우 updated_timestamp 필드를 업데이트합니다.
+        super().save(*args, **kwargs)

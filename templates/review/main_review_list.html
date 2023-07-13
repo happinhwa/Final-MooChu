@@ -56,7 +56,11 @@
         <div class="review box">
             <h3>작성자: {{ review.user.username }}</h3>
             <p>평점: {{ review.vote }}</p>
-            <p>작성일: {{review.timestamp }}</p>
+            {% if review.updated_at and review.updated_at != review.timestamp %}
+                <p>수정일: {{ review.updated_at }}</p>
+            {% else %}
+                <p>작성일: {{ review.timestamp }}</p>
+            {% endif %}
             <p>리뷰 내용:</p>
             <p>
                 {% if review.review|length > 30 %}

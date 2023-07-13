@@ -42,6 +42,7 @@ def main_review_list(request, movie_id):
     else:
         reviews = reviews.order_by('-timestamp')
 
+    
     counts = reviews.annotate(num_comments=Count('review'), num_likes=Count('liker'))
     context = {'movie':movie, 'reviews': reviews, 'counts':counts}
 
@@ -74,7 +75,7 @@ def write_comment(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
     user = request.user
     comment_txt = request.POST.get('content')
-    comment = Comments(review=review, comment_txt=comment_txt, user=user, created_at=timezone.now())
+    comment = Comments(review=review, comment_txt=comment_txt, user=user)
     comment.save()
     return redirect('review:main_review_detail', review_id=review.id)
 

@@ -47,8 +47,14 @@
                       {% for follow in follower%}
                       <div class="news-row">
                         <div>
-                          <img class="follow-img" src="{{follow.follower.profile_img}}">
-                          <a href="{% url 'common:mypage' nickname=follow.follower.nickname %}"> {{ follow.follower.nickname }}</a>
+                          <img class="follow-img" src="{{follow.follower.profile_img.url }}">
+                          <a href="{% url 'mypage:home' nickname=follow.follower.nickname %}"> {{ follow.follower.nickname }}</a>
+                          {% if follow.follower == writer or writer == master %}
+                          <form id="delete-button" data-url="{% url 'mypage:follower' follow_id=follow.id %}" method="delete">
+                            {% csrf_token %}
+                            <button class="follow-btn" type="delete-button">팔로우 취소</button>
+                          </form>
+                          {% endif %}
                         </div>
                       </div>
                       {% endfor %}
@@ -65,8 +71,14 @@
                       {% for follow in following%}
                       <div class="menu-row">
                         <div>
-                          <img class="follow-img" src="{{follow.following.profile_img}}">
-                          <a href="{% url 'common:mypage' nickname=follow.following.nickname %}"> {{ follow.following.nickname }}</a>
+                          <img class="follow-img" src="{{follow.following.profile_img.url }}">
+                          <a href="{% url 'mypage:home' nickname=follow.following.nickname %}"> {{ follow.following.nickname }}</a>
+                          {% if follow.following == writer or writer == master%}
+                          <form id="delete-button" data-url="{% url 'mypage:follower' follow_id=follow.id %}" method="delete">
+                            {% csrf_token %}
+                            <button class="follow-btn" type="delete-button">팔로우 취소</button>
+                          </form>
+                          {% endif %}
                         </div>
                       </div>
                       {% endfor %}
@@ -92,5 +104,33 @@
       </div>
     </div>
   </body>
+  
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#delete-button').submit(function(e) {
+      e.preventDefault(); // Prevent the default form submission
+      
+      var form = $(this);
+      var url = form.data('url');
+      
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: form.serialize(),
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+        },
+        success: function(response) {
+
+          location.reload();
+        },
+        error: function(xhr, status, error) {
+
+          console.error('Failed to cancel follow:', error);
+        }
+      });
+    });
+  });
+</script>
 </html>
-```

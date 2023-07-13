@@ -6,7 +6,7 @@
                   <!-- 프로필 사진 -->
   <div class="box profile-box">
     <div class="profile-image">
-      <img class="profile-image-img" src="{{ master.profile_img }}" alt="프로필 이미지"/>
+      <img class="profile-image-img" src="{{ master.profile_img.url }}" alt="프로필 이미지"/>
     </div>
             <!-- 프로필 사진 밑에 내용 -->
     <div class="profile-text font-kyobohand">
@@ -31,18 +31,45 @@
             <!-- 팔로우 버튼을 넣으면 어떨지 고민중 -->
     {% if writer.id != master.id %}
       {% if allow %}        
-        <form action="{% url 'common:follow_de' %}" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="master_id" value="{{ master.id }}">
-          <button class="follow-btn" type="submit">팔로우 취소</button>
-        </form>
+      <form id="follow-form" action="{% url 'mypage:follow' nickname=master.nickname %}" method="POST">
+        {% csrf_token %}
+        <button class="follow-btn" type="submit">팔로우 취소</button>
+      </form>
       {% else %}     
-        <form action="{% url 'common:follow' %}" method="post">
+        <form action="{% url 'mypage:follow' nickname=master.nickname %}" method="post">
           {% csrf_token %}
-          <input type="hidden" name="master_id" value="{{ master.id }}">
           <button class="follow-btn" type="submit">팔로우</button>
         </form>
       {% endif %}
     {% endif %}
   </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#follow-form').submit(function(e) {
+      e.preventDefault(); // 기본 form 제출 동작 방지
+      
+      var form = $(this);
+      var url = form.attr('action');
+      
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: form.serialize(),
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+        },
+        success: function(response) {
+          // 성공적인 응답을 처리하세요
+          // console.log('팔로우 취소되었습니다.');
+          location.reload();
+        },
+        error: function(xhr, status, error) {
+          // 에러 응답을 처리하세요
+          console.error('팔로우 취소에 실패했습니다:', error);
+        }
+      });
+    });
+  });
+</script>

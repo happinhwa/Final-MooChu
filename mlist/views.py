@@ -136,41 +136,35 @@ def movie_detail_by_id(request, id):
 
 # 디테일 뷰
 from django.shortcuts import render
-from .models import Ott_detail
+from .models import OTT_detail
+
+from .models import OTT_detail
 
 def movie_detail2(request, id):
-    movie = Ott_detail.get_movie_by_id(id)
-
+    movie = OTT_detail.get_movie_by_id(id)
     return render(request, 'mlist/movie_detail2.html', {'movie': movie})
-#def moviedetail(request, id):
-#    movie = Movie.get_movie_by_id(id)
-#    if movie:
-#        poster_url = 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/' + movie.poster_path
-#        return render(request, 'mlist/movie_detail.html', {'movie': movie, 'poster_url': poster_url})
-#    else:
-#        return HttpResponse('Movie not found')
 
-#
-#        context = {
-#            'movie': {
-#                'titleKr': movie['titleKr'],
-#                'titleEn': movie['titleEn'],
-#                'posterImageUrl': movie['posterImageUrl'],
-#                'mediaType': movie['mediaType'],
-#                'releasedAt': movie['releasedAt'],
-#            }
-#        }
-#        return render(request, 'mlist/movie_detail2.html', context)
-##        else:
-##            return HttpResponse('Could not find a movie.') # If no movie was found with that ID
-##
-#    except:
-#        return HttpResponse('Invalid ID.') # Handle if an invalid ID is provided
-#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#def moviedetail(request, id):
+
 #
 def determine_ott(movie_id):
     # 영화 ID를 기반으로 OTT를 결정하기 위한 로직을 구현합니다.
-    # 예시 구현:
     # - 각 OTT 컬렉션에서 영화를 쿼리하고 movie_id의 존재 여부를 확인합니다.
     # - 각 OTT 컬렉션에서 movie_id의 존재 여부에 따라 OTT를 반환합니다.
     if AppleMovie.collection.find_one({'_id': movie_id}):
@@ -222,12 +216,6 @@ def load_more_data(request):
     }
     return JsonResponse(data)
 
-
-#def genre_filter(request, genre):
-#    movies = Movie.objects.filter(genre=genre)
-#    context = {'movies': movies}
-#    return render(request, 'api/movielist.html', context)
-#
 #개봉예정작 관련 부분
 import json
 

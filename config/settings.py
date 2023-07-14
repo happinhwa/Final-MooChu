@@ -15,6 +15,7 @@ import os
 from django.conf import settings
 import logging
 from django.utils import timezone
+import logstash
 
 class UserRequestsFilter(logging.Filter): #로그 필터
     def filter(self, record):
@@ -182,26 +183,42 @@ LOGGING = {
                 'filters': ['user_requests'],
                 'formatter': 'detailed',
             },
+            #     'logstash': {
+            #         'level': 'INFO',
+            #         'class': 'logstash.TCPLogstashHandler',
+            #         'host': 'localhost',  # Logstash 서버의 호스트 주소를 입력하세요
+            #         'port': 5959,         # Logstash 서버의 포트 번호를 입력하세요
+            #         'version': 1,         # Logstash 버전 입력 (예: 버전 1)
+            #         'message_type': 'django',  # 메시지 유형 설정 (예: 'django')
+            #         'filters': ['user_requests'],
+            #         'formatter': 'detailed',
+            # },
         },
-        'loggers': {
-            'board': {
-                'handlers': ['boardlogfile'],
-                'level': 'INFO',
-            },
-            'common': {
-                'handlers': ['commonlogfile'],
-                'level': 'INFO',
-            },
-            'moochu': {
-                'handlers': ['moochulogfile'],
-                'level': 'INFO',
-            },
-            'mypage': {
-                'handlers': ['mypagelogfile'],
-                'level': 'INFO',
-            },
+            'loggers': {
+                'board': {
+                    'handlers': ['boardlogfile'],
+                    'level': 'INFO',
+                },
+                'common': {
+                    'handlers': ['commonlogfile'],
+                    'level': 'INFO',
+                },
+                'moochu': {
+                    'handlers': ['moochulogfile'],
+                    'level': 'INFO',
+                },
+                'mypage': {
+                    'handlers': ['mypagelogfile'],
+                    'level': 'INFO',
+                },
+                # 'django': {
+                #     'handlers': ['logstash'],
+                #     'level': 'INFO',
+                #     'propagate': True,
+                # },
         },
-    }
+}
+
 
 
 

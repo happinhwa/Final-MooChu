@@ -29,8 +29,19 @@
     <h2>리뷰 댓글 </h2>
 </div>
 
+
+<div class="container my-3">
+    {% if messages %}
+        <div class="alert alert-danger my-3" role="alert">
+        {% for message in messages %}
+            <strong>{{ message.tags }}</strong>
+            <ul><li>{{ message.message }}</li></ul>
+        {% endfor %}
+        </div>
+    {% endif %}
 <div class="reviews">
     <h3>리뷰 작성자: {{ review.user.username }}</h3>
+    <p>평점: {{ review.movie_rating }}</p>
     {% if review.updated_at and review.updated_at != review.timestamp %}
         <p>수정일: {{ review.updated_at }}</p>
     {% else %}
@@ -88,7 +99,7 @@
     </form>
     <hr>
 </div>
-
+</div>
 
     
 {% endblock %}

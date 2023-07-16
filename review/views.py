@@ -105,7 +105,7 @@ def review_update(request, review_id):
 def comment_update(request, comment_id):
     comment = get_object_or_404(Comments, pk=comment_id)
     if request.user != comment.user:
-        messages.error(request, '수정권한이 없습니다')
+        messages.error(request,'수정권한이 없습니다')
         return redirect('review:main_review_detail', comment_id=comment.id)
     
     if request.method == "POST":

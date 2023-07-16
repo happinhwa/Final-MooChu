@@ -55,7 +55,7 @@
     {% for review in reviews %}
         <div class="review box">
             <h3>작성자: {{ review.user.username }}</h3>
-            <p>평점: {{ review.vote }}</p>
+            <p>평점: {{ review.movie_rating }}</p>
             {% if review.updated_at and review.updated_at != review.timestamp %}
                 <p>수정일: {{ review.updated_at }}</p>
             {% else %}

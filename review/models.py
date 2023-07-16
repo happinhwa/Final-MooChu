@@ -15,31 +15,31 @@ class Movie(models.Model):
         db_table = 'movie'
         app_label = 'review'
 
+
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review_writer')
     review = models.TextField(default="작성된 리뷰가 없습니다.")
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(default=timezone.now)
     liker = models.ManyToManyField(User, related_name='review_liker')
-    vote = models.FloatField(null=True, blank=True)  # 평점을 저장할 필드
-    rating = models.ForeignKey(MovieRating, on_delete=models.SET_NULL, null=True, blank=True)  # MovieRating의 id 값을 받는 필드
     updated_at = models.DateTimeField(null=True, blank=True)
+    movie_rating = models.ForeignKey(MovieRating, on_delete=models.SET_NULL, null=True, blank=True, related_name='review_Mrating')
 
     def __str__(self):
         return str(self.review)
 
     def save(self, *args, **kwargs):
         try:
-            rating = MovieRating.objects.get(user=self.user, movie_title=self.movie.title).rating
-            self.vote = rating
+            movie_rating = MovieRating.objects.get(user=self.user, movie_title=self.movie.title)
         except MovieRating.DoesNotExist:
-            self.vote = None  # 평점이 없을 경우 None으로 설정
-
-        if self.pk is not None:
-            self.updated_at = timezone.now() # 수정되었을 경우 updated_at 필드를 업데이트합니다.
-        super().save(*args, **kwargs)
-
+            movie_rating = MovieRating.objects.create(user=self.user, movie_title=self.movie.title, rating=None)
         
+        self.movie_rating = movie_rating
+        
+        if self.pk is not None:
+            self.updated_at = timezone.now()
+        
+        super().save(*args, **kwargs)
         
 class Comments(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comments')

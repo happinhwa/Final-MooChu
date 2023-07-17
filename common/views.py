@@ -3,12 +3,16 @@ from urllib3 import HTTPResponse
 from .forms import RegistrationForm
 ## 회원가입 
 from django.contrib.auth import authenticate, login
-from .models import Genre
+from .models import Genre, User
 from rest_framework.decorators import api_view
+# SMTP 관련 인증
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
+from django.utils.encoding import force_bytes, force_str
+from .tokens import account_activation_token
+from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 
-# from rest_framework.renderers import JSONRenderer
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
 
 
 ## 회원가입 
@@ -16,14 +20,31 @@ def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('common:register_complete')
+            user = form.save()
+            current_site = get_current_site(request) 
+            message = render_to_string('common/register_activation.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            mail_title = "계정 활성화 확인 이메일"
+            mail_to = request.POST["email"]
+            email = EmailMessage(mail_title, message, to=[mail_to])
+            email.send()
+            address = "http://www." + mail_to.split('@')[1]
+            form = { "user": user,
+                    "address": address }
+            return render(request, 'common/register_complete.html', form)
     else:
         form = RegistrationForm()
     return render(request, 'common/register.html', {'form': form})
 
 def register_complete(request):
-    return render(request, 'common/register_complete.html')
+    user=request.user
+    address = "http://www." + user.email.split('@')[1]
+    form = {"address":address}
+    return render(request, 'common/register_complete.html', form)
 
 ## 로그인 함수
 def user_login(request):
@@ -46,3 +67,21 @@ def user_login(request):
 def genre_selection(request):
     genres = Genre.objects.all()
     return render(request, 'common/genre_selection.html', {'genres': genres})
+
+
+# 계정 활성화 함수(토큰을 통해 인증)
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExsit):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(request, user)
+        return redirect("common:authentication")
+    
+def authentication(request):
+    return render(request, 'common/Authentication_complete.html')

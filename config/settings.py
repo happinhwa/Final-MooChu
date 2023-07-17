@@ -174,7 +174,6 @@ LOGIN_REDIRECT_URL = "/moochu"
 LOGOUT_REDIRECT_URL = "/moochu"
 ACCOUNT_LOGOUT_ON_GET = True
 
-
 # 기본 프로필 이미지 경로 설정
 DEFAULT_PROFILE_IMAGE = 'media/profiles/chuchu.png'  # 기본 이미지 파일의 경로
 
@@ -194,4 +193,3 @@ EMAIL_USE_TLS = True
 # TLS 보안 방법
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # 사이트와 관련한 자동응답을 받을 이메일 주소,'webmaster@localhost'
-

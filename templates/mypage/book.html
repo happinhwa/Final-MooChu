@@ -93,11 +93,17 @@
       </div>
     </div>
   </body>
+  <!-- jQuery 라이브러리를 로드 -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
+    // 
     $(document).ready(function() {
+      // delete-button 클래스를 가진 요소가 클릭되었을 때 실행
       $('.delete-button').click(function() {
+        // 토큰 값 할당
         var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+        // 클릭된 요소에서 가장 가까운 <form> 요소를 찾고, 
+        //data-url 속성의 값을 가져와 url 변수에 할당합니다.
         var url = $(this).closest('form').data('url');
 
         $.ajax({
@@ -106,12 +112,14 @@
           beforeSend: function(xhr) {
             xhr.setRequestHeader('X-CSRFToken', csrftoken);
           },
+          // 삭제 성공한 후 수행할 동작
           success: function() {
-            // 삭제 성공한 후 수행할 동작을 추가하세요
-            // 예: 페이지 새로고침 등
+            
             location.reload();
           },
+          // 요청이 실패했을 때 실행될 함수
           error: function(xhr, status, error) {
+            // 오류메세지를 콘솔에 출력한다.
             console.error('Failed to delete book:', error);
           }
         });

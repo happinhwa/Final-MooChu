@@ -8,6 +8,7 @@ app_name = 'mypage'
 urlpatterns = [
     ## 홈 
     path('<str:nickname>/', views.home, name="home"),
+    
     ## 찜 
     path('<str:nickname>/mylist', views.mylist, name="mylist"),
 

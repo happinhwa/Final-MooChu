@@ -40,11 +40,11 @@ class SearchView(APIView):
         # data_list = docs['hits']['hits']
         if data_list:
             # return Response({'data': data_list})
-            return render(request, 'search/result2.html',{'data': data_list})
+            return render(request, 'search/result.html',{'data': data_list})
         else:
             data_list="일치하는 결과가 존재하지 않습니다."
             # return Response({'data': data_list})
-            return render(request, 'search/result2.html',{'data': data_list})
+            return render(request, 'search/result.html',{'data': data_list})
    
 def search(request):
     return render(request, 'search/home.html')

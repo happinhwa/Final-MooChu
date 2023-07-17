@@ -46,11 +46,13 @@ def home(request, nickname):
                     ## 코드 ## 
     return render(request, 'mypage/mypage.html', profile)
 
+@api_view(['GET'])
 def mylist(request, nickname):
     form = profile_data(nickname, request)
     mylist={"mylist":models.mylist.objects.filter(user=form['master'])}
     form.update(mylist)
     return render(request, 'mypage/mylist.html', form)
+
 
 def reviews(request, nickname):
     profile = profile_data(nickname, request)
@@ -92,7 +94,7 @@ def guestbook(request, nickname):
 @api_view(['DELETE'])
 def guestbook_detail(request, guestbook_id):
     if request.method == 'DELETE':
-        book = models.GuestBook.objects.filter(id=guestbook_id)
+        book_item = models.GuestBook.objects.filter(id=guestbook_id)
         book_item.delete()
 
         return Response(status=200)

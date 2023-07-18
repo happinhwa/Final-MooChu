@@ -9,11 +9,13 @@ from urllib3 import HTTPResponse
 ## 회원가입 
 from django.contrib.auth import authenticate, login
 from rest_framework.decorators import api_view
+import logging
 
 # from rest_framework.renderers import JSONRenderer
 # from rest_framework.views import APIView
 # from rest_framework.response import Response
 
+logger=logging.getLogger('common')
 
 ## 회원가입 
 def register(request):
@@ -106,11 +108,18 @@ def movie_selection(request):
 
         #movies = collection.find({"gen": {"$elemMatch": {"$in": list(select_genres)}}})
         print(movies)
-
+        if request.user.is_authenticated:
+            user_id = request.user.id
+        else:
+            user_id = None
         movie_str = []
+        movie_log=[]
         for movie in movies:
             movie['m_id'] = str(movie['_id'])
             movie_str.append(movie)
+            movie_log.append(movie['m_id'])
+        print(movie_log)	
+        logger.info(f'renderMovie{",".join(movie_log)}', extra={'user_id': user_id})
 
         return render(request, 'common/movie_selection.html', {'movies': movie_str})
     

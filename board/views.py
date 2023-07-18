@@ -5,11 +5,10 @@ from . import models, forms
 from django.contrib import messages	
 from django.http import HttpResponse	
 import logging	
-logger = logging.getLogger(__name__)	
-logger.info('board 로그')	
+logger = logging.getLogger(__name__)		
 ############## Post 관련 ##############	
 def moobo(request):	
-    logger.info('Post main page', extra={'request': request})	
+    logger.info('InMainPage', extra={'request': request})	
     post_list = models.board.objects.order_by('-create_date')	
     return render(request, 'board/moobo.html', {'post_list': post_list})	
 def detail(request, post_id):	
@@ -33,7 +32,7 @@ def post(request):
             board.create_date = timezone.now()	
             board.writer = request.user	
             board.save()	
-            logger.info('Event: post add', extra={'request': request, 'post_id': board.id})	
+            logger.info('postAdd', extra={'request': request, 'post_id': board.id})	
             return redirect('board:moobo')	
     else:	
         form = forms.post_form()	
@@ -58,7 +57,7 @@ def comment_create(request, post_id):
             comment.create_date = timezone.now()	
             comment.board = post	
             comment.save()	
-            logger.info('comment create', extra={'request': request}) #로그보내는곳	
+            logger.info('commentcreate', extra={'request': request}) #로그보내는곳	
             return redirect('{}#comment_{}'.format(	
                 resolve_url('board:post_detail', post_id=comment.board.id), comment.id))	
     # elif request.method == "DELETE":	

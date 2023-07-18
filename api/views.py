@@ -11,6 +11,9 @@ def movielist(request):
 
 def ott_movie_list(request, ott):
     movie_data = []
+    genres = ['SF', '가족', '공연', '공포(호러)', '다큐멘터리', '드라마', '멜로/로맨스', '뮤지컬', '미스터리', '범죄',
+              '서부극(웨스턴)', '서사', '서스펜스', '성인', '스릴러', '시사/교양', '애니메이션', '액션', '어드벤처(모험)',
+              '예능', '음악', '전쟁', '코미디', '키즈', '판타지']
     
     if ott == 'Apple':
         movies = AppleMovie.collection.find({})
@@ -86,7 +89,8 @@ def ott_movie_list(request, ott):
     
     context = {
         'ott': ott,
-        'movies': page_obj
+        'movies': page_obj,
+        'genres': genres
     }
     print(type(movie_data))
     return render(request, 'api/movielist.html', context)
@@ -110,11 +114,62 @@ def load_more_data(request):
     return JsonResponse(data)
 
 
-def genre_filter(request, genre):
-    movies = Movie.objects.filter(genre=genre)
-    context = {'movies': movies}
-    return render(request, 'api/movielist.html', context)
+# def genre_filter(request, ott):
+#     selected_genres = request.GET.getlist('genre')  # 선택된 장르들을 리스트로 가져옵니다.
+#     movies = AppleMovie.collection.find({})
+#     # OTT별로 해당하는 영화 컬렉션을 선택합니다.
+#     if ott == 'Apple':
+#         collection = AppleMovie.collection
+#     elif ott == 'CineFox':
+#         collection = CineFoxMovie.collection
+#     elif ott == 'Coupang':
+#         collection = CoupangMovie.collection
+#     elif ott == 'Disney':
+#         collection = DisneyMovie.collection
+#     elif ott == 'Google':
+#         collection = GoogleMovie.collection
+#     elif ott == 'Laftel':
+#         collection = LaftelMovie.collection
+#     elif ott == 'Naver':
+#         collection = NaverMovie.collection
+#     elif ott == 'Netflix':
+#         collection = NetflixMovie.collection
+#     elif ott == 'Primevideo':
+#         collection = PrimevideoMovie.collection
+#     elif ott == 'Tving':
+#         collection = TvingMovie.collection
+#     elif ott == 'UPlus':
+#         collection = UPlusMovie.collection
+#     elif ott == 'Watcha':
+#         collection = WatchaMovie.collection
+#     elif ott == 'Wavve':
+#         collection = WavveMovie.collection
+#     else:
+#         collection = Movie.collection  # ott 값이 없을 경우 전체 영화 데이터를 가져옵니다.
 
+#     # 선택된 장르에 해당하는 영화를 필터링합니다.
+#     movies = list(collection.find({'genre': {'$in': selected_genres}}))
+
+#     context = {'movies': movies}
+#     return render(request, 'api/movielist.html', context)
+
+def genre_filter(request, ott):
+    # 선택된 장르들을 가져옵니다.
+    selected_genres = request.GET.getlist('genre')
+
+    # 체크박스로 표시할 장르 리스트
+    genres = [
+        '가족', '공연', '공포(호러)', '다큐멘터리', '드라마', '멜로/로맨스', '뮤지컬', '미스터리',
+        '범죄', '서부극(웨스턴)', '서사', '서스펜스', '성인', '스릴러', '시사/교양', '애니메이션',
+        '액션', '어드벤처(모험)', '예능', '음악', '전쟁', '코미디', '키즈', '판타지'
+    ]
+
+    context = {
+        'genres': genres,
+        'selected_genres': selected_genres
+    }
+
+    return render(request, 'api/movielist.html', context)
 
     # else:
     #     movies = Movie.collection.find({})  # ott 값이 없을 경우 전체 영화 데이터를 가져옵니다.

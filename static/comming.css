@@ -1,0 +1,16 @@
+.logo-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  
+  .logo-image {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 50%;
+    background-color: white;
+    padding: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  }
+  

@@ -53,8 +53,4 @@ class GenreSelectForm(forms.Form):
         queryset=Genre.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=False
-<<<<<<< HEAD
     )
-=======
-    )
->>>>>>> b654d956433a7c43374b3131e7f081a3d78e63b6

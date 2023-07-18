@@ -6,7 +6,7 @@ from .utils import render_paginator_buttons
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import AppleMovie, CineFoxMovie, CoupangMovie, DisneyMovie, GoogleMovie, LaftelMovie, NaverMovie, NetflixMovie, PrimevideoMovie, TvingMovie, UPlusMovie, WatchaMovie, WavveMovie, DNetflixMovie, DWatchaMovie
+from .models import AppleMovie, CineFoxMovie, CoupangMovie, DisneyMovie, GoogleMovie, LaftelMovie, NaverMovie, NetflixMovie, PrimevideoMovie, TvingMovie, UPlusMovie, WatchaMovie, WavveMovie, DNetflixMovie, DWatchaMovie, CMovie
 from django.core.paginator import Paginator
 
 def movielist(request):
@@ -155,9 +155,6 @@ def movie_detail2(request, id):
 
 
 
-
-
-
 #def moviedetail(request, id):
 
 #
@@ -218,12 +215,29 @@ def load_more_data(request):
 import json
 
 def c_net(request):
-    movies = DNetflixMovie.get_all_movies()
+    netflix_movies = DNetflixMovie.get_all_movies()
+    watcha_movies = DWatchaMovie.get_all_movies()
+
+    movies = []
+
+    for movie in netflix_movies:
+        movie_obj = CMovie(movie)
+        movie_obj.source = 'Netflix'
+        movie_obj.num = movie.get('num')
+        movie_obj.logo_image = '/images/N_logo.png'  # Update the logo image path
+        movies.append(movie_obj)
+
+    for movie in watcha_movies:
+        movie_obj = CMovie(movie)
+        movie_obj.source = 'Watcha'
+        movie_obj.num = movie.get('num')
+        movie_obj.logo_image = '/images/W_logo.png'  # Update the logo image path
+        movies.append(movie_obj)
 
     # Group movies by dday
     dday_groups = {}
     for movie in movies:
-        dday = movie['num']
+        dday = movie.num
         if dday in dday_groups:
             dday_groups[dday].append(movie)
         else:
@@ -248,4 +262,3 @@ def c_net(request):
         'page_obj': page_obj,
     }
     return render(request, 'mlist/c_movie.html', context)
-

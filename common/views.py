@@ -9,12 +9,6 @@ from urllib3 import HTTPResponse
 ## 회원가입 
 from django.contrib.auth import authenticate, login
 from rest_framework.decorators import api_view
-<<<<<<< HEAD
-
-# from rest_framework.renderers import JSONRenderer
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-=======
 # SMTP 관련 인증
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -23,7 +17,6 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 
->>>>>>> b654d956433a7c43374b3131e7f081a3d78e63b6
 
 
 ## 회원가입 
@@ -175,9 +168,6 @@ def save_genre(request):
     else:
         form = GenreSelectForm(genre_choices=all_genres)
 
-<<<<<<< HEAD
-    return render(request, 'common/genre_selection.html', {'form': form})
-=======
     return render(request, 'common/genre_selection.html', {'form': form})
 
 # 계정 활성화 함수(토큰을 통해 인증)
@@ -196,4 +186,3 @@ def activate(request, uidb64, token):
     
 def authentication(request):
     return render(request, 'common/Authentication_complete.html')
->>>>>>> b654d956433a7c43374b3131e7f081a3d78e63b6

@@ -16,25 +16,6 @@ daum_db = mongo_client[settings.DAUM_MONGODB_NAME]
 
 
 
-#from pymongo import MongoClient
-#
-#class tmdb:
-#    ott_collection = ott_db
-#    collection = tmdb_db
-#    a_collection = actor_db
-#    @classmethod
-#    def get_collection(cls):
-#        return tmdb_db, actor_db, ott_db
-#
-#    @classmethod
-#    def get_movie_by_id(cls, id):
-#        ott_ollection = cls.get_collection().all  # ott_db에서 컬렉션 이름 목록 가져오기
-#        document = ott_ollection.find_one({'id': str(id)})
-#        print(document{'title_kr'})
-#        return document
-#
-
-# detail test위한 tmdb 데이터
 class Movie:
     collection = tmdb_db.movie
 
@@ -186,21 +167,6 @@ class OTT_detail:
         document = collection.find_one({'id': str(id)})
         return document
 
-#from pymongo import MongoClient
-#import json
-#class Actor:
-#    collection = actor_db.person
-#    moviecollection = tm_db.detail
-#
-#    @classmethod
-#    def get_person(cls):
-#        return actor_db
-#    
-#    @classmethod
-#    def get_person_by_movie_id(cls, id):
-#        collection = cls.get_person().person
-#        document = collection.find({'movie'}:int(id))
-#        return document
 
 # 개봉예정작 관련입니다.
 class DaumMovie:
@@ -237,6 +203,16 @@ class DWatchaMovie(DaumMovie):
     def get_all_movies(cls):
         movies = cls.collection.find({}, {'num': 1, 'title': 1, 'img_link': 1})
         return list(movies)
+
+class CMovie(dict):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.source = None
+        self.num = None
+        self.logo_image = None  # Add the 'logo_image' attribute to store the logo image path
+
+
+
 
 # Close the connection
 # tmdb_client.close()

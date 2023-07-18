@@ -49,14 +49,12 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-<<<<<<< HEAD
     #영화 리스트 상세정보 등
     "mlist",
-=======
+    #main pull 23.07.18
     "rest_framework",
     "mypage",
     "search",
->>>>>>> b654d956433a7c43374b3131e7f081a3d78e63b6
 ]
 
 MIDDLEWARE = [
@@ -95,7 +93,6 @@ AUTH_USER_MODEL = 'common.User'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-<<<<<<< HEAD
 
 DATABASE_ROUTERS = ['config.router.MongoDBRouter']
 
@@ -123,37 +120,7 @@ OTT_MONGODB_NAME = 'ott_db'  # OTT 데이터베이스의 이름을 입력해주�
 OTT_ALLDB_NAME ='kino_all' 
 #daum db 설정
 DAUM_MONGODB_NAME = 'daum'  #daum db
-=======
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':'final',
-        'USER':'encore',
-        'PASSWORD':'tlrdl13!#',
-        'HOST':'127.0.0.1',
-        'PORT':'4000'
-    },
-    # 'test_mongo': {
-    #     'ENGINE': 'djongo',
-    #     'NAME': 'final_db',
-    #     'CLIENT': {
-    #         'host': 'localhost',
-    #         'port': '4001',
-    #         'username': 'root',
-    #         'password': 'root',
-    #         'authSource': 'admin',
-    #         'authMechanism': 'SCRAM-SHA-1'
-    #     }
-    # }
-}
 
-ELASTICSEARCH_DSL = {
-    'default': {
-        'hosts': '127.0.0.1:9200'
-    },
-}
-
->>>>>>> b654d956433a7c43374b3131e7f081a3d78e63b6
 
 
 # Password validation
@@ -224,14 +191,6 @@ LOGOUT_REDIRECT_URL = "/moochu"
 ACCOUNT_LOGOUT_ON_GET = True
 
 # 기본 프로필 이미지 경로 설정
-<<<<<<< HEAD
-DEFAULT_PROFILE_IMAGE = 'static/chuchu.png'  # 기본 이미지 파일의 경로
-
-
-# 영화 정보 리스트업
-# Pagination
-PAGINATE_BY = 20 # 한 페이지당 20개의 항목이 표시되도록 설정합니다.
-=======
 DEFAULT_PROFILE_IMAGE = 'media/profiles/chuchu.png'  # 기본 이미지 파일의 경로
 
 # Email sending
@@ -250,4 +209,3 @@ EMAIL_USE_TLS = True
 # TLS 보안 방법
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # 사이트와 관련한 자동응답을 받을 이메일 주소,'webmaster@localhost'
->>>>>>> b654d956433a7c43374b3131e7f081a3d78e63b6

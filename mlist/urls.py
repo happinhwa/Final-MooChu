@@ -10,8 +10,6 @@ urlpatterns = [
     path('comming/', views.c_net, name='comming_soon'),
     path('detail/<int:id>/', views.moviedetail, name='moviedetail'),
 ]
-
-path('movie_detail2/', views.movie_detail2, name='movie_detail2')
 #from django.urls import path, include
 #from . import views
 #

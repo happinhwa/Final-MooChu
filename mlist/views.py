@@ -5,7 +5,6 @@ from datetime import datetime
 from .utils import render_paginator_buttons
 from django.http import HttpResponse
 from django.shortcuts import render
-from .models import Movie
 from django.http import JsonResponse
 from .models import AppleMovie, CineFoxMovie, CoupangMovie, DisneyMovie, GoogleMovie, LaftelMovie, NaverMovie, NetflixMovie, PrimevideoMovie, TvingMovie, UPlusMovie, WatchaMovie, WavveMovie, DNetflixMovie, DWatchaMovie
 from django.core.paginator import Paginator
@@ -134,14 +133,13 @@ def movie_detail_by_id(request, id):
     except InvalidId:
         raise Http404('Invalid ID.') # Handle if an invalid ID is provided
 
-# 디테일 뷰
+# 영화 세부정보 뷰
 from django.shortcuts import render
 from .models import OTT_detail
 
-from .models import OTT_detail
-
 def movie_detail2(request, id):
-    movie = OTT_detail.get_movie_by_id(id)
+    movie = OTT_detail.get_movie_by_id(id) # db에서 id를 기준으로 해당 값을
+    print(movie)
     return render(request, 'mlist/movie_detail2.html', {'movie': movie})
 
 

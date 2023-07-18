@@ -21,6 +21,7 @@ import pymongo
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 AUTH_USER_MODEL = 'common.User'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -85,7 +86,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -104,7 +104,7 @@ DATABASES = {
 }
 
 #mongodb 설정
-MONGODB_URI = ''  # 몽고db URI를 입력
+MONGODB_URI = 'mongodb://root:root@210.114.91.91:26697/?authMechanism=DEFAULT'  # TMDB 데이터베이스의 MongoDB URI를 입력해주세요.
 TMDB_MONGODB_NAME = 'tmmovie'  # db 이름
 TMDB_MONGODB_ACTOR = 'tmdbperson' # 인물정보
 
@@ -113,8 +113,6 @@ OTT_MONGODB_NAME = 'ott_db'  # OTT 데이터베이스의 이름을 입력해주�
 
 # ott전체 db (중복 제거)
 OTT_ALLDB_NAME ='kino_all' 
-
-
 #daum db 설정
 DAUM_MONGODB_NAME = 'daum'  #daum db
 

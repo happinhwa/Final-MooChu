@@ -9,10 +9,21 @@ from urllib3 import HTTPResponse
 ## 회원가입 
 from django.contrib.auth import authenticate, login
 from rest_framework.decorators import api_view
+<<<<<<< HEAD
 
 # from rest_framework.renderers import JSONRenderer
 # from rest_framework.views import APIView
 # from rest_framework.response import Response
+=======
+# SMTP 관련 인증
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
+from django.utils.encoding import force_bytes, force_str
+from .tokens import account_activation_token
+from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
+
+>>>>>>> b654d956433a7c43374b3131e7f081a3d78e63b6
 
 
 ## 회원가입 
@@ -27,7 +38,10 @@ def register(request):
     return render(request, 'common/register.html', {'form': form})
 
 def register_complete(request):
-    return render(request, 'common/register_complete.html')
+    user=request.user
+    address = "http://www." + user.email.split('@')[1]
+    form = {"address":address}
+    return render(request, 'common/register_complete.html', form)
 
 ## 로그인 함수
 def user_login(request):
@@ -161,4 +175,25 @@ def save_genre(request):
     else:
         form = GenreSelectForm(genre_choices=all_genres)
 
+<<<<<<< HEAD
     return render(request, 'common/genre_selection.html', {'form': form})
+=======
+    return render(request, 'common/genre_selection.html', {'form': form})
+
+# 계정 활성화 함수(토큰을 통해 인증)
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExsit):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(request, user)
+        return redirect("common:authentication")
+    
+def authentication(request):
+    return render(request, 'common/Authentication_complete.html')
+>>>>>>> b654d956433a7c43374b3131e7f081a3d78e63b6

@@ -14,7 +14,11 @@ class User(AbstractUser):
     fav_genre = models.CharField(max_length=100, null=True)# null을 허용해도 될까?
     created_at = models.DateField(auto_now_add=True)
     temp = models.DecimalField(max_digits=5, decimal_places=2,default=36.5)
+<<<<<<< HEAD
     profile_img = models.ImageField(upload_to="profiles/", default="profiles/cbuchu.png")
+=======
+    profile_img = models.ImageField(upload_to="profiles/", default="profiles/chuchu.png")
+>>>>>>> b654d956433a7c43374b3131e7f081a3d78e63b6
     comment = models.CharField(max_length=100, default="한줄소개가 아직 없습니다.")
     # visit_count = models.IntegerField(default=0)
     # delete column
@@ -49,6 +53,7 @@ class Genre(models.Model):
 class SelectedGenre(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)  # ForeignKey로 변경
+<<<<<<< HEAD
 
     class Meta:
         unique_together = ['user', 'genre']
@@ -61,12 +66,17 @@ class MovieRating(models.Model):
 
     def __str__(self):
         return f"{self.user.nickname} rated '{self.movie_title}' with {self.rating} points"
+=======
+>>>>>>> b654d956433a7c43374b3131e7f081a3d78e63b6
 
-# class GuestNote(models.Model):
-#     main = models.ForeignKey(User, on_delete=models.CASCADE)
-#     writer = models.ForeignKey(User, on_delete=models.RESTRICT)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     content = models.TextField()
+    class Meta:
+        unique_together = ['user', 'genre']
 
-#     def __str__(self):
-#         return self.main
+        
+class MovieRating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE )
+    movie_title = models.CharField(max_length=255)
+    rating = models.FloatField()
+
+    def __str__(self):
+        return f"{self.user.nickname} rated '{self.movie_title}' with {self.rating} points"

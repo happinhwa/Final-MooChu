@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'chuchu.png' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'style-navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'font.css' %}">
+    <link rel="stylesheet" href="{% static 'mypage.css' %}">
+    <script src="https://kit.fontawesome.com/e8d8cefab4.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    {% include "navbar/navbar1.html" %}
+    <!-- Content -->
+    <div>
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

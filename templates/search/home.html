@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>검색 입력 폼</title>
+</head>
+<body>
+    <form action="{% url 'search:search2' %}" method="GET">
+        <input type="text" id="search" name="search" placeholder="검색어를 입력하세요">
+        <button type="submit">검색</button>
+    </form>
+</body>
+</html>

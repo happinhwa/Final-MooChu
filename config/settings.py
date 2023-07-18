@@ -49,8 +49,14 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+<<<<<<< HEAD
     #영화 리스트 상세정보 등
     "mlist",
+=======
+    "rest_framework",
+    "mypage",
+    "search",
+>>>>>>> b654d956433a7c43374b3131e7f081a3d78e63b6
 ]
 
 MIDDLEWARE = [
@@ -85,9 +91,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "config.wsgi.application"
+AUTH_USER_MODEL = 'common.User'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+<<<<<<< HEAD
 
 DATABASE_ROUTERS = ['config.router.MongoDBRouter']
 
@@ -115,6 +123,37 @@ OTT_MONGODB_NAME = 'ott_db'  # OTT 데이터베이스의 이름을 입력해주�
 OTT_ALLDB_NAME ='kino_all' 
 #daum db 설정
 DAUM_MONGODB_NAME = 'daum'  #daum db
+=======
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME':'final',
+        'USER':'encore',
+        'PASSWORD':'tlrdl13!#',
+        'HOST':'127.0.0.1',
+        'PORT':'4000'
+    },
+    # 'test_mongo': {
+    #     'ENGINE': 'djongo',
+    #     'NAME': 'final_db',
+    #     'CLIENT': {
+    #         'host': 'localhost',
+    #         'port': '4001',
+    #         'username': 'root',
+    #         'password': 'root',
+    #         'authSource': 'admin',
+    #         'authMechanism': 'SCRAM-SHA-1'
+    #     }
+    # }
+}
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': '127.0.0.1:9200'
+    },
+}
+
+>>>>>>> b654d956433a7c43374b3131e7f081a3d78e63b6
 
 
 # Password validation
@@ -158,6 +197,7 @@ STATICFILES_DIRS = [
 ]
 
 # 장고디비에 이미지 파일올리기
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -178,28 +218,36 @@ AUTHENTICATION_BACKENDS = [
 # # ACCOUNT_AUTHENTICATION_METHOD = "email"
 # ACCOUNT_EMAIL_CONFIRMATION_EMAIL_TEMPLATE = 'account/email_confirmation.html'
 
-# # Email sending
-# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-LOGIN_REDIRECT_URL = "/moochu/mainpage"
-LOGOUT_REDIRECT_URL = "/moochu/mainpage"
+LOGIN_REDIRECT_URL = "/moochu"
+LOGOUT_REDIRECT_URL = "/moochu"
 ACCOUNT_LOGOUT_ON_GET = True
-# EMAIL_HOST = 'smtp.gmail.com'
-# # 메일을 호스트하는 서버
-# EMAIL_PORT = '587'
-# # gmail과의 통신하는 포트
-# EMAIL_HOST_USER = '----'
-# # 발신할 이메일
-# EMAIL_HOST_PASSWORD = '-----'
-# # 발신할 메일의 비밀번호
-# EMAIL_USE_TLS = True
-# # TLS 보안 방법
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-# # 사이트와 관련한 자동응답을 받을 이메일 주소,'webmaster@localhost'
+
 # 기본 프로필 이미지 경로 설정
+<<<<<<< HEAD
 DEFAULT_PROFILE_IMAGE = 'static/chuchu.png'  # 기본 이미지 파일의 경로
 
 
 # 영화 정보 리스트업
 # Pagination
 PAGINATE_BY = 20 # 한 페이지당 20개의 항목이 표시되도록 설정합니다.
+=======
+DEFAULT_PROFILE_IMAGE = 'media/profiles/chuchu.png'  # 기본 이미지 파일의 경로
+
+# Email sending
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+# 메일을 호스트하는 서버
+EMAIL_PORT = '587'
+# gmail과의 통신하는 포트
+EMAIL_HOST_USER = 'gusl4497@gmail.com'
+# 발신할 이메일
+EMAIL_HOST_PASSWORD = 'aicbqygsbhwmgpnm'
+# 발신할 메일의 비밀번호
+EMAIL_USE_TLS = True
+# TLS 보안 방법
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# 사이트와 관련한 자동응답을 받을 이메일 주소,'webmaster@localhost'
+>>>>>>> b654d956433a7c43374b3131e7f081a3d78e63b6

@@ -133,7 +133,7 @@ LOGGING = {
             'format': '{levelname} {asctime} User[{user_id}] postID[{extra_post_id}] Path[{path}] {message}',
             'style': '{',
         },
-        'movie_verbose': {
+        'movie_verbose': { # render한 영화에 대한 로그
             'format': '{levelname} {asctime} User[{user_id}] {message}',
             'style': '{',
         },
@@ -175,7 +175,7 @@ LOGGING = {
                 'filters': ['user_requests'],
                 'formatter': 'detailed',
             },
-            'file': {
+            'file': { # render한 영화에 대한 로그
                 'level': 'DEBUG',
                 'class': 'logging.FileHandler',
                 'filename': 'renderMV.log',  
@@ -199,7 +199,7 @@ LOGGING = {
                     'handlers': ['mypagelogfile'],
                     'level': 'INFO',
                 },
-                'common': {  # 앱 이름으로 변경하세요.
+                'common': {  # render한 영화에 대한 로그 
                     'handlers': ['file'],
                     'level': 'DEBUG',
                     'propagate': False,

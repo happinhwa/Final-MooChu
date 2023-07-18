@@ -119,7 +119,7 @@ def movie_selection(request):
             movie_str.append(movie)
             movie_log.append(movie['m_id'])
         print(movie_log)	
-        logger.info(f'renderMovie{",".join(movie_log)}', extra={'user_id': user_id})
+        logger.info(f'renderMovie{",".join(movie_log)}', extra={'user_id': user_id}) # render한 영화에 대한 로그
 
         return render(request, 'common/movie_selection.html', {'movies': movie_str})
     

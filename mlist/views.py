@@ -137,19 +137,10 @@ def movie_detail_by_id(request, id):
 from django.shortcuts import render
 from .models import OTT_detail
 
-def movie_detail2(request, id):
-    movie = OTT_detail.get_movie_by_id(id) # db에서 id를 기준으로 해당 값을
-    print(movie)
-    return render(request, 'mlist/movie_detail2.html', {'movie': movie})
-
-
-
-
-
-
-
-
-
+#def movie_detail2(request, id):
+#    movie = OTT_detail.get_movie_by_id(id) # db에서 id를 기준으로 해당 값을
+#    print(movie)
+#    return render(request, 'mlist/movie_detail2.html', {'movie': movie})
 
 
 
@@ -211,8 +202,8 @@ def load_more_data(request):
     }
     return JsonResponse(data)
 
-#개봉예정작 관련 부분
-import json
+#개봉예정작 관련 부분# views.py
+from django.shortcuts import redirect
 
 def c_net(request):
     netflix_movies = DNetflixMovie.get_all_movies()
@@ -224,14 +215,14 @@ def c_net(request):
         movie_obj = CMovie(movie)
         movie_obj.source = 'Netflix'
         movie_obj.num = movie.get('num')
-        movie_obj.logo_image = '/images/N_logo.png'  # Update the logo image path
+        movie_obj.logo_image = '/static/images/넷플_logo.png'  # Update the logo image path
         movies.append(movie_obj)
 
     for movie in watcha_movies:
         movie_obj = CMovie(movie)
         movie_obj.source = 'Watcha'
         movie_obj.num = movie.get('num')
-        movie_obj.logo_image = '/images/W_logo.png'  # Update the logo image path
+        movie_obj.logo_image = '/static/images/왓챠_logo.png'  # Update the logo image path
         movies.append(movie_obj)
 
     # Group movies by dday
@@ -262,3 +253,13 @@ def c_net(request):
         'page_obj': page_obj,
     }
     return render(request, 'mlist/c_movie.html', context)
+
+
+def movie_detail2(request, id):
+    movie = OTT_detail.get_movie_by_id(id)
+    if movie:
+        return render(request, 'mlist/movie_detail2.html', {'movie': movie})
+    else:
+        return redirect('movie_not_found')
+
+

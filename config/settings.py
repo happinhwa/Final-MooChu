@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     #영화 리스트 상세정보 등
     "mlist",
     #main pull 23.07.18
+    "review",
     "rest_framework",
     "mypage",
     "search",
@@ -105,6 +106,9 @@ DATABASES = {
         'PASSWORD': '1234',
         'HOST': '127.0.0.1',
         'PORT': 4000,
+#    "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": os.path.join(BASE_DIR / "db.sqlite3"),
     },
 }
 
@@ -120,6 +124,8 @@ OTT_MONGODB_NAME = 'ott_db'  # OTT 데이터베이스의 이름을 입력해주�
 OTT_ALLDB_NAME ='kino_all' 
 #daum db 설정
 DAUM_MONGODB_NAME = 'daum'  #daum db
+
+
 
 
 

@@ -1,59 +1,95 @@
-  {% extends 'base.html' %}
-  {% load static %}
+{% extends 'base.html' %}
+{% load static %}
 
-  {% block content %}
-  <style>
-  .logo-overlay {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+{% block content %}
+<style>
+.logo-overlay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.logo-image {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 50%;
+  background-color: white;
+  padding: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+.card img {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 3px;
+}
+
+@media (min-width: 768px) {
+  .row {
+      margin-left: -10px; /* Add negative margin to counteract the padding of the column */
+      margin-right: -10px; /* Add negative margin to counteract the padding of the column */
   }
-
-  .logo-image {
-    width: 40px;
-    height: 40px;
-    object-fit: contain;
-    border-radius: 50%;
-    background-color: white;
-    padding: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  .col-lg-3, .col-md-4, .col-sm-6 {
+      padding-left: 10px; /* Add padding to the column */
+      padding-right: 10px; /* Add padding to the column */
   }
+}
 
+.card-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
 
-  </style>
-  <div class="container mt-3">
-    {% for dday_group in page_obj %}
-      <div class="row">
-        <div class="col-12">
-          <h3 class="d-day-{{ dday_group.0 }} float-left text-white">D-{{ forloop.counter }}</h3>
-        </div>
-      </div>
-      <div class="row flex-row flex-nowrap overflow-auto">
-        {% for movie in dday_group.1 %}
-          <div class="col-lg-3 col-md-4 col-sm-6 mb-3 d-day-{{ dday_group.0 }}">
-            <div class="card">
-              {% if movie.img_link %}
-                <img class="poster lazyload lazyloaded" src="{{ movie.img_link }}" alt="{{ movie.title }}">
-              {% else %}
-                <img class="poster lazyload lazyloaded" src="{% static 'images/moochu.png' %}" alt="{{ movie.title }}">
-              {% endif %}
-              <div class="card-body text-center">
-                <div class="logo-overlay">
-                  <img class="logo-image" src="{% static movie.logo_image %}" alt="{{ movie.source }}">
-                </div>
-                <h6 class="card-title">{{ movie.title }}</h6>
-                <p class="card-text d-day-label">{{ dday_group.0 }}</p>
-                <p class="card-text">{{ movie.num|date:"Y.m.d" }}</p>
-              </div>
-            </div>
-            
-          </div>
-        {% endfor %}
-      </div>
-    {% endfor %}
-    <div class="row justify-content-center" style="text-align: center;">
-      <div class="col-12 text-center"  style="text-align: center;">
+.card:hover .card-title {
+  opacity: 1;
+}
+</style>
+<div class="container mt-3">
+  {% for dday_group in page_obj %}
+    <div class="row">
+      <div class="col-12">
+        <h3 class="d-day-{{ dday_group.0 }} float-left text-white">
+          D-{{ forloop.counter }} {{ movie.num|date:"Y.m.d" }}
+        </h3>
+        
       </div>
     </div>
+    <div class="row flex-row flex-nowrap overflow-auto">
+      {% for movie in dday_group.1 %}
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-3 d-day-{{ dday_group.0 }}">
+          <div class="card">
+            {% if movie.img_link %}
+              <img class="poster lazyload lazyloaded" src="{{ movie.img_link }}" alt="{{ movie.title }}">
+            {% else %}
+              <img class="poster lazyload lazyloaded" src="{% static 'images/moochu.png' %}" alt="{{ movie.title }}">
+            {% endif %}
+            <div class="card-body text-center">
+              <div class="logo-overlay">
+                <img class="logo-image" src="{% static movie.logo_image %}" alt="{{ movie.source }}">
+              </div>
+              <h6 class="card-title">{{ movie.title }}</h6>
+              <p class="card-text d-day-label">{{ dday_group.0 }}</p>
+              <p class="card-text">{{ movie.num|date:"Y.m.d" }}</p>
+            </div>
+          </div>
+          
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+  <div class="row justify-content-center" style="text-align: center;">
+    <div class="col-12 text-center"  style="text-align: center;">
+    </div>
   </div>
-  {% endblock %}
+</div>
+{% endblock %}

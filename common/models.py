@@ -61,3 +61,16 @@ class MovieRating(models.Model):
 
     def __str__(self):
         return f"{self.user.nickname} rated '{self.movie_title}' with {self.rating} points"
+    
+#    def __str__(self):
+#        return str(self.rating)
+    
+
+# class GuestNote(models.Model):
+#     main = models.ForeignKey(User, on_delete=models.CASCADE)
+#     writer = models.ForeignKey(User, on_delete=models.RESTRICT)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     content = models.TextField()
+
+#     def __str__(self):
+#         return self.main

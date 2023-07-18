@@ -27,6 +27,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('accounts/confirm-email/<str:key>/', ConfirmEmailView.as_view(), name='account_confirm_email'),
     path('mlist/', include('mlist.urls', namespace="mlist")), #영화 리스트 및 상세정보
+    path('review/', include('review.urls', namespace='review')), #리뷰
     path('mypage/', include('mypage.urls', namespace='mypage')),  # 수정된 부분
     path('board/', include('board.urls', namespace='board')),  # 수정된 부분
     path('search/', include('search.urls', namespace='search')), # 수정된 부분 (07/11)

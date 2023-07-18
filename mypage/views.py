@@ -155,4 +155,3 @@ def follower(request, follow_id):
         
         return Response(status=200)
     
-

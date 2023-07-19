@@ -19,6 +19,12 @@
         <span class="ott-title">Apple</span>
     </div>
 </a> {% endcomment %}
+
+{% comment %} 로고 {% endcomment %}
+<a href="{% url 'ott_movie_list' ott='ALL' %}" class="ott-logo">
+    <img src="{% static 'images/ALL.png' %}" alt="ALL" style="width: 60px; height: 40px;">
+</a>
+
 <a href="{% url 'ott_movie_list' ott='Apple' %}" class="ott-logo">
     <img src="{% static 'images/AppleTV_Logo.png' %}" alt="Apple" style="width: 60px; height: 40px;">
 </a>
@@ -60,11 +66,18 @@
 </a>
 
 <!-- 다른 OTT 버튼들 추가 -->
-<div id="movie-list">
+<div id="movie_list">
+    {% for all_movie in all_movies %}
+        <img src={{ all_movie|lower }} style="width: 200px; height: 250px;" >
+    {% endfor %}
+</div>
+
+<div id="ott_movie_list">
     {% for movie in movies %}
         <img src={{ movie|lower }} style="width: 200px; height: 250px;" >
     {% endfor %}
 </div>
+
 <style>
     .pagination {
         text-align: center;
@@ -93,6 +106,7 @@
     }
 </style>
 
+{% comment %} 페이지 분할 {% endcomment %}
 <div class="pagination">
     {% if movies.has_previous %}
         <a href="?page={{ movies.previous_page_number }}">Previous</a>
@@ -135,41 +149,10 @@
     {% for genre in genres %}
         <label>
             <input type="checkbox" name="genre" value="{{ genre }}" {% if genre in selected_genres %}checked{% endif %}>
-            {{ genre }}
+            <span style="color: white;">{{ genre }}</span>
         </label>
     {% endfor %}
     <input type="submit" value="Filter">
 </form>
 
 {% endblock %}
-
-
-    {% comment %} <label>
-        <input type="checkbox" name="genre" value="가족"> 가족
-    </label> {% endcomment %}
-    {% comment %} <input type="checkbox" name="genre" value="공연"> 공연
-    <input type="checkbox" name="genre" value="공포(호러)"> 공포(호러)
-    <input type="checkbox" name="genre" value="다큐멘터리"> 다큐멘터리
-    <input type="checkbox" name="genre" value="드라마"> 드라마
-    <input type="checkbox" name="genre" value="멜로/로맨스"> 멜로/로맨스
-    <input type="checkbox" name="genre" value="뮤지컬"> 뮤지컬
-    <input type="checkbox" name="genre" value="미스터리"> 미스터리
-    <input type="checkbox" name="genre" value="범죄"> 범죄
-    <input type="checkbox" name="genre" value="서부극(웨스턴)"> 서부극(웨스턴)
-    <input type="checkbox" name="genre" value="서사"> 서사
-    <input type="checkbox" name="genre" value="서스펜스"> 서스펜스
-    <input type="checkbox" name="genre" value="성인"> 성인
-    <input type="checkbox" name="genre" value="스릴러"> 스릴러
-    <input type="checkbox" name="genre" value="시사/교양"> 시사/교양
-    <input type="checkbox" name="genre" value="애니메이션"> 애니메이션
-    <input type="checkbox" name="genre" value="액션"> 액션
-    <input type="checkbox" name="genre" value="어드벤처(모험)"> 어드벤처(모험)
-    <input type="checkbox" name="genre" value="예능"> 예능
-    <input type="checkbox" name="genre" value="음악"> 음악
-    <input type="checkbox" name="genre" value="전쟁"> 전쟁
-    <input type="checkbox" name="genre" value="음악"> 음악
-    <input type="checkbox" name="genre" value="코미디"> 코미디
-    <input type="checkbox" name="genre" value="키즈"> 키즈
-    <input type="checkbox" name="genre" value="판타지"> 판타지 {% endcomment %}
-    {% comment %} <input type="submit" value="Filter">
-</form> {% endcomment %}

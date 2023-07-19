@@ -54,6 +54,11 @@ class OTTMovie:
         titles = [movie['posterImageUrl'] for movie in movies]
         return titles
     
+class ALL(OTTMovie):
+    collection = ott_db['OTT_SUM']
+    
+    def __init__(self, posterImageUrl):
+        super().__init__(posterImageUrl)
     
 class AppleMovie(OTTMovie):
     collection = ott_db['Apple']
@@ -145,6 +150,8 @@ class WavveMovie(OTTMovie):
     def __init__(self, posterImageUrl):
         super().__init__(posterImageUrl)
 
+class CompressedDocument(models.Model):
+    compressed_data = models.BinaryField()
     # OTTMovie 클래스에 특화된 메서드 추가
     # 필요한 기능을 구현해주세요.
 # 연결 종료

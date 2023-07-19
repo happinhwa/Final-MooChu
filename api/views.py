@@ -1,21 +1,48 @@
 from django.shortcuts import render
 from .models import Movie
 from django.http import JsonResponse
-from .models import AppleMovie, CineFoxMovie, CoupangMovie, DisneyMovie, GoogleMovie, LaftelMovie, NaverMovie, NetflixMovie, PrimevideoMovie, TvingMovie, UPlusMovie, WatchaMovie, WavveMovie
+from .models import ALL, AppleMovie, CineFoxMovie, CoupangMovie, DisneyMovie, GoogleMovie, LaftelMovie, NaverMovie, NetflixMovie, PrimevideoMovie, TvingMovie, UPlusMovie, WatchaMovie, WavveMovie
 from django.core.paginator import Paginator
+import gzip
+import bson
+from .models import CompressedDocument
+import json
 
 def movielist(request):
-    movies = Movie.collection.find({})
-    return render(request, 'api/movielist.html', {'movies': movies})
-
+    movie_data1 = []
+    all_movies = ALL.collection.find({})
+    for all_movie in all_movies:
+        poster_url = all_movie.get('posterImageUrl')
+        if poster_url:
+            urls = list(poster_url.values())
+            movie_data1.extend(urls)
+    
+    paginator = Paginator(movie_data1, 10)  # 페이지당 10개씩 영화 목록을 보여줍니다.
+    page_number = request.GET.get('page')  # 현재 페이지 번호를 가져옵니다.
+    page_obj = paginator.get_page(page_number)  # 현재 페이지에 해당하는 영화 목록을 가져옵니다.
+    
+    context = {
+        'movies': page_obj,
+    }
+    # print(movie_data1)
+    return render(request, 'api/movielist.html', context)
 
 def ott_movie_list(request, ott):
     movie_data = []
     genres = ['SF', '가족', '공연', '공포(호러)', '다큐멘터리', '드라마', '멜로/로맨스', '뮤지컬', '미스터리', '범죄',
               '서부극(웨스턴)', '서사', '서스펜스', '성인', '스릴러', '시사/교양', '애니메이션', '액션', '어드벤처(모험)',
               '예능', '음악', '전쟁', '코미디', '키즈', '판타지']
+            
+    if ott == 'ALL':
+        movies = ALL.collection.find({})
+        for movie in movies:
+            poster_url = movie.get('posterImageUrl')
+            if poster_url:
+                urls = list(poster_url.values())
+                movie_data.extend(urls)
+        print(movie_data)
     
-    if ott == 'Apple':
+    elif ott == 'Apple':
         movies = AppleMovie.collection.find({})
         for movie in movies:
             movie_data.append(movie['posterImageUrl'])
@@ -92,7 +119,6 @@ def ott_movie_list(request, ott):
         'movies': page_obj,
         'genres': genres
     }
-    print(type(movie_data))
     return render(request, 'api/movielist.html', context)
 
 from django.http import JsonResponse
@@ -170,6 +196,7 @@ def genre_filter(request, ott):
     }
 
     return render(request, 'api/movielist.html', context)
+
 
     # else:
     #     movies = Movie.collection.find({})  # ott 값이 없을 경우 전체 영화 데이터를 가져옵니다.

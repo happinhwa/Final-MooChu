@@ -134,8 +134,9 @@ LOGGING = {
             'style': '{',
         },
         'movie_verbose': { # render한 영화에 대한 로그
-            'format': '{levelname} {asctime} User[{user_id}] {message}',
+            'format': '{levelname},{asctime},{user_id},{message}',
             'style': '{',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
         },
     },
         'handlers': {

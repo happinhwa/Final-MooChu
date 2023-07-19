@@ -118,8 +118,10 @@ def movie_selection(request):
             movie['m_id'] = str(movie['_id'])
             movie_str.append(movie)
             movie_log.append(movie['m_id'])
-        print(movie_log)	
-        logger.info(f'renderMovie{",".join(movie_log)}', extra={'user_id': user_id}) # render한 영화에 대한 로그
+            logger.info(f'{movie["m_id"]},{movie["title"]},[{movie["gen"]}]', extra={'user_id': user_id}) # render한 영화에 대한 로그
+            #영화아이디, 영화제목, 영화장르
+        #print(movie_log)	
+        #logger.info(f'renderMovie{",".join(movie_log)}', extra={'user_id': user_id}) # render한 모든 영화의 로그
 
         return render(request, 'common/movie_selection.html', {'movies': movie_str})
     

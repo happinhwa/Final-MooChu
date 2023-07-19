@@ -6,8 +6,8 @@ urlpatterns = [
     path('movies/', views.movielist, name='movie_list'),
     path('movies/<str:ott>/', views.ott_movie_list, name='ott_movie_list'),
     path('movies/movie/<int:id>/', views.movie_detail_by_id, name='movie_detail_by_id'),
-    path('movie_detail2/<int:id>/', views.movie_detail2, name='movie_detail2'),
-    path('comming/', views.c_net, name='comming_soon'),
+    path('movie_detail/<int:id>/', views.movie_detail, name='movie_detail'),
+    path('coming/', views.c_net, name='coming_soon'),
     path('detail/<int:id>/', views.moviedetail, name='moviedetail'),
 ]
 #from django.urls import path, include

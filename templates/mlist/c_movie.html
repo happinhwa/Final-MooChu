@@ -29,12 +29,12 @@
 
 @media (min-width: 768px) {
   .row {
-      margin-left: -10px; /* Add negative margin to counteract the padding of the column */
-      margin-right: -10px; /* Add negative margin to counteract the padding of the column */
+      margin-left: -10px;
+      margin-right: -10px;
   }
   .col-lg-3, .col-md-4, .col-sm-6 {
-      padding-left: 10px; /* Add padding to the column */
-      padding-right: 10px; /* Add padding to the column */
+      padding-left: 10px;
+      padding-right: 10px;
   }
 }
 
@@ -53,15 +53,32 @@
 .card:hover .card-title {
   opacity: 1;
 }
+.counter-font-size {
+  font-size: 30px;
+  color: #FCA472;
+}
+
+.dday-font-size {
+  font-size: 16px;
+}
+
+.date-font-size {
+  font-size: 12px;
+}
+/* Remove bottom margin from cards */
+.mb-3 {
+  margin-bottom: 0;
+}
 </style>
 <div class="container mt-3">
   {% for dday_group in page_obj %}
     <div class="row">
       <div class="col-12">
         <h3 class="d-day-{{ dday_group.0 }} float-left text-white">
-          D-{{ forloop.counter }} {{ movie.num|date:"Y.m.d" }}
-        </h3>
-        
+          <span class="counter-font-size">D-{{ forloop.counter }}</span>
+          <span class="dday-font-size">{{ dday_group.0 }}</span>
+          <span class="date-font-size">{{ movie.num|date:"Y.m.d" }}</span>
+        </h3>        
       </div>
     </div>
     <div class="row flex-row flex-nowrap overflow-auto">
@@ -74,19 +91,17 @@
               <img class="poster lazyload lazyloaded" src="{% static 'images/moochu.png' %}" alt="{{ movie.title }}">
             {% endif %}
             <div class="card-body text-center">
+              <h6 class="card-title">{{ movie.title }}</h6>
               <div class="logo-overlay">
                 <img class="logo-image" src="{% static movie.logo_image %}" alt="{{ movie.source }}">
               </div>
-              <h6 class="card-title">{{ movie.title }}</h6>
-              <p class="card-text d-day-label">{{ dday_group.0 }}</p>
-              <p class="card-text">{{ movie.num|date:"Y.m.d" }}</p>
             </div>
           </div>
-          
         </div>
       {% endfor %}
     </div>
   {% endfor %}
+</div>
   <div class="row justify-content-center" style="text-align: center;">
     <div class="col-12 text-center"  style="text-align: center;">
     </div>

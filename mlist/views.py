@@ -9,6 +9,9 @@ from .models import (
     WavveMovie, DNetflixMovie, DWatchaMovie, CMovie, Movie, OTT_detail
 )
 from .utils import render_paginator_buttons
+from django.shortcuts import render, redirect
+from .forms import ReviewForm
+from review.models import Review
 
 
 def movielist(request):
@@ -161,14 +164,15 @@ def c_net(request):
         movie_obj = CMovie(movie)
         movie_obj.source = 'Netflix'
         movie_obj.num = movie.get('num')
-        movie_obj.logo_image = '/static/images/넷플_logo.png'
+        movie_obj.logo_image = '/static/images/N_logo.png'  # Netflix 영화에 대한 로고 이미지 경로 업데이트
+
         movies.append(movie_obj)
 
     for movie in watcha_movies:
         movie_obj = CMovie(movie)
         movie_obj.source = 'Watcha'
         movie_obj.num = movie.get('num')
-        movie_obj.logo_image = '/static/images/왓챠_logo.png'
+        movie_obj.logo_image = '/static/images/W_logo.png'  # Watcha 영화에 대한 로고 이미지 경로 업데이트
         movies.append(movie_obj)
 
     dday_groups = {}
@@ -201,6 +205,18 @@ def c_net(request):
 def movie_detail(request, id):
     movie = OTT_detail.get_movie_by_id(id)
     if movie:
-        return render(request, 'mlist/movie_detail.html', {'movie': movie})
+        # Add review functionality
+        if request.method == "POST":
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                review = form.save(commit=False)
+                # Set the necessary movie details in the review
+                review.movie_id = id
+                review.save()
+                return redirect('mlist:movie_detail', id=id)
+        else:
+            form = ReviewForm()
+
+        return render(request, 'mlist/movie_detail.html', {'movie': movie, 'form': form})
     else:
         return redirect('movie_not_found')

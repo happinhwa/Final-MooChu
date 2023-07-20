@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-z+i-5d9*d+s!vp_a+6#aj(hvwaciv0_+!2a*(0a!bqia$^c)i&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -92,11 +92,11 @@ AUTH_USER_MODEL = 'common.User'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':'final',
-        'USER':'encore',
-        'PASSWORD':'tlrdl13!#',
-        'HOST':'127.0.0.1',
-        'PORT':'4000'
+        'NAME':'moochu',
+        'USER':'moochu',
+        'PASSWORD':'Encore123$%^',
+        'HOST':'34.22.93.125',
+        'PORT':'3306'
     },
     # 'test_mongo': {
     #     'ENGINE': 'djongo',

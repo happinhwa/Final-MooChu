@@ -89,6 +89,38 @@ h3 > a:hover{
     padding: 5px;
 }
 
+table {
+    table-layout: fixed;
+    width: 100%; /* Set the desired width for the table */
+}
+
+th.col-num,
+th.col-writer,
+th.col-date{
+    overflow: hidden;
+    text-overflow: clip; /* ellipsis: ... 으로 표시, clip : 그냥 잘라버림 */
+    white-space: nowrap;
+}
+
+th.col-count,
+td.col-writer,
+td.col-date {
+    max-width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis; /* ellipsis: ... 으로 표시, clip : 그냥 잘라버림 */
+    white-space: nowrap;
+}
+
+td a.col-title, td a.title{
+    display: block;
+    width: 100%;
+    max-width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis; /* ellipsis: ... 으로 표시, clip : 그냥 잘라버림 */
+    white-space: nowrap;
+}
+
+  
 table td,.table th{padding:.75rem;vertical-align:top;border-top:1px solid #FCA472;font-family: 'NanumBarunpen';}
 .table thead th{font-size: 20px;color:#D9DFF5;vertical-align:bottom;border-bottom:1.5px solid #FCA472}
 .table tbody+tbody{border-top:1px solid #FCA472;}
@@ -143,30 +175,35 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
 }
 /* ################################## */
 
-.num{
+.col-num{
     width: 10%;
     text-align: center;
 }
-.title{ /* post 목록에서 글 제목 css */
+.col-title, .title{ /* post 목록에서 글 제목 css */
     text-decoration: none ;
     color:#D9DFF5;
-    width: 50%;
+    width: 40%;
     text-align: left;
 }
-.writer{
+.title:hover{ /* post 목록에서 글 제목 마우스 가져다 댔을 때 css */
+    text-decoration: none ;
+    color:#FCA472;
+    text-align: left;
+}
+.col-writer{
     width: 10%;
     text-align: center;
 }
-.date{
+.col-date{
     width: 10%;
     text-align: center;
 }
-.count{
+.col-count{
     width: 10%;
     text-align: center;
 }
 
-.content {
+.col-content {
     border-bottom: 1px solid #D9DFF5;
     padding: 10px;
     padding-bottom: 20px;
@@ -176,6 +213,11 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
 }
 
 
+.comment-count2 { /* 글 목록에서 보여지는 댓글 갯수 */
+    color: #FCA472;
+    font-family: 'Chonburi';
+    margin-top: 20px;
+}
 .comment-count { /* 게시판 글에 달린 댓글 갯수 */
     color: #FCA472;
     font-family: 'NanumBarunpen';
@@ -205,4 +247,34 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
 
 .comment_text{ /* 댓글 작성하는 흰색 text_area css */
     border-radius: 0.375rem;
+}
+
+.btn-search{
+    color:#FCA472;
+    border: 1px solid #FCA472;
+}
+.btn-search:hover,
+.btn-search:active,
+.btn-search:after{
+    color:#FCA472;
+    border: 1px solid #FCA472;
+}
+
+.input-group {
+    min-width: 300px;
+  }
+
+.grayed-input {
+    background-color: #FFE7D9;
+    color: #FC6B02;
+    border: 1px solid #FCA472;
+    cursor: not-allowed;
+}
+
+.grayed-input:focus,
+.grayed-input:active {
+    outline: none;
+    background-color: #FFE7D9;
+    color: #FC6B02;
+    border: 1px solid #FCA472;
 }

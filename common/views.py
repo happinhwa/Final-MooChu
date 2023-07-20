@@ -16,8 +16,22 @@ def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('common:register_complete')
+            user = form.save()
+            current_site = get_current_site(request) 
+            message = render_to_string('common/register_activation.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            mail_title = "계정 활성화 확인 이메일"
+            mail_to = request.POST["email"]
+            email = EmailMessage(mail_title, message, to=[mail_to])
+            email.send()
+            address = "http://www." + mail_to.split('@')[1]
+            form = { "user": user,
+                    "address": address }
+            return render(request, 'common/register_complete.html', form)
     else:
         form = RegistrationForm()
     return render(request, 'common/register.html', {'form': form})

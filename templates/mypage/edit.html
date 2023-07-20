@@ -1,17 +1,7 @@
+{% extends 'base_my.html' %}
+{% block title %}mypage{% endblock %}
 {% load static %}
-<!-- Navbar -->
-{% include "navbar/navbar1.html" %}
-.
-<!DOCTYPE html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <title>My page</title>
-  	<link rel="stylesheet" href="{% static 'font.css' %}">
-   <link rel="stylesheet" href="{% static 'mypage.css' %}">
-	  <script src="https://kit.fontawesome.com/e8d8cefab4.js" crossorigin="anonymous"></script>
-  </head>
-  <body>
+{% block content %}
     <div class="bookcover">
       <div class="bookdot">
         <div class="page">
@@ -94,4 +84,4 @@
   });
 </script>
 </html>
-```
+{% endblock %}

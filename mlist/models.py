@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.conf import settings
 from pymongo import MongoClient
 
+from common.models import User, MovieRating
+
 # db 연결
 mongo_client = MongoClient(settings.MONGODB_URI)
 
@@ -53,6 +55,15 @@ class Movie:
             'genres': self.genres,
             'overview': self.overview,
         })
+    def save_review(self, user, review_text):
+        # 해당 영화에 새 리뷰를 저장합니다.
+        review = Review.objects.create(user=user, review=review_text, movie=self)
+        return review
+
+    def get_reviews(self):
+        # 해당 영화에 대한 모든 리뷰를 가져옵니다.
+        reviews = Review.objects.filter(movie=self)
+        return reviews
 
 
 
@@ -148,6 +159,7 @@ class OTTdetail:
     @classmethod
     def get_all_movies(cls):
         movies = cls.collection.find({}, {'id': 1, 'posterImageUrl': 1, 'titleKr': 1, 'releasedAt': 1, 'mediaType': 1})
+        
         return movies
 
 
@@ -165,6 +177,7 @@ class OTT_detail:
     def get_movie_by_id(cls, id):
         collection = cls.get_collection().all  # ott_db에서 컬렉션 이름 목록 가져오기
         document = collection.find_one({'id': str(id)})
+        print(document)
         return document
 
 
@@ -212,9 +225,46 @@ class CMovie(dict):
         self.logo_image = None  # Add the 'logo_image' attribute to store the logo image path
 
 
+from django.db import models
+from django.utils import timezone
+
+class MovieModel(models.Model):
+    # 필요한 필드들을 정의합니다.
+    title = models.CharField(max_length=100)
+    release_date = models.DateField()
+    runtime = models.IntegerField()
+    poster_path = models.URLField()
+    genres = models.CharField(max_length=200)
+    overview = models.TextField()
+
+    def __str__(self):
+        return self.title
+
+class Review(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews_written')
+    review = models.TextField(default="작성된 리뷰가 없습니다.")
+    movie = models.ForeignKey(MovieModel, on_delete=models.CASCADE, related_name='reviews')
+
+    timestamp = models.DateTimeField(default=timezone.now)
+    liker = models.ManyToManyField(User, related_name='liked_reviews')
+    updated_at = models.DateTimeField(null=True, blank=True)
+    movie_rating = models.ForeignKey(MovieRating, on_delete=models.SET_NULL, null=True, blank=True, related_name='reviews')
+
+    # 나머지 코드...
 
 
-# Close the connection
-# tmdb_client.close()
-# ott_client.close()
-# daum_client.close()
+    def __str__(self):
+        return str(self.review)
+
+    def save(self, *args, **kwargs):
+        try:
+            movie_rating = MovieRating.objects.get(user=self.user, movie_title=self.movie.title)  # MovieModel의 title을 사용하여 MovieRating 조회
+        except MovieRating.DoesNotExist:
+            movie_rating = MovieRating.objects.create(user=self.user, movie_title=self.movie.title, rating=None)
+        
+        self.movie_rating = movie_rating
+        
+        if self.pk is not None:
+            self.updated_at = timezone.now()
+        
+        super().save(*args, **kwargs)

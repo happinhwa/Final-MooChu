@@ -4,38 +4,47 @@ from common.models import User, MovieRating
 from django.conf import settings
 from pymongo import MongoClient
 
+from django.db import models
+from django.utils import timezone
+from common.models import User, MovieRating
 
+from django.db import models
+from mlist.models import Movie
+
+
+# 일반적인 Django 모델로서, MongoDB의 데이터를 저장할 필요는 없습니다.
+# MongoDB 연결
 mongo_client = MongoClient(settings.MONGODB_URI)
 
-tmdb_db = mongo_client[settings.TMDB_MONGODB_NAME]
-actor_db = mongo_client[settings.TMDB_MONGODB_ACTOR]
- 
-ott_db = mongo_client[settings.OTT_MONGODB_NAME]
+# ott_all_db 데이터베이스 선택
 ott_all_db = mongo_client[settings.OTT_ALLDB_NAME]
 
-daum_db = mongo_client[settings.DAUM_MONGODB_NAME]
+# 'all' 컬렉션에서 id 값만 가져오기
+def get_all_ids_from_all_collection():
+    all_collection = ott_all_db['all']
+    ids = [doc['_id'] for doc in all_collection.find({}, {'_id': 1})]
+    return ids
 
-
-
-
+# Movie 클래스 정의
 class Movie(models.Model):
-    title = models.CharField(max_length=255)
-    genre = models.CharField(max_length=255)
-    release_date = models.DateField()
-    director = models.CharField(max_length=255)
-    cast = models.TextField()
-    synopsis = models.TextField(default="작성된 영화 줄거리가 없습니다.")
-    def __str__(self):
-        return str(self.title)
-    class Meta:
-        db_table = 'movie'
-        app_label = 'review'
+    # id 필드를 primary key로 사용하고 CharField로 선언
+    id = models.CharField(max_length=255, primary_key=True)
 
+# MongoDB에서 가져온 id 값들을 Movie 객체로 변환하여 저장
+def save_ids_to_movie_model():
+    ids = get_all_ids_from_all_collection()
+    for id in ids:
+        movie = Movie(id=id)
+        movie.save()
+
+# 실행해서 id 값들을 Movie 객체로 저장
+save_ids_to_movie_model()
 
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review_writer')
     review = models.TextField(default="작성된 리뷰가 없습니다.")
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    movie_id = models.IntegerField(default=1)  # MongoDB에서 가져온 id를 문자열로 저장
+    rating = models.IntegerField(default=0)
     timestamp = models.DateTimeField(default=timezone.now)
     liker = models.ManyToManyField(User, related_name='review_liker')
     updated_at = models.DateTimeField(null=True, blank=True)
@@ -46,9 +55,9 @@ class Review(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            movie_rating = MovieRating.objects.get(user=self.user, movie_title=self.movie.title)
+            movie_rating = MovieRating.objects.get(user=self.user, movie_title=self.movie_id)
         except MovieRating.DoesNotExist:
-            movie_rating = MovieRating.objects.create(user=self.user, movie_title=self.movie.title, rating=None)
+            movie_rating = MovieRating.objects.create(user=self.user, movie_title=self.movie_id, rating=None)
         
         self.movie_rating = movie_rating
         
@@ -56,6 +65,46 @@ class Review(models.Model):
             self.updated_at = timezone.now()
         
         super().save(*args, **kwargs)
+        
+
+
+#class Movie(models.Model):
+#    genre = models.CharField(max_length=255)
+#    release_date = models.DateField()
+#    director = models.CharField(max_length=255)
+#    cast = models.TextField()
+#    synopsis = models.TextField(default="작성된 영화 줄거리가 없습니다.")
+#    def __str__(self):
+#        return str(self.title)
+#    class Meta:
+#        db_table = 'movie'
+#        app_label = 'review'
+
+#class Review(models.Model):
+#    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review_writer')
+#
+#    review = models.TextField(default="작성된 리뷰가 없습니다.")
+#    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+#    timestamp = models.DateTimeField(default=timezone.now)
+#    liker = models.ManyToManyField(User, related_name='review_liker')
+#    updated_at = models.DateTimeField(null=True, blank=True)
+#    movie_rating = models.ForeignKey(MovieRating, on_delete=models.SET_NULL, null=True, blank=True, related_name='review_Mrating')
+#    def __str__(self):
+#        return str(self.review)
+#
+#    def save(self, *args, **kwargs):
+#        try:
+#
+#            movie_rating = MovieRating.objects.get(user=self.user, movie_title=self.movie.title)
+#        except MovieRating.DoesNotExist:
+#            movie_rating = MovieRating.objects.create(user=self.user, movie_title=self.movie.title, rating=None)
+#        
+#        self.movie_rating = movie_rating
+#        
+#        if self.pk is not None:
+#            self.updated_at = timezone.now()
+#        
+#        super().save(*args, **kwargs)
         
 class Comments(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comments')

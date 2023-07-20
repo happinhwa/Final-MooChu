@@ -7,21 +7,37 @@ from .forms import ReviewForm, CommentsForm
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib import messages
-
-from mlist.models import OTTdetail
-
+from .models import Movie
 
 
-## 임시 영화 데이터
-#
-#def movie_list(request):
-#    movies = Movie.objects.all()
-#    context= {'movies': movies}
-#    return render(request, 'review/movie_list.html',context)
-#
-#def movie_detail(request, movie_id):
-#    movie = Movie.objects.get(id=movie_id)
-#    return render(request, 'review/movie_detail.html', {'movie': movie})
+
+# 임시 영화 데이터
+
+def movie_list(request):
+    movies = Movie.objects.all()
+    context= {'movies': movies}
+    return render(request, 'review/movie_list.html',context)
+
+
+
+def movie_detail(request, id):
+    movie = OTT_detail.get_movie_by_id(id)
+    if movie:
+        # Add review functionality
+        if request.method == "POST":
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                review = form.save(commit=False)
+                movie_obj = get_object_or_404(Movie, pk=id)  # mlist 앱의 Movie 모델에서 영화 객체 가져오기
+                review.movie = movie_obj  # 영화 정보를 리뷰에 연결
+                review.save()
+                return redirect('mlist:movie_detail', id=id)
+        else:
+            form = ReviewForm()
+
+        return render(request, 'mlist/movie_detail.html', {'movie': movie, 'form': form})
+    else:
+        return redirect('movie_not_found')
 
 
 
@@ -57,6 +73,8 @@ def main_review_detail(request, review_id):
 
 def write_review(request, movie_id):
     movie = get_object_or_404(Movie, pk=movie_id)
+    print(movie)
+    
     if request.method == "POST":
         form = ReviewForm(request.POST)
         if form.is_valid():

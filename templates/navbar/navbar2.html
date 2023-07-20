@@ -22,7 +22,7 @@
         </div>
 
         <ul class="navbar-nav ml-auto"> 
-            <li class="nav-items"><a class="nav-link nav-search" href="{% url 'board:moobo' %}"><img src="{% static 'search_chu.png' %}" style="max-height: 30px;"></a></li>
+            <li class="nav-items"><a class="nav-link nav-search" href="{% url 'search:SearchView' %}"><img src="{% static 'search_chu.png' %}" style="max-height: 30px;"></a></li>
         </ul>
         {% if user.is_authenticated %}
             <ul class="navbar-nav ml-auto">

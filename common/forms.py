@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from .models import User
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from .models import Genre
 
 User = get_user_model()
 
@@ -45,5 +46,11 @@ class RegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'password1', 'password2', 'nickname', 'birth', 'gender','email']
+        fields = ['username', 'password1', 'password2', 'nickname', 'birth', 'gender', 'email']
 
+class GenreSelectForm(forms.Form):
+    selected_genres = forms.ModelMultipleChoiceField(
+        queryset=Genre.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )

@@ -10824,3 +10824,37 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+.complete-text{
+  color: #96FC72;
+  font-weight: bold;
+  font-size: 25px;
+}
+.search-card{
+  flex-direction: column;
+  align-items: center;
+  width: 150px;
+  padding: 10px;
+  /* border: 1px solid #ccc; */
+  border-radius: 5px;
+  margin-top: 15px;
+  display: inline-block; /* 추가 */
+  margin-right:27px;
+}
+.search-img{
+  width: 150px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+.search-text{
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  font-size: 15px;
+  color:white;
+}
+

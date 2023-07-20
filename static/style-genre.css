@@ -1,25 +1,25 @@
 /* 관심 장르 선택 관련한 전체 정보에 대한 박스 */
 #container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height:auto;
-    margin-top: 30px;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:auto;
+  margin-top: 30px;
+}
 
 .next-btn{
-    width: 200px;
-    height: 50px;
-    flex-shrink: 0;
-    margin-bottom: 15px;
-    background: #96FC72;
-    border-radius: 0.3rem;
-    border-color: transparent;
-    border-color: white;
-    border-width: 0.2rem;
-    font-size: 1.5rem;
-    font-family: NanumBarunpen;
-    justify-content: right;
+  width: 200px;
+  height: 50px;
+  flex-shrink: 0;
+  margin-bottom: 15px;
+  background: #96FC72;
+  border-radius: 0.3rem;
+  border-color: transparent;
+  border-color: white;
+  border-width: 0.2rem;
+  font-size: 1.5rem;
+  font-family: NanumBarunpen;
+  justify-content: right;
 }
 
 

@@ -23,21 +23,21 @@
                 <br />
                 <br />
                 <br />
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <label style="font-weight: bolder;">닉네임:</label>
-                    <input type="text" name="nickname" value="{{ form.nickname.value }}" required><br>
-
-                    <label style="font-weight: bolder;">관심 장르:</label>
-                    <input type="text" name="fav_genre" value="{{ form.fav_genre.value }}"><br>
-
-                    <label style="font-weight: bolder;">프로필 사진:</label>
-                    <input type="file" name="profile_img"><br>
-
-                    <label style="font-weight: bolder;">한줄 소개:</label>
-                    <input type="text" name="comment" value="{{ form.comment.value }}"><br>
-                    <button type="submit">저장</button>
-                  </form>
+                <form id="profile-form" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <label style="font-weight: bolder;">닉네임:</label>
+                  <input type="text" name="nickname" value="{{ form.nickname.value }}" required><br>
+                
+                  <label style="font-weight: bolder;">관심 장르:</label>
+                  <input type="text" name="fav_genre" value="{{ form.fav_genre.value }}"><br>
+                
+                  <label style="font-weight: bolder;">프로필 사진:</label>
+                  <input type="file" name="profile_img"><br>
+                
+                  <label style="font-weight: bolder;">한줄 소개:</label>
+                  <input type="text" name="comment" value="{{ form.comment.value }}"><br>
+                  <button type="submit">저장</button>
+                </form>
                 
                 
               </div>
@@ -71,8 +71,7 @@
         },
         success: function(response) {
           // Handle the success response
-          // You can display a success message or perform any other action
-          console.log('Profile saved successfully.');
+          location.reload();
         },
         error: function(xhr, status, error) {
           // Handle the error response

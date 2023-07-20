@@ -11,8 +11,6 @@ from .models import (
 )
 from .utils import render_paginator_buttons
 from django.shortcuts import render, redirect
-from .forms import ReviewForm
-from review.models import Review
 
 
 def movielist(request):
@@ -204,7 +202,7 @@ def c_net(request):
 
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import OTT_detail
-from .forms import ReviewForm
+
 
 def movie_detail(request, id):
     movie = OTT_detail.get_movie_by_id(id)
@@ -235,7 +233,7 @@ def movie_detail(request, id):
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required 
 from .models import MovieModel, OTT_detail
-from .forms import ReviewForm
+
 from django.contrib.auth.decorators import login_required
 @login_required
 def write_review(request, movie_id):

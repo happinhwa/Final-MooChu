@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     #영화 리스트 상세정보 등
     "mlist",
     #main pull 23.07.18
-    "review",
+ 
     "rest_framework",
     "mypage",
     "search",

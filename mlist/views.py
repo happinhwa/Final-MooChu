@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from bson import ObjectId
-from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404, JsonResponse
 
 from .models import (
@@ -11,7 +10,14 @@ from .models import (
 )
 from .utils import render_paginator_buttons
 from django.shortcuts import render, redirect
+from review.models import Review
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.http import JsonResponse
 
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 def movielist(request):
     movies = list(Movie.collection.find())
@@ -110,8 +116,8 @@ def movie_detail_by_id(request, id):
         else:
             raise Http404('Could not find a movie.')
 
-    except InvalidId:
-        raise Http404('Invalid ID.')
+    except : #InvalidId
+        raise Http404('Invalid ID.')  Z
 
 
 def determine_ott(movie_id):
@@ -200,25 +206,18 @@ def c_net(request):
     }
     return render(request, 'mlist/c_movie.html', context)
 
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import OTT_detail
-
 
 def movie_detail(request, id):
     movie = OTT_detail.get_movie_by_id(id)
-    if not movie:
-        # ID에 해당하는 영화 객체가 없을 경우, 새로운 영화 객체를 생성합니다.
-        # (이 부분은 Movie 모델의 필드에 맞게 수정해야 합니다.)
-        new_movie = Movie.objects.create(title="MovieID")
-        movie = new_movie  # 새로운 영화 객체를 movie 변수에 할당
-
     if movie:
         # Add review functionality
         if request.method == "POST":
             form = ReviewForm(request.POST)
             if form.is_valid():
                 review = form.save(commit=False)
-                review.movie_id = id  # Connect the review to the OTT movie using its 'id' field
+                review.user = request.user
+                # Set the necessary movie details in the review
+                review.movie_id = id
                 review.save()
                 return redirect('mlist:movie_detail', id=id)
         else:
@@ -227,27 +226,18 @@ def movie_detail(request, id):
         return render(request, 'mlist/movie_detail.html', {'movie': movie, 'form': form})
     else:
         return redirect('movie_not_found')
+    
+    ################찜 관련##############
+    
+    
+    
+from .models import MyList
 
+# 기존의 뷰 함수들...
 
+@require_POST
+def toggle_wish(request, movie_id):
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required 
-from .models import MovieModel, OTT_detail
+    user = request.user
 
-from django.contrib.auth.decorators import login_required
-@login_required
-def write_review(request, movie_id):
-    if request.method == "POST":
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            review = form.save(commit=False)
-            review.user = request.user
-            review.movie_id = movie_id
-            review.rating = 0  # 또는 다른 유효한 숫자 값을 저장
-            review.save()
-            return redirect('review:main_review_list', movie_id=movie_id)
-    else:   
-        form = ReviewForm()
-    context = {'form': form, 'movie_id': movie_id}
-
-    return render(request, 'review/write_review.html', context)
+    return JsonResponse({"message": "찜하기 성공적으로 처리되었습니다."})

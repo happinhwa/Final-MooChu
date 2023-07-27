@@ -11,9 +11,8 @@ class ReviewForm(forms.ModelForm):
 
     class Meta:
         model = Review
-        fields = ['title', 'content', 'rating', 'writer', 'movie_title']  # Add 'movie_title' field to the form
+        fields = ['content', 'rating', 'writer', 'movie_title']  # Add 'movie_title' field to the form
         labels = {
-            'title': '제목',
             'content': '내용',
             'rating': '평점',
             'writer': '작성자',

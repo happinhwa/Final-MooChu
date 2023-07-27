@@ -6,14 +6,55 @@ from common.models import User
 
 # db 연결
 mongo_client = MongoClient(settings.MONGODB_URI)
-#
-#tmdb_db = mongo_client[settings.TMDB_MONGODB_NAME]
-#actor_db = mongo_client[settings.TMDB_MONGODB_ACTOR]
+
+tmdb_db = mongo_client[settings.TMDB_MONGODB_NAME]
+actor_db = mongo_client[settings.TMDB_MONGODB_ACTOR]
  
 ott_db = mongo_client[settings.OTT_MONGODB_NAME]
 ott_all_db = mongo_client[settings.OTT_ALLDB_NAME]
 
 daum_db = mongo_client[settings.DAUM_MONGODB_NAME]
+
+
+
+class Movie:
+    collection = tmdb_db.movie
+
+    @classmethod
+    def get_collection(cls):
+        return tmdb_db
+
+    @classmethod
+    def get_movie_by_id(cls, movie_id):
+        collection = cls.get_collection().movie
+        movie = collection.find_one({'id': movie_id})
+        if movie:
+            genre_names = [genre['name'] for genre in movie['genres']]
+            movie['genres'] = genre_names
+            return Movie(**movie)
+        return None
+
+    def __init__(self, id, title, release_date, runtime, poster_path, genres, overview):
+        self.id = id
+        self.title = title
+        self.release_date = release_date
+        self.runtime = runtime
+        self.poster_path = poster_path
+        self.genres = genres
+        self.overview = overview
+
+    def save(self):
+        collection = self.get_collection().movie
+        collection.insert_one({
+            'id': self.id,
+            'title': self.title,
+            'release_date': self.release_date,
+            'runtime': self.runtime,
+            'poster_path': self.poster_path,
+            'genres': self.genres,
+            'overview': self.overview,
+        })
+
 
 
 
@@ -116,7 +157,7 @@ class OTTdetail:
 from pymongo import MongoClient
 
 class OTT_detail:
-    collection = ott_all_db.all
+    collection = ott_all_db['all']
 
     @classmethod
     def get_collection(cls):
@@ -124,13 +165,13 @@ class OTT_detail:
 
     @classmethod
     def get_movie_by_id(cls, id):
-        collection = cls.get_collection().all
+        collection = cls.get_collection()['all']
         document = collection.find_one({'id': str(id)})
         return document
 
     @classmethod
     def get_movie_id_by_id(cls, id):
-        collection = cls.get_collection().all
+        collection = cls.get_collection()['all']
         document = collection.find_one({'id': str(id)})
         if document:
             return document['id']
@@ -184,9 +225,14 @@ class CMovie(dict):
 
 #######찜하기
 class MyList(models.Model):
+    like = models.BooleanField(default=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mylist_user')
-    media_id = models.CharField(max_length=30)
-    media_poster = models.CharField(max_length=255)
+    media_id = models.CharField(max_length=20)
+    media_poster = models.ImageField(upload_to="posters/", null=True)
 
+    class Meta:
+        db_table = 'Mylist'
+        
     def __str__(self):
-        return str(self.user)
+        return self.user + " like " + self.content
+    

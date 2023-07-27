@@ -7,11 +7,40 @@ from .forms import ReviewForm, CommentsForm
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib import messages
+from .models import OTT_detail
 
 
-def moobo(request):
-    post_list = models.board.objects.order_by('-create_date')
-    return render(request, 'board/moobo.html', {'post_list': post_list})
+
+
+# 임시 영화 데이터
+
+def movie_list(request):
+    movies = OTT_detail.objects.all()
+    context= {'movies': movies}
+    return render(request, 'review/movie_list.html',context)
+
+
+
+def movie_detail(request, id):
+    movie = OTT_detail.get_movie_by_id(id)
+    if movie:
+        # Add review functionality
+        if request.method == "POST":
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                review = form.save(commit=False)
+                review.user = request.user
+                # Set the necessary movie details in the review
+                review.movie_id = id
+                review.save()
+                return redirect('mlist:movie_detail', id=id)
+        else:
+            form = ReviewForm()
+
+        return render(request, 'mlist/movie_detail.html', {'movie': movie, 'form': form})
+    else:
+        return redirect('movie_not_found')  
+
 
 
 # 구현해야 하는 리뷰 기능들
@@ -44,32 +73,47 @@ def main_review_detail(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
     return render(request, 'review/main_review_detail.html', {'review': review})
 
-from django.db import connection
+from django.shortcuts import get_object_or_404
+
+
+from pymongo import MongoClient
+from django.utils import timezone
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
 
 @login_required
 def write_review(request, movie_id):
+    # Prepopulate the movie_title field with the title of the movie
+    movie_title = request.GET.get('title_kr')
+
     if request.method == "POST":
         form = ReviewForm(request.POST)
         if form.is_valid():
             user_id = request.user.id
-            movie_title = form.cleaned_data['movie_title']
+            movie_title = form.cleaned_data['movie_title']  # Get the value from the form data
             rating = form.cleaned_data['rating']
 
-            # 데이터베이스에 직접 값을 저장하는 SQL 쿼리 실행
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    "INSERT INTO movie_rating (user_id, movie_title, rating, create_date) "
-                    "VALUES (%s, %s, %s, %s)",
-                    [user_id, movie_title, rating, timezone.now()]
-                )
+            # Fetch the movie based on the movie_title from MongoDB
+            try:
+                movie = OTT_detail['all'].find_one({'title_kr': movie_title})
+                print("MongoDB Query Result:", movie)
+            except Exception as e:
+                print("Error:", e)
+                return HttpResponse("Movie not found!")
 
+            # Save the review to the database
+            review = Review(user_id=user_id, movie_title=movie['title'], rating=rating, create_date=timezone.now())
+            review.save()
+            print('title_kr')
             return redirect('mlist:movie_detail', id=movie_id)
     else:
-        # Prepopulate the movie_title field with the title of the movie
-        form = ReviewForm(initial={'movie_title': movie.title})
+        form = ReviewForm(initial={'movie_title': movie_title})
 
-    context = {'form': form, 'movie': movie}
+    context = {'form': form, 'title_kr': movie_title}
     return render(request, 'review/write_review.html', context)
+
+
+
 
 
 

@@ -169,7 +169,9 @@
         </div>
     </div>
     {% if user.is_authenticated %}
-        <a href="{% url 'add_to_mylist' movie_id=movie.id %}" class="btn btn-primary">찜하기</a>
+    <div style="margin-left: auto;">
+        <a href="{% url 'mlist:add_to_mylist' movie_id=movie.id %}?title_kr={{ movie.title_kr }}" class="btn btn-primary">찜하기</a>
+    </div>
     {% endif %}
 </div>
 

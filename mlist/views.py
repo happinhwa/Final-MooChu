@@ -6,7 +6,7 @@ from django.http import Http404, JsonResponse
 from .models import (
     AppleMovie, CineFoxMovie, CoupangMovie, DisneyMovie, GoogleMovie, LaftelMovie,
     NaverMovie, NetflixMovie, PrimevideoMovie, TvingMovie, UPlusMovie, WatchaMovie,
-    WavveMovie, DNetflixMovie, DWatchaMovie, CMovie, Movie, OTT_detail
+    WavveMovie, DNetflixMovie, DWatchaMovie, CMovie,  OTT_detail, MyList
 )
 from .utils import render_paginator_buttons
 from django.shortcuts import render, redirect
@@ -21,20 +21,15 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
 
-from common.models import MovieRating
-def movielist(request):
-    movies = list(Movie.collection.find())
-    return render(request, 'mlist/movie_list.html', {'movies': movies})
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+from .models import OTT_detail
+
 
 
 def moviedetail(request, id):
-    movie = Movie.get_movie_by_id(id)
-    if movie:
-        poster_url = 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/' + movie.poster_path
-        return render(request, 'mlist/movie_detail.html', {'movie': movie, 'poster_url': poster_url})
-    else:
-        return HttpResponse('Movie not found')
-
+    return HttpResponse('Movie not found')
 
 def ott_movie_list(request, ott):
     ott_movies = {
@@ -56,7 +51,7 @@ def ott_movie_list(request, ott):
     if ott in ott_movies:
         movies = ott_movies[ott].collection.find({})
     else:
-        movies = Movie.collection.find({})
+        movies = OTT_detail.collection.find({})
 
     movie_data = [
         {
@@ -148,7 +143,7 @@ def determine_ott(movie_id):
 
 
 def load_more_data(request):
-    movies = Movie.collection.find({})
+    movies = OTT_detail.collection.find({})
 
     data = {
         'movies': [
@@ -234,23 +229,20 @@ def movie_detail(request, id):
     
 ################찜, 평점 관련##############
     
-from django.shortcuts import render, redirect
-from .models import Movie, MyList,OTT_detail
-from .models import OTT_detail  # OTT_detail 클래스가 정의된 파일을 import
-
-@login_required
 def add_to_mylist(request, movie_id):
     ott_movie = OTT_detail.get_movie_by_id(movie_id)
 
     if ott_movie:
-        # 이미 해당 영화가 찜 목록에 있는지 확인
-        if not MyList.objects.filter(user=request.user, movie_id=movie_id).exists():
-            movie = Movie.objects.create(
-                id=str(movie_id),
-                title=ott_movie.get('title', ''),
-                poster_url=ott_movie.get('poster_url', ''),
-                # 필요한 다른 영화 정보들도 추가할 수 있습니다.
-            )
-            MyList.objects.create(user=request.user, movie=movie)
+        # 사용자의 찜 목록에 영화가 있는지 확인
+        if not MyList.objects.filter(user=request.user, media_id=movie_id).exists():
+            poster_url = ott_movie.get('poster_url', '')
+            if poster_url:
+                movie = OTT_detail(
+                    media_id=str(movie_id),
+                    title=ott_movie.get('title', ''),
+                    poster_url=poster_url,
+                    # 필요한 다른 영화 정보들을 추가할 수 있습니다.
+                )
+                MyList.objects.create(user=request.user, media_id=movie_id, media_poster=poster_url)
 
-    return redirect('movie_detail', movie_id=movie_id)
+    return redirect('detail/<int:id>/', id=movie_id)

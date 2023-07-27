@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>영화 리뷰 작성</title>
+</head>
+<body>
+    <h1>{{ movie.movie_title }} 리뷰 작성</h1>
+    {% if has_review %}
+        <p>이미 해당 영화에 대한 리뷰를 작성하였습니다.</p>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            <label for="content">리뷰 내용:</label><br>
+            <textarea id="content" name="content" rows="4" cols="50"></textarea><br>
+            <input type="submit" value="리뷰 작성">
+        </form>
+    {% endif %}
+</body>
+</html>

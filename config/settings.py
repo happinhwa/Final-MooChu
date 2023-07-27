@@ -31,7 +31,7 @@ SECRET_KEY = "django-insecure-z+i-5d9*d+s!vp_a+6#aj(hvwaciv0_+!2a*(0a!bqia$^c)i&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -52,10 +52,12 @@ INSTALLED_APPS = [
     #영화 리스트 상세정보 등
     "mlist",
     #main pull 23.07.18
- 
+    "review",
     "rest_framework",
     "mypage",
     "search",
+    #리뷰 목록 정렬 비동기
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -109,6 +111,11 @@ DATABASES = {
 #    "default": {
 #         "ENGINE": "django.db.backends.sqlite3",
 #         "NAME": os.path.join(BASE_DIR / "db.sqlite3"),
+#        'NAME':'moochu',
+#        'USER':'moochu',
+#        'PASSWORD':'Encore123$%^',
+#        'HOST':'34.22.93.125',
+#        'PORT':'3306'
     },
 }
 
@@ -215,3 +222,5 @@ EMAIL_USE_TLS = True
 # TLS 보안 방법
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # 사이트와 관련한 자동응답을 받을 이메일 주소,'webmaster@localhost'
+ASGI_APPLICATION = 'your_project.routing.application'
+# AJAX를 위한.

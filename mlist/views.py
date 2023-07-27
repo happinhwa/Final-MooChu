@@ -10,6 +10,7 @@ from .models import (
 )
 from .utils import render_paginator_buttons
 from django.shortcuts import render, redirect
+from .forms import ReviewForm
 from review.models import Review
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -19,6 +20,8 @@ from django.http import JsonResponse
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
+
+from common.models import MovieRating
 def movielist(request):
     movies = list(Movie.collection.find())
     return render(request, 'mlist/movie_list.html', {'movies': movies})
@@ -117,7 +120,7 @@ def movie_detail_by_id(request, id):
             raise Http404('Could not find a movie.')
 
     except : #InvalidId
-        raise Http404('Invalid ID.')  Z
+        raise Http404('Invalid ID.')
 
 
 def determine_ott(movie_id):
@@ -158,7 +161,7 @@ def load_more_data(request):
     }
     return JsonResponse(data)
 
-
+# 개봉예정작 관련
 def c_net(request):
     netflix_movies = DNetflixMovie.get_all_movies()
     watcha_movies = DWatchaMovie.get_all_movies()
@@ -227,17 +230,27 @@ def movie_detail(request, id):
     else:
         return redirect('movie_not_found')
     
-    ################찜 관련##############
     
     
+################찜, 평점 관련##############
     
-from .models import MyList
+from django.shortcuts import render, redirect
+from .models import Movie, MyList,OTT_detail
+from .models import OTT_detail  # OTT_detail 클래스가 정의된 파일을 import
 
-# 기존의 뷰 함수들...
+@login_required
+def add_to_mylist(request, movie_id):
+    ott_movie = OTT_detail.get_movie_by_id(movie_id)
 
-@require_POST
-def toggle_wish(request, movie_id):
+    if ott_movie:
+        # 이미 해당 영화가 찜 목록에 있는지 확인
+        if not MyList.objects.filter(user=request.user, movie_id=movie_id).exists():
+            movie = Movie.objects.create(
+                id=str(movie_id),
+                title=ott_movie.get('title', ''),
+                poster_url=ott_movie.get('poster_url', ''),
+                # 필요한 다른 영화 정보들도 추가할 수 있습니다.
+            )
+            MyList.objects.create(user=request.user, movie=movie)
 
-    user = request.user
-
-    return JsonResponse({"message": "찜하기 성공적으로 처리되었습니다."})
+    return redirect('movie_detail', movie_id=movie_id)

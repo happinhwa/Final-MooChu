@@ -26,7 +26,7 @@
         background-image: url({{ movie.poster_image_url }});
         background-repeat: no-repeat;
         background-size: cover;
-        opacity: 0.5; /* Adjust the transparency by changing the opacity value */
+        opacity: 0.5;
         z-index: -1;
     }
 
@@ -42,7 +42,7 @@
 
 
     .movie-info {
-        background-color: rgba(0, 0, 0, 0.7); /* Change the background color as desired */
+        background-color: rgba(0, 0, 0, 0.7);
         padding: 10px;
         color: #fff;
     }
@@ -107,7 +107,7 @@
         margin: 0;
     }
 
-    /* 리뷰 작성 폼 스타일 */
+    /* 리뷰 작성 폼 */
     .review-container {
         margin: 80px;
         display: flex;
@@ -140,7 +140,7 @@
 
 </style>
 
-<!-- Get movie information -->
+<!-- 영화정보관련 -->
 <div class="movie-container">
     <div class="background-image"></div>
     <div class="poster-image">
@@ -168,33 +168,143 @@
             <h4>{{ movie.synopsis }}</h4>
         </div>
     </div>
+    {% if user.is_authenticated %}
+        <a href="{% url 'add_to_mylist' movie_id=movie.id %}" class="btn btn-primary">찜하기</a>
+    {% endif %}
 </div>
-<!-- Review form section -->
-
 
 <!-- 리뷰 목록 -->
-<div class="review-container">
-    {% if reviews %}
-        <div class="review-list">
-            <h2>리뷰 목록</h2>
-            {% for review in reviews %}
-                <div class="review-item">
-                    <h4>{{ review.user.username }}</h4>
-                    <p>{{ review.text }}</p>
-                    <p>{{ review.created_at }}</p>
-                </div>
-            {% endfor %}
-        </div>
+
+
+<style>
+.reviews {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+  }
+  
+.reviews h1 {
+    text-align: center;
+    color: white;
+  }
+  
+.container-my-3 {
+    margin: 80px;
+    justify-content: space-between; 
+    gap: 20px;
+    padding: 20px;
+    border: 2px solid #FCA472;
+    box-shadow: 0px 0px 10px rgba(252, 164, 114, 0.5);
+    position: relative;
+  }
+
+.board-menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    overflow: auto;
+    justify-content: flex-end;
+}
+
+.btn-sorting {
+        color: red; 
+        border-color: #D9DFF5;
+        border-width: 1px;
+        font-family: 'NanumBarunpen';
+    }
+.write-review {
+        color: #FCA472;
+        text-decoration: underline;
+    }
+.container-recommed-system {
+        margin: 80px;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 20px;
+        border: 2px solid #FCA472;
+        box-shadow: 0px 0px 10px rgba(252, 164, 114, 0.5);
+        position: relative;
+      }
+</style>
+
+<div class="container-my-3">
+    {% if messages %}
+    <div class="alert alert-danger my-3" role="alert">
+        {% for message in messages %}
+        <strong>{{ message.tags }}</strong>
+        <ul><li>{{ message.message }}</li></ul>
+        {% endfor %}
+    </div>
     {% endif %}
 
-    <!-- 리뷰 작성 폼 -->
-    <div class="review-form">
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Submit Review</button>
-        </form>
+    <div class="btn-sorting" role="group" aria-label="Sorting options">
+        <div style="display: flex;">
+            <a href="?order=newest" class="btn btn-secondary">최신 순</a>
+            <a href="?order=likes" class="btn btn-secondary">좋아요 순</a>
+            <a href="?order=rating" class="btn btn-secondary">평점 순</a>
+            <a href="?order=comments" class="btn btn-secondary">댓글 많은 순</a>
+        </div>
+        <div style="margin-left: auto;">
+            <a href="{% url 'review:write_review' movie_id=movie.id %}?title_kr={{ movie.title_kr }}" class="btn btn-secondary">리뷰작성하기</a>
+        </div>
     </div>
+    <div class="reviews">
+        {% if reviews %}
+            <ul>
+            {% for review in reviews %}
+                <div class="review box">
+                    <div class="content">
+                        {{ review.content }}  
+                    </div>
+
+                    <h3>작성자: {{ review.writer }}</h3>
+                    <p>평점: {{ review.rating }}</p>
+                    {% if review.updated_at and review.updated_at != review.timestamp %}
+                        <p>수정일: {{ review.updated_at }}</p>
+                    {% else %}
+                        <p>작성일: {{ review.timestamp }}</p>
+                    {% endif %}
+                    <p>리뷰 내용:</p>
+                    <p>
+                        {% if review.content|length > 30 %}
+                            {{ review.content|truncatechars:30 }}
+                            <a href="{% url 'review:main_review_detail' review_id=review.pk %}">...더보기</a>
+                        {% else %}
+                            {{ review.content }}
+                            <a href="{% url 'review:main_review_detail' review_id=review.pk %}">상세</a>
+                        {% endif %}
+                    </p>
+                    <hr>
+                    <a href="{% url 'review:main_review_detail' review_id=review.pk %}" class="btn btn-primary">
+                        댓글 {{ review.comments.count }}
+                    </a>
+                    <a href="{% url 'review:review_liker1' review_id=review.id  %}" class="btn btn-sm btn-outline-secondary">
+                        좋아요 {{ review.liker.count }}
+                    </a>
+                    {% if request.user == review.user %}
+                        <a href="{% url 'review:review_update' review_id=review.id  %}" class="btn btn-sm btn-outline-secondary">수정</a>
+                        <a href="{% url 'review:review_delete' review_id=review.id  %}" class="btn btn-sm btn-outline-secondary">삭제</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>아직 작성된 리뷰가 없습니다.</p>
+        {% endif %}
+    </div>
+    
 </div>
+
+
+
+<br><br/>
+
+<div class="container-recommed-system">
+</div>
+{% csrf_token %}
+
+
 
 {% endblock %}

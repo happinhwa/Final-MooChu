@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm,GenreSelectForm
-from .models import Genre,SelectedGenre,MovieRating
+from .models import Genre,SelectedGenre,MovieRating,User
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from django.forms import ValidationError
@@ -24,8 +24,22 @@ def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('moochu:mainpage')
+            user = form.save()
+            current_site = get_current_site(request) 
+            message = render_to_string('common/register_activation.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            mail_title = "계정 활성화 확인 이메일"
+            mail_to = request.POST["email"]
+            email = EmailMessage(mail_title, message, to=[mail_to])
+            email.send()
+            address = "http://www." + mail_to.split('@')[1]
+            form = { "user": user,
+                    "address": address }
+            return render(request, 'common/register_complete.html', form)
     else:
         form = RegistrationForm()
     return render(request, 'common/register.html', {'form': form})
@@ -149,8 +163,6 @@ def genre_selection(request):
         return render(request, 'common/genre_selection.html', {'form': form, 'genres': genres})
 
 
-
-
 @login_required
 def save_genre(request):
     all_genres = get_all_genres()
@@ -170,12 +182,13 @@ def save_genre(request):
 
     return render(request, 'common/genre_selection.html', {'form': form})
 
+
 # 계정 활성화 함수(토큰을 통해 인증)
 def activate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.DoesNotExsit):
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True

@@ -39,11 +39,10 @@ input[type=submit] {
     background-color: white;
     font-family: 'NanumBarunpen';
 }
-
+/* 
 .btn-recommend{
-    color:#2C2E34;
-    background-color:#FCA472;
-    border-color: #D9DFF5;
+    background-color: transparent;
+    border-color: #FCA472;
     border-width: 1px;
     font-family: 'NanumBarunpen';
 }
@@ -51,7 +50,7 @@ input[type=submit] {
     color:#2C2E34;
     background-color: #D9DFF5;
     font-family: 'NanumBarunpen';
-}
+} */
 
 h3 {
     color: #FCA472;
@@ -173,6 +172,13 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
     margin-left: 10px;
     color:#D9DFF5;
 }
+
+.content {
+    margin-left: 10px;
+    color:#D9DFF5;
+    font-family: 'NanumBarunpen';
+
+}
 /* ################################## */
 
 .col-num{
@@ -215,11 +221,11 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
 
 .comment-count2 { /* 글 목록에서 보여지는 댓글 갯수 */
     color: #FCA472;
-    font-family: 'Chonburi';
+    font-family: Arial, Helvetica, sans-serif;
     margin-top: 20px;
 }
 .comment-count { /* 게시판 글에 달린 댓글 갯수 */
-    color: #FCA472;
+    color: #D9DFF5;
     font-family: 'NanumBarunpen';
     margin-top: 20px;
 }
@@ -241,8 +247,10 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
 .vote {
     color: #FCA472; /* Text color */
     /* text-shadow: -1px -1px 0 #D9DFF5, 1px -1px 0 #D9DFF5, -1px 1px 0 #D9DFF5, 1px 1px 0 #D9DFF5; Text outline color */
-    font-family: 'Chonburi';
+    font-family: NanumBarunpen;
     font-size: 20px;
+    font-weight: bold;
+    align-items: center;
 }
 
 .comment_text{ /* 댓글 작성하는 흰색 text_area css */
@@ -262,19 +270,36 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
 
 .input-group {
     min-width: 300px;
-  }
+}
 
 .grayed-input {
-    background-color: #FFE7D9;
     color: #FC6B02;
-    border: 1px solid #FCA472;
     cursor: not-allowed;
 }
 
 .grayed-input:focus,
 .grayed-input:active {
     outline: none;
-    background-color: #FFE7D9;
     color: #FC6B02;
-    border: 1px solid #FCA472;
+}
+
+.badge-comment{
+    border: 1px solid transparent;
+}
+.comment-body{
+    background-color: #2C2E34; 
+    border:1px solid #FCA472;
+}
+
+
+
+.btn-board{
+    color:#D9DFF5;
+    border:1px solid #FCA472;
+    font-family: 'NanumBarunpen';
+}
+.btn-board:hover{
+    color:#2C2E34;
+    background-color: white;
+    font-family: 'NanumBarunpen';
 }

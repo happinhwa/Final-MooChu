@@ -11,6 +11,7 @@ class post_form(forms.ModelForm):
         }
 
 
+
 class comment_form(forms.ModelForm):
     class Meta:
         model = comment

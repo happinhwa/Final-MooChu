@@ -3,8 +3,7 @@
         <a href="{% url 'mypage:home' nickname=master.nickname %}">홈</a>
         <a href="{% url 'mypage:mylist' nickname=master.nickname %}">찜</a>
         <a href="{% url 'mypage:reviews' nickname=master.nickname %}">활동</a>
-        <a href="{% url 'mypage:book' nickname=master.nickname %}">방명록
-        </a>
+        <a href="{% url 'mypage:book' nickname=master.nickname %}">방명록</a>
         <!-- mypage ID와 접속하고 있는 사용자가 같은 경우-->
         {% if writer.id == master.id %}
           <a href="{% url 'mypage:edit' nickname=master.nickname %}">설정</a>

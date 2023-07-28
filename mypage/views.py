@@ -99,6 +99,8 @@ def guestbook_detail(request, guestbook_id):
 
         return Response(status=200)
 
+
+
 @api_view(['PUT','GET'])
 def edit(request, nickname):
     if request.method == 'PUT':
@@ -113,8 +115,6 @@ def edit(request, nickname):
         context = profile_data(nickname, request)
         context.update({"form":form})
         return render(request, 'mypage/edit.html', context)
-
-
 
 
 
@@ -155,4 +155,3 @@ def follower(request, follow_id):
         
         return Response(status=200)
     
-

@@ -8,22 +8,21 @@
   display: flex;
   font-size: 1.5rem;
   border-bottom: 1px dashed grey;
-  
   margin: 3px 0;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  font-family: NanumBarunpen;
 }
-.news-box {
+.nickname{
+  color:#FF8540;
+}
+.news-box { /* 팔로워 목록 관련 박스*/
   flex: 1;
+  padding: 10px;
 }
-.update-box {
-  flex: 1;
-}
-.menu-row {
-  display: flex;
-  font-size: 1.5rem;
-  border-bottom: 1px dashed grey;
-  border-left: 1px solid black;
-  margin: 3px 0;
-}
+
 .follower-text {
   text-align: center;
 }
@@ -41,14 +40,34 @@
   flex: 1;
 }
 
-.update-box {
+.update-box { /* 팔로잉 목록 관련 박스 */
   flex: 1;
+  padding: 10px;
 }
-
-.box-title {
-  font-family: "KOTRA_BOLD-Bold";
+.menu-row {
+  display: flex;
+  font-size: 1.5rem;
+  border-bottom: 1px dashed grey;
+  margin: 3px 0;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  font-family: NanumBarunpen;
+}
+.nickname{
+  color:#FF8540;
+  text-decoration: none;
+}
+.nickname:hover{
+  color:#95B988;
+  text-decoration: none;
+}
+.box-title { /* 방명록 '~에게', '~님의 방명록' */
+  font-family: "NanumBarunpen";
+  font-weight: 1000;
+  font-size: 20px;
   border-bottom: 1px solid grey;
-  color: #3b87ab;
   margin-bottom: 15px;
 }
 
@@ -72,12 +91,6 @@
 
 .category-post {
   background-color: #617dc1;
-}
-
-.menu-row {
-  display: flex;
-  border-bottom: 1px dashed grey;
-  margin: 3px 0;
 }
 
 .menu-item {
@@ -117,19 +130,20 @@ body {
 }
 
 .bookcover {
-  background-color: #b4d1da;
+  background-color: #C0DBB6;
   border-radius: 9px;
-  border: 1px solid #738186;
+  /* border: 1px solid #738186; */
   width: 1400px;
   height: 900px;
   margin: 10px auto;
-  margin-bottom: 100px;
+  margin-bottom: 100px !important;
   position: relative;
+  padding-bottom: 100px;
 }
 
 .bookdot {
   border-radius: 9px;
-  border: 2px dashed #ffffff;
+  border: 2px dashed #2C2E34;
   padding: 15px;
   position: absolute;
   top: 15px;
@@ -139,7 +153,7 @@ body {
 }
 
 .page {
-  background-color: #eeeeee;
+  background-color: #F6FFEF;
   border-radius: 9px;
   position: absolute;
   top: 10px;
@@ -159,7 +173,8 @@ body {
 .profile-container {
   flex: 0.4;
   margin-right: 1.5rem;
-
+  max-width: 352px;
+  max-height: 825px;
   display: flex;
   flex-direction: column;
 }
@@ -181,19 +196,21 @@ body {
 .menu-container > a {
   padding: 6px;
   margin: 15px 0;
-  background-color: #3b87ab;
+  background-color: #C0DBB6;
   border-bottom-right-radius: 6px; /* 우측 하단 border-radius 적용 */
   border-top-right-radius: 6px; /* 우측 상단 border-radius 적용 */
-  border: 1px solid #617dc1;
-  color: white;
+  border: 1px solid transparent;
+  color: #F6FFEF;
   text-decoration: none;
-  font-family: "NeoDunggeunmo";
-  font-size: 1.3rem;
+  font-family: "NanumBarunpen";
+  font-size: 1000;
+  font-size: 20px;
   text-align: center;
 }
 
 .menu-container > a:hover {
-  background-color: #617dc1;
+  background-color: #98DB80;
+  color: #F6FFEF;
 }
 
 
@@ -226,22 +243,46 @@ body {
 
 .profile-image-img {
   height:300px; 
-  width:200px;
+  width:250px;
   display: inline-block;
   margin: auto;
 }
 
 .profile-text {
-  margin-top: 1.5rem;
   font-size: 2rem;
   line-height: 1.7;
-  flex: 1;
+  font-family: NanumBarunpen;
+  color:#FF8540;
+  margin: 43px 24px 43px 24px;
+  white-space: nowrap; /* 줄 바꿈 방지 */
+  overflow:scroll; /* 넘치는 부분 감추기 */
 }
 
 .profile-username {
   flex: 0;
 }
+.mypage-edit{
+  font-family: NanumBarunpen;
+  font-weight: bolder; 
+  margin-top: 30px;
+  color:#95B988;
+}
+.input-group2 {
+  width: 100%;
+  margin: auto;
+  font-family: NanumBarunpen;
+  border: 1px solid #C0DBB6;
+  border-radius: 0.3rem;
+}
+::file-selector-button {
+  -webkit-appearance: button;
+  color: #2C2E34;
+  background-color: #FCA472;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  box-shadow: none;
 
+}
 .content-box {
   display: flex;
   flex-direction: column;
@@ -252,9 +293,9 @@ body {
   display: flex;
   align-items: center;
 }
-
 .content-title-name {
   flex: 1;
+  font-family: 'NanumBarunpen';
 }
 .poster-img {
   width: 140px;
@@ -308,22 +349,37 @@ body {
   margin: 0;
   font-size: 15px;
 }
-.follow-btn {
+.prof-follow-btn {
   width: 100%;
-  height: 30px;
-  background-color: skyblue;
-  border:None;
+  background-color: #96FC72;
+  border:1px solid transparent;
+  border-radius: 0.374rem;
+  font-family: NanumBarunpen;
+}
+
+.follow-btn {
+  background-color: #FFD7C0;
+  border:1px solid transparent;
+  border-radius: 0.375rem;
+  font-family: NanumBarunpen;
+  margin: 0 3px 6px 6px;
 }
 .follow-img{
   width: 40px;
   height: 40px;
 }
 .follow-title {
-  font-family: "KOTRA_BOLD-Bold";
+  font-family: "NanumBarunpen";
+  font-weight: 1000;
+  font-size: 20px;
   border-bottom: 1px solid grey;
-  color: #3b87ab;
-  margin-bottom: 15px;
+}
+.no-follow{
+  font-family: NanumBarunpen;
+  color:#FCA472;
+  text-align: left;
   font-size: 25px;
+  margin-top: 20px;
 }
 .thermometer {
   width: 100%;
@@ -342,10 +398,30 @@ body {
 
 .temperature-fill {
   height: 100%;
-  background-color: skyblue;
+  background-color: #98DB80;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
+.bio{
+  font-weight: bolder;
+  font-family: 'NanumBarunpen';
+}
+.temp{
+  font-weight: bolder;
+  font-family: 'NanumBarunpen';
+  margin-bottom: 10px;
+}
+.bio-content{
+  font-family: NanumBarunpen;
+}
+.bio-area{
+  flex: 1;
+}
+
+
+
+
+
 
 
 
@@ -374,29 +450,29 @@ body {
   font-size: 15px;
 } */
 .delete-button {
-  padding: 8px 16px;
-  background-color: skyblue;
+  background-color: #FCA472;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-right: 5px;
   display: flex;
-  margin-left: auto;
+
 }
-
-
 .delete-button:hover {
-  background-color: #4caf50;
+  background-color: #FFE7D9;
+  color: #FCA472;
 }
+
+
 .content-note{
   background-color: white;
   border-radius: 10px;
   border: 1px solid rgb(206, 206, 206);
   width: 100%;
   flex: 1;
-  padding: 0.75rem;
+  padding: 12px ;
   margin-top:15px;
+  margin-bottom: 15px;
 }
 .main-section{
   overflow-y: auto;
@@ -406,18 +482,20 @@ body {
 }
 .guest-info{
   height: 2rem;
-  background-color: rgb(207, 207, 207);
+  background-color: #EBEBEB;
   padding-left: 1rem;
-
   display: flex;
   align-items: center;
-
-  font-family: 'NeoDunggeunmo';
+  font-family: 'NanumBarunpen';
 }
 .span-note{
-  color: blue;
+  color: #FF8540;
   font-weight: bold;
-  font-family: 'NeoDunggeunmo';
+  font-family: 'NanumBarunpen';
+  text-decoration: none !important;
+}
+.span-note:hover{
+  color:#FF8540;
 }
 /* .guest-content{
   padding: 1.25rem 0;
@@ -425,6 +503,11 @@ body {
   align-items: center;
 } */
 
+.no-note{
+  font-family: NanumBarunpen;
+  color:#FF8540;
+  text-align: center;
+}
 .guest-profile{
   border: 1px solid rgb(204, 204, 204);
   height: 200px;
@@ -437,20 +520,34 @@ body {
   align-items: center;
   justify-content: center;
 }
-
-.guest-image{
+.guest-image {
   width: 200px;
   height: 200px;
   object-fit: cover;
   border-radius: 5px;
 }
 
+.btn-moobo {
+  color: #2C2E34;
+  background-color: #FCA472;
+  border: 1px solid transparent;
+  font-family: 'NanumBarunpen';
+  border-radius: 0.375rem;
+  box-shadow: none;
+}
 
+.btn-moobo:hover {
+  color: #2C2E34;
+  background-color: white;
+  font-family: 'NanumBarunpen';
+  border: 1px solid #FCA472;
+}
 
 .form-container {
   display: flex;
-  align-items: center;
+  align-items: flex-end; /* textarea와 버튼을 아래로 정렬 */
 }
+
 .write-guestnote-form {
   height: 200px; /* 이미지 높이와 동일하게 설정 */
 }
@@ -472,9 +569,6 @@ textarea {
   border-radius: 5px;
 }
 
-.button-input {
-  height: 40px; /* 버튼 높이 설정 */
-}
 
 
 

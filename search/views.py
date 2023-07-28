@@ -17,7 +17,7 @@ def trans(hits):
 
 class SearchView(APIView):
     def get(self, request):
-        es = Elasticsearch()
+        es = Elasticsearch(hosts=["34.64.147.118:9200"])
 
         search_word = request.GET.get('search')
 
@@ -42,9 +42,8 @@ class SearchView(APIView):
             # return Response({'data': data_list})
             return render(request, 'search/result.html',{'data': data_list})
         else:
-            data_list="일치하는 결과가 존재하지 않습니다."
             # return Response({'data': data_list})
-            return render(request, 'search/result.html',{'data': data_list})
+            return render(request, 'search/result.html')
    
 def search(request):
     return render(request, 'search/home.html')

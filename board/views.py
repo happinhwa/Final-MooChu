@@ -13,8 +13,10 @@ def moobo(request):
     return render(request, 'board/moobo.html', {'post_list': post_list})
 
 
-
 def detail(request, post_id):
+    """
+    게시판 글 내용 출력
+    """
     post = get_object_or_404(models.board, pk=post_id)
     voted = post.voter.filter(id=request.user.id).exists()
     is_writer = request.user == post.writer
@@ -45,6 +47,43 @@ def post(request):
     return render(request, 'board/post.html', context)
 
 
+@login_required
+def post_edit(request, post_id):
+    """
+    게시판 글 수정
+    """
+    post = get_object_or_404(models.board, pk=post_id)
+    if request.user != post.writer:
+        messages.error(request, '수정권한이 없습니다')
+        return redirect('board:post_detail', post_id=post.id)
+
+    if request.method == "POST":
+        form = forms.post_form(request.POST, instance=post)
+        if form.is_valid():
+            board = form.save(commit=False)
+            board.writer = request.user
+            board.modify_date = timezone.now()  # 수정일시 저장
+            board.save()
+            return redirect('board:post_detail', post_id=post.id)
+    else:
+        form = forms.post_form(instance=post)
+    
+    context = {'form': form}
+    return render(request, 'board/post.html', context)
+
+
+@login_required
+def post_delete(request, post_id):
+    """
+    게시판 글 삭제
+    """
+    post = get_object_or_404(models.board, pk=post_id)
+    if request.user != post.writer:
+        messages.error(request, '삭제권한이 없습니다')
+        return redirect('board:detail', post_id=post.id)
+    post.delete()
+    return redirect('board:moobo')
+
 
 
 ############## Comment 관련 ##############
@@ -55,13 +94,10 @@ def comment(request, post_id):
     return redirect('board:detail', post_id = post.id)
 
 
-
-
-
 @login_required
 def comment_create(request, post_id):
     """
-    pybo 질문댓글등록
+    게시글 작성
     """
     post = get_object_or_404(models.board, pk=post_id)
     if request.method == "POST":
@@ -74,11 +110,6 @@ def comment_create(request, post_id):
             comment.save()
             return redirect('{}#comment_{}'.format(
                 resolve_url('board:post_detail', post_id=comment.board.id), comment.id))
-    # elif request.method == "DELETE":
-    #     ## 삭제하는 로직 
-
-    # elif request.method == "PUT":
-    #     ## 수정하는 로직 
     else:
         form = forms.comment_form()
     context = {'form': form}
@@ -86,18 +117,55 @@ def comment_create(request, post_id):
 
 
 
+@login_required
+def comment_edit(request, comment_id):
+    """
+    게시글 댓글수정
+    """
+    comment = get_object_or_404(models.comment, pk=comment_id)
+    if request.user != comment.writer:
+        messages.error(request, '수정권한이 없습니다')
+        return redirect('board:post_detail', post_id=comment.board.id)
+
+    if request.method == "POST":
+        form = forms.comment_form(request.POST, instance=comment)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.writer = request.user
+            comment.modify_date = timezone.now()
+            comment.save()
+            return redirect('board:post_detail', post_id=comment.board.id)
+    else:
+        form = forms.comment_form(instance=comment)
+    context = {'comment': comment, 'form': form}
+    return render(request, 'board/comment_create.html', context)
+
+
+@login_required
+def comment_delete(request, comment_id):
+    """
+    게시글 댓글삭제 
+    """
+    comment = get_object_or_404(models.comment, pk=comment_id)
+    if request.user != comment.writer:
+        messages.error(request, '삭제권한이 없습니다')
+    else:
+        comment.delete()
+    return redirect('board:post_detail', post_id=comment.board.id)
+
+
 ############## 추천 관련 ##############
 
 @login_required
 def vote_post(request, post_id):
     """
-    pybo 질문추천등록
+    게시글 추천
     """
     post = get_object_or_404(models.board, pk=post_id)
     if request.user == post.writer:
-        messages.error(request, '본인이 작성한 글은 추천할 수 없습니다')
+        pass # 오류메세지는 js로 작성 post_detail.html 맨 아래쪽 script 코드 참조
     elif post.voter.filter(id=request.user.id).exists():
-        messages.error(request, '이미 추천했습니다')
+        pass # 오류메세지는 js로 작성 post_detail.html 맨 아래쪽 script 코드 참조
     else:
         post.voter.add(request.user)
     
@@ -107,13 +175,13 @@ def vote_post(request, post_id):
 @login_required
 def vote_comment(request, comment_id):
     """
-    pybo 답글추천등록
+    댓글 추천
     """
     comment = get_object_or_404(comment, pk=comment_id)
     if request.user == comment.writer:
-        messages.error(request, '본인이 작성한 글은 추천할수 없습니다')
+        pass # 오류메세지는 js로 작성 post_detail.html 맨 아래쪽 script 코드 참조
     elif comment.voter.filter(id=request.user.id).exits():
-        messages.error(request, '이미 추천했습니다')
+        pass # 오류메세지는 js로 작성 post_detail.html 맨 아래쪽 script 코드 참조
     else:
         comment.voter.add(request.user)
     return redirect('board:post_detail', post_id=comment.board.id)

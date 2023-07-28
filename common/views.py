@@ -116,9 +116,9 @@ def movie_selection(request):
 
         return render(request, 'common/register_complete.html', {'message': message})
     else:
-        client = MongoClient('mongodb://localhost:27017/')
-        db = client['test']
-        collection = db['movie']
+        client = MongoClient('mongodb://root:root@210.114.91.91:26697/?authMechanism=DEFAULT') # 이부분 수정필요
+        db = client['ott_all']
+        collection = db['all']
         #select_genres = SelectedGenre.objects.values_list('genre', flat=True)
         select_genres = SelectedGenre.objects.filter(user=request.user).values_list('genre', flat=True)  # 가져온 필드를 사용하여 장르를 선택
         select_genre_names = [get_genre_name(int(g)) for g in select_genres]  # 선택된 장르 번호를 이름으로 매핑
@@ -138,8 +138,8 @@ def movie_selection(request):
         return render(request, 'common/movie_selection.html', {'movies': movie_str})
     
 def get_mongo_db():
-    client = MongoClient('mongodb://localhost:27017/')
-    db = client['test']
+    client = MongoClient('mongodb://root:root@210.114.91.91:26697/?authMechanism=DEFAULT')
+    db = client['ott_all']
     return db
 
 

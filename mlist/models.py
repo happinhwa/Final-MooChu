@@ -18,11 +18,11 @@ daum_db = mongo_client[settings.DAUM_MONGODB_NAME]
 
 
 class Movie:
-    collection = tmdb_db.movie
+    collection = ott_all_db.movie
 
     @classmethod
     def get_collection(cls):
-        return tmdb_db
+        return ott_all_db
 
     @classmethod
     def get_movie_by_id(cls, movie_id):
@@ -33,28 +33,26 @@ class Movie:
             movie['genres'] = genre_names
             return Movie(**movie)
         return None
-
-    def __init__(self, id, title, release_date, runtime, poster_path, genres, overview):
+    
+    def __init__(self, id, titleKr, releasedAt, posterImageUrl, mediaType):
         self.id = id
-        self.title = title
-        self.release_date = release_date
-        self.runtime = runtime
-        self.poster_path = poster_path
-        self.genres = genres
-        self.overview = overview
+        self.titleKr = titleKr
+        self.releasedAt = releasedAt
+        self.posterImageUrl = posterImageUrl
+        self.mediaType = mediaType
 
     def save(self):
-        collection = self.get_collection().movie
-        collection.insert_one({
-            'id': self.id,
-            'title': self.title,
-            'release_date': self.release_date,
-            'runtime': self.runtime,
-            'poster_path': self.poster_path,
-            'genres': self.genres,
-            'overview': self.overview,
+        self.collection.insert_one({
+            'id': self.id.lower(),
+            'titleKr': self.titleKr.lower(),
+            'releasedAt': self.releasedAt.lower(),
+            'posterImageUrl': self.posterImageUrl.lower(),
+            'mediaType': self.mediaType.lower()
         })
-
+    @classmethod
+    def get_all_movies(cls):
+        movies = cls.collection.find({}, {'id': 1, 'posterImageUrl': 1, 'titleKr': 1, 'releasedAt': 1, 'mediaType': 1})
+        return movies
 
 
 
@@ -157,6 +155,7 @@ class OTTdetail:
 from pymongo import MongoClient
 
 class OTT_detail:
+    
     collection = ott_all_db['all']
 
     @classmethod
@@ -176,7 +175,7 @@ class OTT_detail:
         if document:
             return document['id']
         return None
-
+   
 
 
 # 개봉예정작 관련입니다.

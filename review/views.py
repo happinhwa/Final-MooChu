@@ -76,22 +76,23 @@ def main_review_detail(request, review_id):
 from django.shortcuts import get_object_or_404
 
 
-from pymongo import MongoClient
-from django.utils import timezone
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from .forms import ReviewForm
+from common.models import Review, OTT_detail
+from django.http import HttpResponse
 
 @login_required
 def write_review(request, movie_id):
     # Prepopulate the movie_title field with the title of the movie
-    movie_title = request.GET.get('title_kr')
+    movie = OTT_detail.get_movie_by_id(movie_id)
+    movie_title = movie['title_kr']
 
     if request.method == "POST":
         form = ReviewForm(request.POST)
         if form.is_valid():
             user_id = request.user.id
-            movie_title = form.cleaned_data['movie_title']  # Get the value from the form data
-            rating = form.cleaned_data['rating']
 
             # Fetch the movie based on the movie_title from MongoDB
             try:
@@ -102,7 +103,7 @@ def write_review(request, movie_id):
                 return HttpResponse("Movie not found!")
 
             # Save the review to the database
-            review = Review(user_id=user_id, movie_title=movie['title'], rating=rating, create_date=timezone.now())
+            review = Review(user_id=user_id, movie_title=movie['title'], create_date=timezone.now())
             review.save()
             print('title_kr')
             return redirect('mlist:movie_detail', id=movie_id)
@@ -111,6 +112,7 @@ def write_review(request, movie_id):
 
     context = {'form': form, 'title_kr': movie_title}
     return render(request, 'review/write_review.html', context)
+
 
 
 

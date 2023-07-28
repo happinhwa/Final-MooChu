@@ -16,8 +16,9 @@ urlpatterns = [
     path('detail/<int:id>/', views.moviedetail, name='moviedetail'),
     #path("mylist/add/", views.add_to_mylist, name="add_to_mylist"),
     #찜하기
-     path('add_to_mylist', views.add_to_mylist, name='add_to_mylist'),
-
+    path('add_to_mylist', views.add_to_mylist, name='add_to_mylist'),
+    #평점 설정
+    path('movie_rating/<int:id>/', views.movie_rating, name='movie_rating'),
     # 영화 리뷰 관련
    # path('review/<int:id>', views.media_review_by_id, name = 'review_by_id'),
    # path('postreview/<int:id>', views.post_review, name= 'post_reivew'),

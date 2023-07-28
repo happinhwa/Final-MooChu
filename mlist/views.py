@@ -254,3 +254,36 @@ def add_to_mylist(request, movie_id):
         return HttpResponseRedirect(response_data['detail/<int:id>'])
     else:
         return JsonResponse(response_data)
+
+from pymongo import MongoClient
+from common.models import MovieRating
+##### 점수 관련#####
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
+from common.models import MovieRating
+
+@login_required
+def movie_rating(request, id):
+    if request.method == 'POST':
+        # Retrieve the data from the POST request
+        movie_title = request.POST.get('movie_title', '')
+        rating = request.POST.get('rating', '')
+        user = request.user  # Get the currently logged-in user
+
+        if movie_title and rating:
+            try:
+                # Create and save the MovieRating object
+                movie_rating = MovieRating(user=user, movie_title=movie_title, rating=rating)
+                movie_rating.save()
+                message = "영화 평점 저장이 완료되었습니다."
+            except ValidationError:
+                message = "영화 평점 저장에 실패했습니다. 다시 시도해 주세요."
+        else:
+            message = "영화 평점 정보가 누락되었습니다."
+
+        return render(request, 'mlist/complete_rating.html', {'message': message, 'movie_title':movie_title})
+    else:
+        # Handle GET requests (if necessary)
+        # You may add some logic here to display the form or redirect to a different page
+        pass

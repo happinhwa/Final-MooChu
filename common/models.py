@@ -56,7 +56,7 @@ class SelectedGenre(models.Model):
         
 class MovieRating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE )
-    movie_title = models.CharField(max_length=255)
+    movie_id = models.CharField(max_length=255)
     rating = models.FloatField()
     
     def __str__(self):

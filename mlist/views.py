@@ -231,29 +231,14 @@ def movie_detail(request, id):
     ################찜 관련##############
     
 from django.http import HttpResponseRedirect
-
-def add_to_mylist(request, movie_id):
-    movie_id = str(movie['_id'])
+from .models import MyList
+def add_to_mylist(request, movie_id):# 상세페이지 함수에서 처리를 한다. 
     user = request.user
-    media_details = OTT_detail.get_movie_by_id(media_id)
+    MyList.objects.create(user=user, media_id=movie_id)
+    return render(request, 'mlist/movie_detail.html', {'id': movie_id})
 
-    if media_details:
-        media_in_mylist = MyList.objects.filter(user=user, media_id=media_id).exists()
 
-        if not media_in_mylist:
 
-            media_poster_url = media_details.get('poster_url', None)
-            MyList.objects.create(user=user, media_id=media_id, media_poster=media_poster_url)
-            response_data = {'status': 'added', 'redirect_url': '/mylist/'}
-        else:
-            response_data = {'status': 'already_added', 'redirect_url': '/mylist/'}
-    else:
-        response_data = {'status': 'not_found'}
-
-    if 'redirect_url' in response_data:
-        return HttpResponseRedirect(response_data['detail/<int:id>'])
-    else:
-        return JsonResponse(response_data)
 
 from pymongo import MongoClient
 from common.models import MovieRating

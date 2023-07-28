@@ -154,17 +154,27 @@
 
 
 <!-- 영화정보관련 -->
+
 <div class="movie-container">
     <div class="background-image"></div>
     <div class="poster-image">
         <img src="{{ movie.poster_image_url }}" alt="Movie Poster">
     </div>
         <div class="movie-info">
-            <h1>{{ movie.title_kr }}</h1><div>
+            <h1>{{ movie.title_kr }}</h1>
+            <div>
                 {% if user.is_authenticated %}
-            <button class="add-to-my-list-btn" data-movie-id="{{ movie.id }}">찜하기</button>
-            {% endif %}
+                    <form method="post" action="{% url 'mlist:add_to_mylist' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="movie_id" value="{{ movie.id }}">
+                        <input type="submit" value="영화 내 목록에 추가">
+                    </form>
+                {% else %}
+                    <p>영화를 목록에 추가하려면 로그인하세요.</p>
+                {% endif %}
+            </div>
         </div>
+    
         
             <div style="display: inline;">
                 <h3 style="display: inline;">{{ movie.title_En }}</h3>
@@ -186,75 +196,75 @@
                 <h4>{{ movie.synopsis }}</h4>
             </div>
         <div class="movie-rating">
-            <div>
-                <form method="post" action="{% url 'mlist:movie_rating' movie.id %}">
-                        <li>
-                            <div> 
-                                <div style="display: flex; flex-direction: column;">
-                                    <!-- 영화 정보를 포함하는 div 태그 -->
-                                    <div>
-                                        {{ movie.title }}
-                                    </div>
-                                    <!-- 별점 div -->
-                                      <h4>{{ movie.title_kr }}에 대한 평점을 남겨주세요.</h4>
-                                      <form method="post">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="movie_title_{{ movie.id }}" value="{{ movie.title }}">
-                                        <div class="rate">
-                                          {% with forloop.counter as movie_id %}
-                                          <input type="radio" id="rating10_{{ movie.id }}" name="rating_{{ movie.id }}" value="10"><label for="rating10_{{ movie.id }}" title="5점"></label>
-                                          <input type="radio" id="rating9_{{ movie.id }}" name="rating_{{ movie.id }}" value="9"><label class="half" for="rating9_{{ movie.id }}" title="4.5점"></label>
-                                          <input type="radio" id="rating8_{{ movie.id }}" name="rating_{{ movie.id }}" value="8"><label for="rating8_{{ movie.id }}" title="4점"></label>
-                                          <input type="radio" id="rating7_{{ movie.id }}" name="rating_{{ movie.id }}" value="7"><label class="half" for="rating7_{{ movie.id }}" title="3.5점"></label>
-                                          <input type="radio" id="rating6_{{ movie.id }}" name="rating_{{ movie.id }}" value="6"><label for="rating6_{{ movie.id }}" title="3점"></label>
-                                          <input type="radio" id="rating5_{{ movie.id }}" name="rating_{{ movie.id }}" value="5"><label class="half" for="rating5_{{ movie.id }}" title="2.5점"></label>
-                                          <input type="radio" id="rating4_{{ movie.id }}" name="rating_{{ movie.id }}" value="4"><label for="rating4_{{ movie.id }}" title="2점"></label>
-                                          <input type="radio" id="rating3_{{ movie.id }}" name="rating_{{ movie.id }}" value="3"><label class="half" for="rating3_{{ movie.id }}" title="1.5점"></label>
-                                          <input type="radio" id="rating2_{{ movie.id }}" name="rating_{{ movie.id }}" value="2"><label for="rating2_{{ movie.id }}" title="1점"></label>
-                                          <input type="radio" id="rating1_{{ movie.id }}" name="rating_{{ movie.id }}" value="1"><label class="half" for="rating1_{{ movie.id }}" title="0.5점"></label>
-                                             <!-- ... -->
-                                          {% endwith %}
-                                        </div>
-                                        <button type="submit">평점 저장</button>
-                                      </form>
-                                    </div>
-                                </div>
+            <form method="post" action="{% url 'mlist:movie_rating' movie.id %}">
+                {% csrf_token %}
+                <li>
+                    <div> 
+                        <div style="display: flex; flex-direction: column;">
+                            <!-- 영화 정보를 포함하는 div 태그 -->
+                            <div>
+                                {{ movie.title }}
                             </div>
-                        </li>
-                </form>
-            </div>
+                            <!-- 별점 div -->
+                              <h4>{{ movie.title_kr }}에 대한 평점을 남겨주세요.</h4>
+                              <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="movie_title_{{ movie.id }}" value="{{ movie.title }}">
+                                    <div class="rate">
+                                      {% with forloop.counter as movie_id %}
+                                      <input type="radio" id="rating10_{{ movie.id }}" name="rating_{{ movie.id }}" value="10"><label for="rating10_{{ movie.id }}" title="5점"></label>
+                                      <input type="radio" id="rating9_{{ movie.id }}" name="rating_{{ movie.id }}" value="9"><label class="half" for="rating9_{{ movie.id }}" title="4.5점"></label>
+                                      <input type="radio" id="rating8_{{ movie.id }}" name="rating_{{ movie.id }}" value="8"><label for="rating8_{{ movie.id }}" title="4점"></label>
+                                      <input type="radio" id="rating7_{{ movie.id }}" name="rating_{{ movie.id }}" value="7"><label class="half" for="rating7_{{ movie.id }}" title="3.5점"></label>
+                                      <input type="radio" id="rating6_{{ movie.id }}" name="rating_{{ movie.id }}" value="6"><label for="rating6_{{ movie.id }}" title="3점"></label>
+                                      <input type="radio" id="rating5_{{ movie.id }}" name="rating_{{ movie.id }}" value="5"><label class="half" for="rating5_{{ movie.id }}" title="2.5점"></label>
+                                      <input type="radio" id="rating4_{{ movie.id }}" name="rating_{{ movie.id }}" value="4"><label for="rating4_{{ movie.id }}" title="2점"></label>
+                                      <input type="radio" id="rating3_{{ movie.id }}" name="rating_{{ movie.id }}" value="3"><label class="half" for="rating3_{{ movie.id }}" title="1.5점"></label>
+                                      <input type="radio" id="rating2_{{ movie.id }}" name="rating_{{ movie.id }}" value="2"><label for="rating2_{{ movie.id }}" title="1점"></label>
+                                      <input type="radio" id="rating1_{{ movie.id }}" name="rating_{{ movie.id }}" value="1"><label class="half" for="rating1_{{ movie.id }}" title="0.5점"></label>
+                                         <!-- ... -->
+                                      {% endwith %}
+                                    </div>
+                                <button type="submit">평점 저장</button>
+                              </form>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </form>
         </div>
+    </div>
 </div>
 
 
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-      const addToMyListButton = document.getElementById("add-to-my-list");
-      addToMyListButton.addEventListener("click", function() {
-        const movieId = this.dataset.movieId;
-        const url = `/add_to_mylist/${movieId}/`;
-    
-        // Use Ajax to send a POST request to the server
-        fetch(url, {
-          method: "POST",
-          headers: {
-            "X-CSRFToken": "{{ csrf_token }}", // Include the CSRF token for security
-            "Content-Type": "application/json",
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            // Update the button text and style based on the response
-            if (data.status === "added") {
-              this.innerText = "Remove from My List";
-            } else if (data.status === "removed") {
-              this.innerText = "Add to My List";
-            }
+        const addToMyListButton = document.getElementById("add-to-my-list");
+        addToMyListButton.addEventListener("click", function() {
+          const movieId = this.dataset.movieId;
+          const url = `/add_to_mylist/${movieId}/`;
+      
+          // Use Ajax to send a POST request to the server
+          fetch(url, {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": "{{ csrf_token }}", // Include the CSRF token for security
+              "Content-Type": "application/json",
+            },
           })
-          .catch((error) => console.error("Error:", error));
-      });
-    });
+            .then((response) => response.json())
+            .then((data) => {
+              // Update the button text and style based on the response
+              if (data.status === "added") {
+                this.innerText = "Remove from My List";
+              } else if (data.status === "removed") {
+                this.innerText = "Add to My List";
+              }
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+      });      
     </script>
 <!-- 리뷰 목록 -->
 
@@ -330,7 +340,7 @@
             <a href="?order=comments" class="btn btn-secondary">댓글 많은 순</a>
         </div>
         <div style="margin-left: auto;">
-            <a href="{% url 'review:write_review' movie.id %}" class="btn btn-secondary">리뷰작성하기</a>
+            <a href="{% url 'review:write_review' id=movie.id %}" class="btn btn-secondary">리뷰작성하기</a>
         </div>
     </div>
     <div class="reviews"><div class="reviews h1">

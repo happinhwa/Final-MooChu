@@ -224,10 +224,8 @@ class CMovie(dict):
 
 #######찜하기
 class MyList(models.Model):
-    like = models.BooleanField(default=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mylist_user')
     media_id = models.CharField(max_length=20)
-    media_poster = models.ImageField(upload_to="posters/", null=True)
 
     class Meta:
         db_table = 'Mylist'

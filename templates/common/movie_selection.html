@@ -65,7 +65,6 @@
                             ({{ movie.info }}) <br>
                         </div>
                         <!-- 별점 div -->
-                        
                         {% csrf_token %}
                         <input type="hidden" name="movie_title_{{ movie.m_id }}" value="{{ movie.title }}">
                         <div class="rate">

@@ -10,7 +10,7 @@ urlpatterns = [
     path('main_review_detail/<int:review_id>/', views.main_review_detail, name='main_review_detail'),
     
     # 리뷰 작성
-    path('write_review/<int:movie_id>/', views.write_review, name='write_review'),
+    path('write_review/<int:id>/', views.write_review, name='write_review'),
     
     #path('movies/', views.movie_list, name='movie_list'),
     #path('movies/<int:movie_id>/', views.movie_detail, name='movie_detail'),

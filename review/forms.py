@@ -11,13 +11,11 @@ class ReviewForm(forms.ModelForm):
 
     class Meta:
         model = Review
-        fields = ['content', 'writer', 'id']  # Add 'movie_title' field to the form
+        fields = ['content', 'writer']  # Remove 'id' and 'movie_id' from the fields attribute
         labels = {
             'content': '내용',
             'writer': '작성자',
-            'movie_id': '영화id',  # Set the label for the movie_title field
         }
-
 
         
 class CommentsForm(forms.ModelForm):

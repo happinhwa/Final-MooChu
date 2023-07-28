@@ -229,26 +229,31 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from common.models import MovieRating
 from django.shortcuts import render, redirect, get_object_or_404
+from django.forms import ValidationError
+from django.shortcuts import redirect
 
 @login_required
 def movie_rating(request, id):
     if request.method == 'POST':
-        # Retrieve the data from the POST request
-        movie_id = int(id)
-        rating = int(request.POST.get('rating', 0))
         user = request.user
+        movie_id = str(id)
+        movie_title_key = f"movie_title_{movie_id}"
+        rating_key = f"rating_{movie_id}"
 
-        # Get the MovieRating object using filter (handles multiple objects)
-        movie_ratings = MovieRating.objects.filter(user=user, movie_id=movie_id)
+        if movie_title_key in request.POST and rating_key in request.POST:
+            movie_title = request.POST[movie_title_key]
+            rating = request.POST[rating_key]
 
-        if movie_ratings.exists():
-            # If the user has already rated the movie, update the rating of the first object
-            movie_rating = movie_ratings.first()
-            movie_rating.rating = rating
-            movie_rating.save()
-        else:
-            # If the user has not rated the movie, create a new rating record
-            MovieRating.objects.create(user=user, rating=rating, movie_id=movie_id)
+            movie_ratings = MovieRating.objects.filter(user=user, movie_id=movie_id)
 
-    # Handle GET requests or invalid data (if necessary)
-    return redirect('mlist:moviedetail', id=id)
+            if movie_ratings.exists():
+                # If the user has already rated the movie, update the rating of the first object
+                movie_rating = movie_ratings.first()
+                movie_rating.rating = rating
+                movie_rating.save()
+            else:
+                # If the user has not rated the movie, create a new rating record
+                MovieRating.objects.create(user=user, rating=rating, movie_id=movie_id)
+
+    # Redirect to the movie detail page
+    return redirect('mlist:movie_detail', id=id)

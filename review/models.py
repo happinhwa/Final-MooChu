@@ -23,16 +23,14 @@ from mlist.models import OTT_detail
 
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews_written', default=None)
-    title = models.CharField(max_length=255)
     content = models.TextField()
-    #movie = models.ForeignKey(OTT_detail, on_delete=models.CASCADE)
     create_date = models.DateField(auto_now_add=True)
     modify_date = models.DateTimeField(null=True, blank=True)
     timestamp = models.DateTimeField(default=timezone.now)
     voter = models.ManyToManyField(User, related_name='voter_reviews')
     updated_at = models.DateTimeField(null=True, blank=True)
-    rating =models.ForeignKey(MovieRating, on_delete=models.SET_NULL, null=True, blank=True, related_name='review_Mrating')
     n_hit = models.PositiveIntegerField(default=0)
+    movie_id = models.TextField()
 
     def update_counter(self):
         self.n_hit += 1

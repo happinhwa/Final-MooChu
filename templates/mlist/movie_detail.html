@@ -206,43 +206,35 @@
 
 
 
-        <div class="movie-rating">
-            <form method="post" action="{% url 'mlist:movie_rating' movie.id %}">
-                {% csrf_token %}
-                <li>
-                    <div> 
-                        <div style="display: flex; flex-direction: column;">
-                            <!-- 영화 정보를 포함하는 div 태그 -->
-                            <div>
-                                {{ movie.title }}
-                            </div>
-                            <!-- 별점 div -->
-                              <h4>{{ movie.title_kr }}에 대한 평점을 남겨주세요.</h4>
-                              <form method="post" action="{% url 'mlist:movie_rating' movie.id %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="movie_title_{{ movie.id }}" value="{{ movie.title }}">
-                                <div class="rate">
-                                    {% with forloop.counter as movie_id %}
-                                    <input type="radio" id="rating10_{{ movie_id }}" name="rating_{{ movie_id }}" value="5"><label for="rating10_{{ movie_id }}" title="5.0점"></label>
-                                    <input type="radio" id="rating9_{{ movie_id }}" name="rating_{{ movie_id }}" value="4.5"><label class="half" for="rating9_{{ movie_id }}" title="4.5점"></label>
-                                    <input type="radio" id="rating8_{{ movie_id }}" name="rating_{{ movie_id }}" value="4"><label for="rating8_{{ movie_id }}" title="4.0점"></label>
-                                    <input type="radio" id="rating7_{{ movie_id }}" name="rating_{{ movie_id }}" value="3.5"><label class="half" for="rating7_{{ movie_id }}" title="3.5점"></label>
-                                    <input type="radio" id="rating6_{{ movie_id }}" name="rating_{{ movie_id }}" value="3"><label for="rating6_{{ movie_id }}" title="3.0점"></label>
-                                    <input type="radio" id="rating5_{{ movie_id }}" name="rating_{{ movie_id }}" value="2.5"><label class="half" for="rating5_{{ movie_id }}" title="2.5점"></label>
-                                    <input type="radio" id="rating4_{{ movie_id }}" name="rating_{{ movie_id }}" value="2"><label for="rating4_{{ movie_id }}" title="2.0점"></label>
-                                    <input type="radio" id="rating3_{{ movie_id }}" name="rating_{{ movie_id }}" value="1.5"><label class="half" for="rating3_{{ movie_id }}" title="1.5점"></label>
-                                    <input type="radio" id="rating2_{{ movie_id }}" name="rating_{{ movie_id }}" value="1"><label for="rating2_{{ movie_id }}" title="1.0점"></label>
-                                    <input type="radio" id="rating1_{{ movie_id }}" name="rating_{{ movie_id }}" value="0.5"><label class="half" for="rating1_{{ movie_id }}" title="0.5점"></label>
-                                    {% endwith %}
-                                </div>
-                                <button type="submit">평점 저장</button>
-                            </form>
-                            </div>
+            <div class="movie-rating">
+                <form method="post" action="{% url 'mlist:movie_rating' movie.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="movie_title_{{ movie.id }}" value="{{ movie.title }}">
+                    <div style="display: flex; flex-direction: column;">
+                        <!-- 영화 정보를 포함하는 div 태그 -->
+                        <div>
+                            {{ movie.title }}
                         </div>
+                        <!-- 별점 div -->
+                        <h4>{{ movie.title_kr }}에 대한 평점을 남겨주세요.</h4>
+                        <div class="rate">
+                            {% with forloop.counter as movie_id %}
+                            <input type="radio" id="rating10_{{ movie_id }}" name="rating_{{ movie_id }}" value="5"><label for="rating10_{{ movie_id }}" title="5.0점"></label>
+                            <input type="radio" id="rating9_{{ movie_id }}" name="rating_{{ movie_id }}" value="4.5"><label class="half" for="rating9_{{ movie_id }}" title="4.5점"></label>
+                            <input type="radio" id="rating8_{{ movie_id }}" name="rating_{{ movie_id }}" value="4"><label for="rating8_{{ movie_id }}" title="4.0점"></label>
+                            <input type="radio" id="rating7_{{ movie_id }}" name="rating_{{ movie_id }}" value="3.5"><label class="half" for="rating7_{{ movie_id }}" title="3.5점"></label>
+                            <input type="radio" id="rating6_{{ movie_id }}" name="rating_{{ movie_id }}" value="3"><label for="rating6_{{ movie_id }}" title="3.0점"></label>
+                            <input type="radio" id="rating5_{{ movie_id }}" name="rating_{{ movie_id }}" value="2.5"><label class="half" for="rating5_{{ movie_id }}" title="2.5점"></label>
+                            <input type="radio" id="rating4_{{ movie_id }}" name="rating_{{ movie_id }}" value="2"><label for="rating4_{{ movie_id }}" title="2.0점"></label>
+                            <input type="radio" id="rating3_{{ movie_id }}" name="rating_{{ movie_id }}" value="1.5"><label class="half" for="rating3_{{ movie_id }}" title="1.5점"></label>
+                            <input type="radio" id="rating2_{{ movie_id }}" name="rating_{{ movie_id }}" value="1"><label for="rating2_{{ movie_id }}" title="1.0점"></label>
+                            <input type="radio" id="rating1_{{ movie_id }}" name="rating_{{ movie_id }}" value="0.5"><label class="half" for="rating1_{{ movie_id }}" title="0.5점"></label>
+                            {% endwith %}
+                        </div>
+                        <button type="submit">평점 저장</button>
                     </div>
-                </li>
-            </form>
-        </div>
+                </form>
+            </div>
     </div>
 </div>
 
@@ -355,7 +347,7 @@
     </div>
     <div class="reviews"><div class="reviews h1">
     <h1 style="font-size: 2rem; color: #FCA472;">
-        <u>{{ movie.title_kr }}</u> 이 영화 어떠셨나요?
+        <u>{{ movie.title_kr }}</u> 리뷰를 작성해 주세요
     </h1>
 </div>
         {% if reviews %}
@@ -366,8 +358,7 @@
                         {{ review.content }}  
                     </div>
 
-                    <h3>작성자: {{ review.writer }}</h3>
-                    <p>평점: {{ review.rating }}</p>
+                    <h3>작성자: {{ review.user_id }}</h3>
                     {% if review.updated_at and review.updated_at != review.timestamp %}
                         <p>수정일: {{ review.updated_at }}</p>
                     {% else %}

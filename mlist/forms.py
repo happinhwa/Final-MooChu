@@ -7,11 +7,9 @@ class DateInput(forms.DateInput):
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['title', 'content', 'rating']  # Include 'rating' field in the form
+        fields = ['content']  
         labels = {
-            'title': '제목',
             'content': '내용',
-            'rating': '평점',
         }
 
 class Comment_form(forms.ModelForm):

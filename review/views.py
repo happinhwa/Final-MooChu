@@ -12,45 +12,12 @@ from .models import OTT_detail
 
 
 
-# 임시 영화 데이터
-
-def movie_list(request):
-    movies = OTT_detail.objects.all()
-    context= {'movies': movies}
-    return render(request, 'review/movie_list.html',context)
-
-
-
-def movie_detail(request, id):
-    movie = OTT_detail.get_movie_by_id(id)
-    if movie:
-        # Add review functionality
-        if request.method == "POST":
-            form = ReviewForm(request.POST)
-            if form.is_valid():
-                review = form.save(commit=False)
-                review.user = request.user
-                # Set the necessary movie details in the review
-                review.movie_id = id
-                review.save()
-                return redirect('mlist:movie_detail', id=id)
-        else:
-            form = ReviewForm()
-
-        return render(request, 'mlist/movie_detail.html', {'movie': movie, 'form': form})
-    else:
-        return redirect('movie_not_found')  
-
-
-
 # 구현해야 하는 리뷰 기능들
 
-def main_review_list(request, movie_id):
-    movie = Movie.objects.get(pk=movie_id)
-    reviews = Review.objects.filter(movie_id=movie_id)
+def review(request, review_id, id):
+    reviews = Review.objects.filter(movie_id=id)
     order = request.GET.get("order")
-    print(order)
-    
+    movie = OTT_detail.find_one({'id':str(id)})
     if order == "newest":
         reviews = reviews.order_by('-timestamp')
     elif order == "likes":
@@ -61,12 +28,37 @@ def main_review_list(request, movie_id):
         reviews = reviews.annotate(num_comments=Count('comments')).order_by('-num_comments')
     else:
         reviews = reviews.order_by('-timestamp')
-
+        
     
     counts = reviews.annotate(num_comments=Count('review'), num_likes=Count('liker'))
     context = {'movie':movie, 'reviews': reviews, 'counts':counts}
 
-    return render(request, 'review/main_review_list.html', context)
+    return render(request, 'mlist/movie_detail.html', context)
+
+
+
+#def main_review_list(request, movie_id):
+#    movie = Movie.objects.get(pk=movie_id)
+#    reviews = Review.objects.filter(movie_id=movie_id)
+#    order = request.GET.get("order")
+#    print(order)
+#    
+#    if order == "newest":
+#        reviews = reviews.order_by('-timestamp')
+#    elif order == "likes":
+#        reviews = reviews.annotate(num_likes=Count('liker')).order_by('-num_likes')
+#    elif order == "rating":
+#        reviews = reviews.order_by("-vote")
+#    elif order == "comments":
+#        reviews = reviews.annotate(num_comments=Count('comments')).order_by('-num_comments')
+#    else:
+#        reviews = reviews.order_by('-timestamp')
+#
+#    
+#    counts = reviews.annotate(num_comments=Count('review'), num_likes=Count('liker'))
+#    context = {'movie':movie, 'reviews': reviews, 'counts':counts}
+#
+#    return render(request, 'review/main_review_list.html', context)
 
 
 def main_review_detail(request, review_id):
@@ -82,6 +74,11 @@ from django.utils import timezone
 from .forms import ReviewForm
 from django.http import HttpResponse
 
+
+
+
+
+
 @login_required
 def write_review(request, id):
     # Prepopulate the movie_title field with the title of the movie
@@ -90,7 +87,10 @@ def write_review(request, id):
         if form.is_valid():
             user_id = request.user.id
             # Save the review to the database
-            review = Review(user_id=user_id, movie_id=id, create_date=timezone.now())
+            review = form.save(commit=False)
+            review.user_id = user_id
+            review.movie_id = id  # Set the movie_id attribute using the id
+            review.create_date = timezone.now()
             review.save()
             print(review)
             return redirect('mlist:movie_detail', id=id)
@@ -109,6 +109,8 @@ def write_review(request, id):
 
 
 
+
+@login_required
 def write_comment(request, review_id):
     review = get_object_or_404(Review, pk=review_id)
     user = request.user
@@ -125,6 +127,10 @@ def write_comment(request, review_id):
         form = CommentsForm()
 
     return render(request, 'review/write_comment.html', {'form': form, 'review': review})
+
+
+
+
 
 
 @login_required
@@ -203,6 +209,7 @@ def review_liker1(request, review_id):
         else:
             review.liker.add(request.user)  # 좋아요 추가
     return redirect('review:main_review_list', movie_id=review.movie.id)
+
 # main_review_detail로 보낼거
 @login_required
 def review_liker2(request, review_id):

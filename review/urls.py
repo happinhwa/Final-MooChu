@@ -6,7 +6,7 @@ app_name = 'review'
 urlpatterns = [
     # 리뷰
     # 리뷰 모음들
-    path('main_review_list/<int:movie_id>/', views.main_review_list, name='main_review_list'),
+    path('main_review_list/<int:movie_id>/', views.review, name='main_review_list'),
     path('main_review_detail/<int:review_id>/', views.main_review_detail, name='main_review_detail'),
     
     # 리뷰 작성

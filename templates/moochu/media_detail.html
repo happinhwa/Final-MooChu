@@ -4,12 +4,18 @@
 {% block title %}Media Detail{% endblock %}
 
 {% block content %}
+<head>
+    <link rel="stylesheet" href="{% static 'media_detail.css' %}">
+</head>
 
 
-
-    <div class="movie-details">
-        <h2>{{ movie.titleKr }}</h2>
-        <img src="{{ movie.posterImageUrl }}" alt="{{ movie.titleKr }}">
+<div class="movie-container">
+    <div class="background-image"></div>
+    <div class="poster-image">
+        <img src="{{ movie.posterImageUrl }}" alt="Movie Poster">
+    </div>
+        <div class="movie-info">
+            <h1>{{ movie.title_kr }}</h1>
         <p>Age: {{ movie.age }}</p>
         <p>Genre: {{ movie.genre }}</p>
         <p>Synopsis: {{ movie.synopsis }}</p>

@@ -97,11 +97,8 @@ def genre_filter(request, ott, media_type):
 
 # 영화 상세 페이지 
 def movie_detail(request, movie_id):
-
     ## TV 또는 MOVIE에 맞게 media 리스트 저장
-    data = list(Media.collection.find({"id": movie_id}))
-
-
+    data = list(Media.collection.find({"_id": ObjectId(movie_id)}))
     ## 필요한 데이터 형식으로 변형
     data =[
         {
@@ -117,7 +114,7 @@ def movie_detail(request, movie_id):
     ]
 
     context = {
-            'data': data,
+            'movie': data[0],
         }
 
     return render(request, 'moochu/media_detail.html', context)

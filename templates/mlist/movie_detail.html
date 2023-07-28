@@ -164,17 +164,24 @@
             <h1>{{ movie.title_kr }}</h1>
             <div>
                 {% if user.is_authenticated %}
-                    <form method="post" action="{% url 'mlist:add_to_mylist' %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="movie_id" value="{{ movie.id }}">
-                        <input type="submit" value="영화 내 목록에 추가">
-                    </form>
+                    {% if added_to_list %}
+                        <p>영화가 목록에 추가되었습니다.</p>
+                        <form method="post" action="{% url 'mlist:add_to_mylist' id=movie.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="added_to_list" value="False">
+                            <input type="submit" value="이미찜">
+                        </form>
+                    {% else %}
+                        <form method="post" action="{% url 'mlist:add_to_mylist' id=movie.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="added_to_list" value="True">
+                            <input type="submit" value="찜하기">
+                        </form>
+                    {% endif %}
                 {% else %}
                     <p>영화를 목록에 추가하려면 로그인하세요.</p>
                 {% endif %}
             </div>
-        </div>
-    
         
             <div style="display: inline;">
                 <h3 style="display: inline;">{{ movie.title_En }}</h3>
@@ -195,6 +202,10 @@
                 <h3>작품 개요</h3>
                 <h4>{{ movie.synopsis }}</h4>
             </div>
+
+
+
+
         <div class="movie-rating">
             <form method="post" action="{% url 'mlist:movie_rating' movie.id %}">
                 {% csrf_token %}
@@ -207,26 +218,25 @@
                             </div>
                             <!-- 별점 div -->
                               <h4>{{ movie.title_kr }}에 대한 평점을 남겨주세요.</h4>
-                              <form method="post">
+                              <form method="post" action="{% url 'mlist:movie_rating' movie.id %}">
                                 {% csrf_token %}
                                 <input type="hidden" name="movie_title_{{ movie.id }}" value="{{ movie.title }}">
-                                    <div class="rate">
-                                      {% with forloop.counter as movie_id %}
-                                      <input type="radio" id="rating10_{{ movie.id }}" name="rating_{{ movie.id }}" value="10"><label for="rating10_{{ movie.id }}" title="5점"></label>
-                                      <input type="radio" id="rating9_{{ movie.id }}" name="rating_{{ movie.id }}" value="9"><label class="half" for="rating9_{{ movie.id }}" title="4.5점"></label>
-                                      <input type="radio" id="rating8_{{ movie.id }}" name="rating_{{ movie.id }}" value="8"><label for="rating8_{{ movie.id }}" title="4점"></label>
-                                      <input type="radio" id="rating7_{{ movie.id }}" name="rating_{{ movie.id }}" value="7"><label class="half" for="rating7_{{ movie.id }}" title="3.5점"></label>
-                                      <input type="radio" id="rating6_{{ movie.id }}" name="rating_{{ movie.id }}" value="6"><label for="rating6_{{ movie.id }}" title="3점"></label>
-                                      <input type="radio" id="rating5_{{ movie.id }}" name="rating_{{ movie.id }}" value="5"><label class="half" for="rating5_{{ movie.id }}" title="2.5점"></label>
-                                      <input type="radio" id="rating4_{{ movie.id }}" name="rating_{{ movie.id }}" value="4"><label for="rating4_{{ movie.id }}" title="2점"></label>
-                                      <input type="radio" id="rating3_{{ movie.id }}" name="rating_{{ movie.id }}" value="3"><label class="half" for="rating3_{{ movie.id }}" title="1.5점"></label>
-                                      <input type="radio" id="rating2_{{ movie.id }}" name="rating_{{ movie.id }}" value="2"><label for="rating2_{{ movie.id }}" title="1점"></label>
-                                      <input type="radio" id="rating1_{{ movie.id }}" name="rating_{{ movie.id }}" value="1"><label class="half" for="rating1_{{ movie.id }}" title="0.5점"></label>
-                                         <!-- ... -->
-                                      {% endwith %}
-                                    </div>
+                                <div class="rate">
+                                    {% with forloop.counter as movie_id %}
+                                    <input type="radio" id="rating10_{{ movie_id }}" name="rating_{{ movie_id }}" value="5"><label for="rating10_{{ movie_id }}" title="5.0점"></label>
+                                    <input type="radio" id="rating9_{{ movie_id }}" name="rating_{{ movie_id }}" value="4.5"><label class="half" for="rating9_{{ movie_id }}" title="4.5점"></label>
+                                    <input type="radio" id="rating8_{{ movie_id }}" name="rating_{{ movie_id }}" value="4"><label for="rating8_{{ movie_id }}" title="4.0점"></label>
+                                    <input type="radio" id="rating7_{{ movie_id }}" name="rating_{{ movie_id }}" value="3.5"><label class="half" for="rating7_{{ movie_id }}" title="3.5점"></label>
+                                    <input type="radio" id="rating6_{{ movie_id }}" name="rating_{{ movie_id }}" value="3"><label for="rating6_{{ movie_id }}" title="3.0점"></label>
+                                    <input type="radio" id="rating5_{{ movie_id }}" name="rating_{{ movie_id }}" value="2.5"><label class="half" for="rating5_{{ movie_id }}" title="2.5점"></label>
+                                    <input type="radio" id="rating4_{{ movie_id }}" name="rating_{{ movie_id }}" value="2"><label for="rating4_{{ movie_id }}" title="2.0점"></label>
+                                    <input type="radio" id="rating3_{{ movie_id }}" name="rating_{{ movie_id }}" value="1.5"><label class="half" for="rating3_{{ movie_id }}" title="1.5점"></label>
+                                    <input type="radio" id="rating2_{{ movie_id }}" name="rating_{{ movie_id }}" value="1"><label for="rating2_{{ movie_id }}" title="1.0점"></label>
+                                    <input type="radio" id="rating1_{{ movie_id }}" name="rating_{{ movie_id }}" value="0.5"><label class="half" for="rating1_{{ movie_id }}" title="0.5점"></label>
+                                    {% endwith %}
+                                </div>
                                 <button type="submit">평점 저장</button>
-                              </form>
+                            </form>
                             </div>
                         </div>
                     </div>

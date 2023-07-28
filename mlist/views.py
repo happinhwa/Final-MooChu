@@ -19,7 +19,15 @@ from django.http import JsonResponse
 
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-
+ott_movies = {
+    'Apple': AppleMovie,    'CineFox': CineFoxMovie,
+    'Coupang': CoupangMovie,'Disney': DisneyMovie,
+    'Google': GoogleMovie,  'Laftel': LaftelMovie,
+    'Naver': NaverMovie,    'Netflix': NetflixMovie,
+    'Primevideo': PrimevideoMovie,'Tving': TvingMovie,
+    'UPlus': UPlusMovie,    'Watcha': WatchaMovie,
+    'Wavve': WavveMovie,
+}
 def movielist(request):
     movies = list(Movie.collection.find())
     return render(request, 'mlist/movie_list.html', {'movies': movies})
@@ -28,29 +36,13 @@ def movielist(request):
 def moviedetail(request, id):
     movie = Movie.get_movie_by_id(id)
     if movie:
-        poster_url = 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/' + movie.poster_path
+        
         return render(request, 'mlist/movie_detail.html', {'movie': movie, 'poster_url': poster_url})
     else:
         return HttpResponse('Movie not found')
 
 
 def ott_movie_list(request, ott):
-    ott_movies = {
-        'Apple': AppleMovie,
-        'CineFox': CineFoxMovie,
-        'Coupang': CoupangMovie,
-        'Disney': DisneyMovie,
-        'Google': GoogleMovie,
-        'Laftel': LaftelMovie,
-        'Naver': NaverMovie,
-        'Netflix': NetflixMovie,
-        'Primevideo': PrimevideoMovie,
-        'Tving': TvingMovie,
-        'UPlus': UPlusMovie,
-        'Watcha': WatchaMovie,
-        'Wavve': WavveMovie,
-    }
-
     if ott in ott_movies:
         movies = ott_movies[ott].collection.find({})
     else:
@@ -82,22 +74,6 @@ def movie_detail_by_id(request, id):
         movie_id = ObjectId(str(id))
         ott = determine_ott(movie_id)
 
-        ott_movies = {
-            'Apple': AppleMovie,
-            'CineFox': CineFoxMovie,
-            'Coupang': CoupangMovie,
-            'Disney': DisneyMovie,
-            'Google': GoogleMovie,
-            'Laftel': LaftelMovie,
-            'Naver': NaverMovie,
-            'Netflix': NetflixMovie,
-            'Primevideo': PrimevideoMovie,
-            'Tving': TvingMovie,
-            'UPlus': UPlusMovie,
-            'Watcha': WatchaMovie,
-            'Wavve': WavveMovie,
-        }
-
         if ott in ott_movies:
             movie = ott_movies[ott].collection.find_one({'_id': movie_id})
         else:
@@ -122,21 +98,6 @@ def movie_detail_by_id(request, id):
 
 
 def determine_ott(movie_id):
-    ott_movies = {
-        'Apple': AppleMovie,
-        'CineFox': CineFoxMovie,
-        'Coupang': CoupangMovie,
-        'Disney': DisneyMovie,
-        'Google': GoogleMovie,
-        'Laftel': LaftelMovie,
-        'Naver': NaverMovie,
-        'Netflix': NetflixMovie,
-        'Primevideo': PrimevideoMovie,
-        'Tving': TvingMovie,
-        'UPlus': UPlusMovie,
-        'Watcha': WatchaMovie,
-        'Wavve': WavveMovie,
-    }
 
     for ott, movie_cls in ott_movies.items():
         if movie_cls.collection.find_one({'_id': movie_id}):
@@ -232,43 +193,62 @@ def movie_detail(request, id):
     
 from django.http import HttpResponseRedirect
 from .models import MyList
-def add_to_mylist(request, movie_id):# 상세페이지 함수에서 처리를 한다. 
+def add_to_mylist(request, id):
     user = request.user
-    MyList.objects.create(user=user, media_id=movie_id)
-    return render(request, 'mlist/movie_detail.html', {'id': movie_id})
+    movie_id = int(id)
 
+    # Check if the movie is already in the user's list
+    try:
+        mylist = MyList.objects.get(user=user, media_id=movie_id)
+        # If the movie is in the list, remove it
+        mylist.delete()
+        added_to_list = False  # To indicate that the movie was removed
+    except MyList.DoesNotExist:
+        # If the movie is not in the list, add it
+        MyList.objects.create(user=user, media_id=movie_id)
+        added_to_list = True  # To indicate that the movie was added
+
+    # Get the value from the POST request, if available
+    added_to_list_value = request.POST.get('added_to_list', None)
+
+    # If the 'added_to_list' value is provided in the POST request, update the 'added_to_list' variable
+    if added_to_list_value is not None:
+        added_to_list = added_to_list_value == "True"
+
+    # Redirect to the movie detail page
+    return HttpResponseRedirect(f'/mlist/detail/{movie_id}/?added_to_list={added_to_list}')
 
 
 
 from pymongo import MongoClient
 from common.models import MovieRating
+
+
 ##### 점수 관련#####
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError
 from common.models import MovieRating
+from django.shortcuts import render, redirect, get_object_or_404
 
 @login_required
 def movie_rating(request, id):
     if request.method == 'POST':
         # Retrieve the data from the POST request
-        movie_title = request.POST.get('movie_title', '')
-        rating = request.POST.get('rating', '')
-        user = request.user  # Get the currently logged-in user
+        movie_id = int(id)
+        rating = int(request.POST.get('rating', 0))
+        user = request.user
 
-        if movie_title and rating:
-            try:
-                # Create and save the MovieRating object
-                movie_rating = MovieRating(user=user, movie_title=movie_title, rating=rating)
-                movie_rating.save()
-                message = "영화 평점 저장이 완료되었습니다."
-            except ValidationError:
-                message = "영화 평점 저장에 실패했습니다. 다시 시도해 주세요."
+        # Get the MovieRating object using filter (handles multiple objects)
+        movie_ratings = MovieRating.objects.filter(user=user, movie_id=movie_id)
+
+        if movie_ratings.exists():
+            # If the user has already rated the movie, update the rating of the first object
+            movie_rating = movie_ratings.first()
+            movie_rating.rating = rating
+            movie_rating.save()
         else:
-            message = "영화 평점 정보가 누락되었습니다."
+            # If the user has not rated the movie, create a new rating record
+            MovieRating.objects.create(user=user, rating=rating, movie_id=movie_id)
 
-        return render(request, 'mlist/complete_rating.html', {'message': message, 'movie_title':movie_title})
-    else:
-        # Handle GET requests (if necessary)
-        # You may add some logic here to display the form or redirect to a different page
-        pass
+    # Handle GET requests or invalid data (if necessary)
+    return redirect('mlist:moviedetail', id=id)

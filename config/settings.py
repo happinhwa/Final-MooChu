@@ -97,9 +97,6 @@ AUTH_USER_MODEL = 'common.User'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASE_ROUTERS = ['config.router.MongoDBRouter']
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -121,8 +118,7 @@ DATABASES = {
 
 #mongodb 설정
 MONGODB_URI = 'mongodb://root:root@210.114.91.91:26697/?authMechanism=DEFAULT'  # TMDB 데이터베이스의 MongoDB URI를 입력해주세요.
-TMDB_MONGODB_NAME = 'tmmovie'  # db 이름
-TMDB_MONGODB_ACTOR = 'tmdbperson' # 인물정보
+
 
 # OTT 연결 설정
 OTT_MONGODB_NAME = 'ott_db'  # OTT 데이터베이스의 이름을 입력해주세요.

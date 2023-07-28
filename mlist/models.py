@@ -7,8 +7,6 @@ from common.models import User
 # db 연결
 mongo_client = MongoClient(settings.MONGODB_URI)
 
-tmdb_db = mongo_client[settings.TMDB_MONGODB_NAME]
-actor_db = mongo_client[settings.TMDB_MONGODB_ACTOR]
  
 ott_db = mongo_client[settings.OTT_MONGODB_NAME]
 ott_all_db = mongo_client[settings.OTT_ALLDB_NAME]

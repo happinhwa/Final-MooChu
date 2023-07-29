@@ -1,3 +1,4 @@
+
 {% extends 'base_my.html' %}
 {% block title %}mypage{% endblock %}
 {% load static %}
@@ -10,11 +11,11 @@
     <div class="content-container">
                               <!-- 오른쪽 페이지 상단 글씨  -->
       <div class="header content-title">
-        <div class="content-title-name">"남도일"님의 마이페이지</div>
+        <div class="content-title-name"> <span style="color: #FF8540;">{{ user.nickname }}</span> 님의 마이페이지</div>
       </div>
       <div class="box content-box">
         <div class="scroll-box">
-          <div class="box-title">"남도일" 님의 찜 리스트 ~</div>
+          <div class="box-title"><span style="font-size: 20px; color: #FF8540;">{{ master.nickname }}</span> 님의 찜 리스트</div>
           
             <!-- 찜 목록 리스트 표시 -->
             <div class="poster-container">
@@ -26,7 +27,7 @@
               </div>
               {% endfor %}
               {% else %}
-              <h3> "{{ master.nickname }}"님의 찜 목록이 존재하지 않습니다.</h3>
+              <h3 class="no-note"><span style="font-weight: 900;">{{ master.nickname }}</span> 님의 찜 목록이 존재하지 않습니다.</h3>
               {% endif %}
             </div> 
         </div>
@@ -38,6 +39,9 @@
 </div>
 </div>
 {% endblock %}
+
+
+{% block script %}
 <script>
   // 모든 card-text 요소에 대해 처리
   const cardTexts = document.querySelectorAll('.card-text');
@@ -57,3 +61,4 @@
     }
   });
 </script>
+{% endblock %}

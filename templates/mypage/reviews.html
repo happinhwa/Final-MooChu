@@ -1,17 +1,7 @@
+{% extends 'base_my.html' %}
+{% block title %}mypage{% endblock %}
 {% load static %}
-<!-- Navbar -->
-{% include "navbar/navbar1.html" %}
-.
-<!DOCTYPE html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <title>My page-review</title>
-    <link rel="stylesheet" href="{% static 'font.css' %}">
-    <link rel="stylesheet" href="{% static 'mypage.css' %}">
-  
-  </head>
-  <body>
+{% block content %}
     <div class="bookcover">
       <div class="bookdot">
         <div class="page">
@@ -55,17 +45,17 @@
                   <div class="card">
                     <img class="card-img" src="/static/images/1_2.jpg" alt="영화 포스터">
                     <span class="card-text">스파이더맨</span>
-                    <span class="card-text"><a style="color:yellow"> ★ </a>4.0</span>
+                    <span class="card-text"><a style="color: #96FC72"> ★ </a>4.0</span>
                   </div>
                   <div class="card">
                     <img class="card-img" src="/static/images/2.jpeg" alt="영화 포스터">
                     <span class="card-text">엘라멘탈</span>
-                    <span class="card-text">★5.0</span>
+                    <span class="card-text"><a style="color: #96FC72"> ★ </a>5.0</span>
                   </div>
                   <div class="card">
                     <img class="card-img" src="/static/images/3.jpeg" alt="영화 포스터">
                     <span class="card-text">범죄도시3</span>
-                    <span class="card-text">★5.0</span>
+                    <span class="card-text"><a style="color: #96FC72"> ★ </a>5.0</span>
                   </div>
                   <div class="card">
                     <img class="card-img" src="/static/images/4.jpeg" alt="영화 포스터">
@@ -109,6 +99,4 @@
         </div>
       </div>
     </div>
-  </body>
-</html>
-```
+{% endblock %}

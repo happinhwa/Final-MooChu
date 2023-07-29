@@ -10824,7 +10824,7 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
-.complete-text{
+.complete-text{ /* 이메일 인증 완료시 '인증 완료됐습니다' */
   color: #96FC72;
   font-weight: bold;
   font-size: 25px;

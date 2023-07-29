@@ -12,6 +12,8 @@ mongo_client = MongoClient(settings.MONGODB_URL)
 
 media_db= mongo_client[settings.ALL_MONGODB_NAME]
 
+daum_db = mongo_client[settings.DAUM_MONGODB_NAME]
+
 class Media:
     collection=media_db.movies
 
@@ -19,7 +21,6 @@ class Media:
 
 
 # 개봉예정작 관련입니다.
-daum_db = mongo_client[settings.DAUM_MONGODB_NAME]
 class DaumMovie:
     collection = None
 
@@ -61,4 +62,3 @@ class CMovie(dict):
         self.source = None
         self.num = None
         self.logo_image = None  # Add the 'logo_image' attribute to store the logo image path
-

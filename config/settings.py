@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-z+i-5d9*d+s!vp_a+6#aj(hvwaciv0_+!2a*(0a!bqia$^c)i&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -96,13 +96,28 @@ DATABASES = {
         'USER':'moochu',
         'PASSWORD':'Encore123$%^',
         'HOST':'34.22.93.125',
-        'PORT':'3306'
-    }
+        'PORT':'3306',
+        'OPTIONS': {
+            'charset': 'utf8mb4', # 특수문자 지원
+        },
+    },
+    # 'test_mongo': {
+    #     'ENGINE': 'djongo',
+    #     'NAME': 'final_db',
+    #     'CLIENT': {
+    #         'host': 'localhost',
+    #         'port': '4001',
+    #         'username': 'root',
+    #         'password': 'root',
+    #         'authSource': 'admin',
+    #         'authMechanism': 'SCRAM-SHA-1'
+    #     }
+    # }
 }
 
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': '127.0.0.1:9200'
+        'hosts': '34.64.147.118:9200'
     },
 }
 #mongodb 설정

@@ -14,6 +14,9 @@ from collections import OrderedDict
 def mainpage(request):
     return render(request, 'moochu/mainpage.html')
 
+
+
+# 페이징을 위한 호출 함수
 def data_change(request,data):
     data =[
         {
@@ -100,3 +103,33 @@ def genre_filter(request, ott, media_type):
     }
 
     return render(request, 'moochu/movie_list.html', context)
+
+
+# 영화 상세 페이지 
+def movie_detail(request, movie_id):
+    ## TV 또는 MOVIE에 맞게 media 리스트 저장
+    data = list(Media.collection.find({"_id": ObjectId(movie_id)}))
+    ## 필요한 데이터 형식으로 변형
+    data =[
+        {
+            'id': str(movie['_id']),
+            'posterImageUrl': movie['poster_image_url'],
+            'titleKr': movie['title_kr'],
+            'age' : movie['rating'],
+            'genre' : movie['genres'],
+            'synopsis' : movie['synopsis'],
+            'date' : movie['released_At'],
+        }
+        for movie in data
+    ]
+
+    context = {
+            'movie': data[0],
+        }
+
+    return render(request, 'moochu/media_detail.html', context)
+
+
+
+
+

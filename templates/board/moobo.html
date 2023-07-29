@@ -22,39 +22,46 @@
                 <option value="recommend" {% if so == 'recommend' %}selected{% endif %}>추천순</option>
                 <option value="popular" {% if so == 'popular' %}selected{% endif %}>인기순</option>
             </select>
-        </div>
-        <div class="col-4 input-group">
-            <input type="text" class="form-control kw" value="{{ kw|default_if_none:'' }}">
+        </div> -->
+        <div class="col-2 input-group">
+            <input type="text" class="form-control grayed-input" placeholder="🔍">
             <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" id="btn_search">찾기</button>
+                <button class="btn btn-search" type="button" id="btn_search">검색</button>
             </div>
         </div>
-        <br> -->
+        <br>
+        
 
         <!-- <a href="{% url 'board:post' %}" class="btn btn-moobo" style="margin-bottom: 20px; justify-content: right;">게시글 작성</a> -->
         <table class="table">
             <thead>
             <tr class="table-dark">
-                <th class="num">번호</th>
-                <th class="title" style="text-align: center;">제목</th>
-                <th class="writer">작성자</th>
-                <th class="date">작성일시</th>
-                <th class="count">조회수</th>
-                <th class="count">추천수</th>
+                <th class="col-num">번호</th>
+                <th class="col-title" style="text-align: center;">제목</th>
+                <th class="col-writer">작성자</th>
+                <th class="col-date">작성일시</th>
+                <th class="col-count">조회수</th>
+                <th class="col-count">추천수</th>
                 </tr>
             </thead>
             <tbody>
                 {% if post_list %}
                 {% for post in post_list %}
                 <tr>
-                    <td class="num">{{ forloop.counter }}</td>
+                    <td class="col-num">{{ forloop.counter }}</td>
                     <td>
-                        <a class="title" href="{% url 'board:post_detail' post.id %}">{{ post.title }} ({{ post.comments.count|default_if_none:"0" }})</a>
+                        <a class="title" href="{% url 'board:post_detail' post.id %}">
+                            {{ post.title }}
+                            <span class="comment-count2">
+                                ({{ post.comments.count|default_if_none:"0" }})
+                            </span>
+                        </a>
                     </td>
-                    <td class="writer">{{ post.writer }}</td>
-                    <td class="date">{{ post.create_date }}</td>
-                    <td class="count">{{ post.n_hit}}</td> 
-                    <td class="count">{{ post.voter.all.count }}</td>
+                    
+                    <td class="col-writer">{{ post.writer }}</td>
+                    <td class="col-date">{{ post.create_date }}</td>
+                    <td class="col-count">{{ post.n_hit}}</td> 
+                    <td class="col-count">{{ post.voter.all.count }}</td>
                 </tr>
             {% endfor %}
             {% else %}

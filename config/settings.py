@@ -92,24 +92,12 @@ AUTH_USER_MODEL = 'common.User'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':'final',
-        'USER':'encore',
-        'PASSWORD':'tlrdl13!#',
-        'HOST':'127.0.0.1',
-        'PORT':'4000'
-    },
-    # 'test_mongo': {
-    #     'ENGINE': 'djongo',
-    #     'NAME': 'final_db',
-    #     'CLIENT': {
-    #         'host': 'localhost',
-    #         'port': '4001',
-    #         'username': 'root',
-    #         'password': 'root',
-    #         'authSource': 'admin',
-    #         'authMechanism': 'SCRAM-SHA-1'
-    #     }
-    # }
+        'NAME':'moochu',
+        'USER':'moochu',
+        'PASSWORD':'Encore123$%^',
+        'HOST':'34.22.93.125',
+        'PORT':'3306'
+    }
 }
 
 ELASTICSEARCH_DSL = {
@@ -117,8 +105,12 @@ ELASTICSEARCH_DSL = {
         'hosts': '127.0.0.1:9200'
     },
 }
+#mongodb 설정
+MONGODB_URL = 'mongodb://final:123@34.22.93.125:27017'  # 데이터베이스의 MongoDB URI를 입력해주세요.
+ALL_MONGODB_NAME = 'final'  # db 이름
 
-
+#daum db 설정
+DAUM_MONGODB_NAME = 'daum'  #daum db
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

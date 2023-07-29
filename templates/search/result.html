@@ -4,7 +4,7 @@
 
 {% block content %}
     <h1 style="color: #96FC72">검색결과 페이지인데용 ?</h1>
-    <form action="{% url 'search:search2' %}" method="GET">
+    <form action="{% url 'search:search' %}" method="GET" >
         <input type="text" id="search" name="search" placeholder="검색어를 입력하세요">
         <button type="submit">검색</button>
     </form>

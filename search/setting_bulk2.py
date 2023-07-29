@@ -31,21 +31,7 @@ es.indices.create(
                 "title_En": {
                     "type": "text",
                     "analyzer": "my_analyzer"
-                },
-                "actors": {
-                    "type": "text",
-                    "analyzer": "my_analyzer"
-                },
-                "media_type": {
-                    "type": "keyword"
-                },
-                "poster_image_url": {
-                    "type": "text"
-                },
-                "genres": {
-                    "type": "text",
-                    "analyzer": "my_analyzer"
-                },
+                }
             }
         }
 
@@ -53,21 +39,19 @@ es.indices.create(
 )
 
 
-with open('./Movie1.json', encoding='utf-8') as json_file:
+with open('./OTT_merged_data.json', encoding='utf-8') as json_file:
     json_data = json.load(json_file)
 
 body = ""
 for x, item in enumerate(json_data):
     id = item['id']
     title_kr = item['title_kr']
-    poster_image_url= item['poster_image_url']
     title_En = item['title_En']
-    actor = "배우" 
-    genres= item['genres']
-    print(x)
+    if x %1000==0:
+        print(x)
 
    
     body += json.dumps({"index": {"_index": "movies"}}) + "\n"
-    body += json.dumps({"id": id, "title_kr": title_kr,"poster_image_url":poster_image_url,"title_En" : title_En,"actor": actor,"genres":genres}, ensure_ascii=False) + "\n"
+    body += json.dumps({"id": id, "title_kr": title_kr,"title_En" : title_En}, ensure_ascii=False) + "\n"
 
 es.bulk(body)

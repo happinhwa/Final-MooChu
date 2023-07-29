@@ -9,8 +9,8 @@
 	<div class="navbar">
 		<a class="nav-logo a-nav" href="{% url 'moochu:main' %}"><img src="{% static 'moochu_logo.png' %}"></a>
 		<ul class="nav-links">
-			<li class="nav-item"><a class="a-nav" href="#">Movie</a></li>
-			<li class="nav-item"><a class="a-nav" href="#">TV Shows</a></li>
+			<li class="nav-item"><a class="a-nav" href="{% url 'moochu:ott_media_list' media_type='MOVIE' ott='All' %}">Movie</a></li>
+			<li class="nav-item"><a class="a-nav" href="{% url 'moochu:ott_media_list' media_type='TV' ott='All' %}">TV Shows</a></li>
 			<li class="nav-item"><a class="a-nav" href="#">What's New</a></li>
 			<li class="nav-item"><a class="a-nav" href="{% url 'board:moobo' %}">Board</a></li>
 		</ul>

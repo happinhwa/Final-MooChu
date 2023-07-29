@@ -4,7 +4,6 @@ from django.shortcuts import render, redirect
 from rest_framework.views import APIView  
 from rest_framework.response import Response  
 from rest_framework import status  
-  
 from elasticsearch import Elasticsearch  
   
 def trans(hits):
@@ -42,9 +41,7 @@ class SearchView(APIView):
             # return Response({'data': data_list})
             return render(request, 'search/result.html',{'data': data_list})
         else:
-            data_list="일치하는 결과가 존재하지 않습니다."
-            # return Response({'data': data_list})
-            return render(request, 'search/result.html',{'data': data_list})
+            return render(request, 'search/result.html')
    
 def search(request):
     return render(request, 'search/home.html')

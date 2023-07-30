@@ -150,6 +150,56 @@
     .movie-info h7 {
         margin: 0;
     }
+    .reviews {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+      }
+      
+    .reviews h1 {
+        text-align: center;
+        color: white;
+      }
+      
+    .container-my-3 {
+        margin: 80px;
+        justify-content: space-between; 
+        gap: 20px;
+        padding: 20px;
+        border: 2px solid #FCA472;
+        box-shadow: 0px 0px 10px rgba(252, 164, 114, 0.5);
+        position: relative;
+      }
+    
+    .board-menu {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        overflow: auto;
+        justify-content: flex-end;
+    }
+    
+    .btn-sorting {
+            color: red; 
+            border-color: #D9DFF5;
+            border-width: 1px;
+            font-family: 'NanumBarunpen';
+        }
+    .write-review {
+            color: #FCA472;
+            text-decoration: underline;
+        }
+    .container-recommed-system {
+            margin: 80px;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 20px;
+            border: 2px solid #FCA472;
+            box-shadow: 0px 0px 10px rgba(252, 164, 114, 0.5);
+            position: relative;
+          }
 </style>
 
 
@@ -270,59 +320,6 @@
     </script>
 <!-- 리뷰 목록 -->
 
-
-<style>
-.reviews {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: white;
-  }
-  
-.reviews h1 {
-    text-align: center;
-    color: white;
-  }
-  
-.container-my-3 {
-    margin: 80px;
-    justify-content: space-between; 
-    gap: 20px;
-    padding: 20px;
-    border: 2px solid #FCA472;
-    box-shadow: 0px 0px 10px rgba(252, 164, 114, 0.5);
-    position: relative;
-  }
-
-.board-menu {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    overflow: auto;
-    justify-content: flex-end;
-}
-
-.btn-sorting {
-        color: red; 
-        border-color: #D9DFF5;
-        border-width: 1px;
-        font-family: 'NanumBarunpen';
-    }
-.write-review {
-        color: #FCA472;
-        text-decoration: underline;
-    }
-.container-recommed-system {
-        margin: 80px;
-        justify-content: space-between;
-        gap: 20px;
-        padding: 20px;
-        border: 2px solid #FCA472;
-        box-shadow: 0px 0px 10px rgba(252, 164, 114, 0.5);
-        position: relative;
-      }
-</style>
 
 <div class="container-my-3">
     {% if messages %}

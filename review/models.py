@@ -40,7 +40,7 @@ class Review(models.Model):
 
 
 class Comments(models.Model):
-    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments_written')
+    writer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments_written', default=None)
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='comments')
     comment_txt = models.TextField(null=True)
     timestamp = models.DateTimeField(default=timezone.now)

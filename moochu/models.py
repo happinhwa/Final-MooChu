@@ -20,10 +20,6 @@ class Media:
 
 
 
-
-
-
-
 # 개봉예정작 관련입니다.
 class DaumMovie:
     collection = None

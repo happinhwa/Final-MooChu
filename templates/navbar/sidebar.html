@@ -1,0 +1,193 @@
+<!-- sidebar.html -->
+
+{% comment %}
+<div class="sidebar ott-logos-box">
+    <!-- 장르 선택 폼을 이곳에 넣어줍니다. -->
+    <div class="row">
+        <div class="col-md-4">
+            <!-- 왼쪽에 필터 버튼 배치 -->
+            <form action="{% url 'moochu:genre_filter' ott=ott %}" method="get">
+                <button type="submit">Filter</button>
+            </form>
+        </div>
+        <div class="col-md-8 justify-content-end">
+            <!-- 오른쪽에 장르 선택 버튼 2행으로 정렬 -->
+            {% if genres %}
+                <div class="ott-logos">
+                    {% for genre in genres|slice:":13" %}
+                        <div class="genre-label">
+                            <input type="checkbox" name="genres" value="{{ genre }}" id="genre_{{ forloop.counter }}">
+                            <label for="genre_{{ forloop.counter }}" onclick="toggleGenre('genre_{{ forloop.counter }}')">{{ genre }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="ott-logos">
+                    {% for genre in genres|slice:"13:" %}
+                        <div class="genre-label">
+                            <input type="checkbox" name="genres" value="{{ genre }}" id="genre_{{ forloop.counter }}">
+                            <label for="genre_{{ forloop.counter }}" onclick="toggleGenre('genre_{{ forloop.counter }}')">{{ genre }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <h1>장르없음</h1>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endcomment %}
+
+<style>
+    {% comment %} .sidebar {
+        /* 기존에 설정한 flex-direction: column; 스타일을 제거합니다. */
+        /* flex-direction: column; */
+        /* 가로로 가운데 정렬되도록 설정합니다. */
+        justify-content: center;
+        align-items: center;
+    } {% endcomment %}
+
+    /* 가로로 일렬로 정렬되도록 스타일을 추가합니다. */
+
+    .sidebar {
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Align images horizontally */
+        flex-wrap: wrap; /* Wrap images to the next row if necessary */
+        margin: 20px auto;
+        padding: 5px;
+        border: 2px solid #FCA472;
+        border-radius: 2px;
+        background-color: #333;
+        outline: 2px solid #FCA472;
+        box-shadow: 0px 0px 10px rgba(252, 164, 114, 0.5); /* 박스 섀도우 추가 */
+        width: 80%; /* Ensure the box occupies the entire width */
+        max-width: 100%; /* Ensure the box doxes not exceed the available width */
+    }
+
+button[type="submit"] {
+        display: inline-block;
+        margin-left: 5px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: #FCA472;
+        color: white;
+        font-size: 15px;
+        border: 1px solid transparent;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    }
+
+    button[type="submit"]:hover {
+        background-color: white;
+        color: #FCA472;
+        border: 1px solid #FCA472;
+    }
+
+    button[type="submit"]:active {
+        transform: scale(0.9);
+    }
+
+    .genre-checkbox {
+
+        cursor: pointer;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+    .ott-logos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    /* 장르 체크 박스 스타일을 추가합니다. */
+    .ott-logos div {
+        display: flex;
+        align-items: center;
+        color: white;
+    }
+
+    .ott-logos input[type="checkbox"] {
+        margin-right: 5px;
+    }
+    #back-to-top {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 99;
+    }
+
+    .button {
+        display: block;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 24px;
+        background-color: #96FC72;
+        color: #2C2E34;
+        border-radius: 50%;
+        text-decoration:none;
+    }
+    .button:hover{
+        text-decoration:none;
+    }
+
+    /* 스크롤 내렸을 때 버튼 보이게 처리 */
+    #back-to-top.visible {
+        visibility: visible;
+    }
+</style>
+
+<div class="sidebar">
+    <!-- 장르 선택 폼을 이곳에 넣어줍니다. -->
+    <form action="{% url 'moochu:genre_filter' ott=ott media_type=type%}" method="get">
+        {% if genres %}
+            <div class="ott-logos" style="margin-left: auto;">
+                <div style="display: flex; flex-wrap: wrap">
+                {% for genre in genres %}
+                    <div style="width: calc(100% / 13);">
+                        <input type="checkbox" name="genres" value="{{ genre }}" {% if genre in selected_genres %}checked{% endif %}>
+                        <label for="genre">{{ genre }}</label>
+                    </div>
+                {% if forloop.counter == 13 %}
+                </div>
+                <div style="display: flex; flex-wrap: wrap">
+                {% endif %}
+                {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <h1>장르없음</h1>
+        {% endif %}
+        <button type="submit" title="Filter">F</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // 장르 텍스트를 클릭하면 해당 장르 체크박스를 체크/언체크하는 함수
+    function toggleGenre(checkboxId) {
+        const checkbox = document.getElementById(checkboxId);
+        checkbox.checked = !checkbox.checked;
+    }
+
+    $(document).ready(function() {
+        // 스크롤 이벤트 처리
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 100) {
+                $('#back-to-top').fadeIn();
+            } else {
+                $('#back-to-top').fadeOut();
+            }
+        });
+
+        // 버튼 클릭 시 상단으로 부드럽게 스크롤
+        $('#back-to-top').click(function() {
+            $('html, body').animate({ scrollTop: 0 }, 800);
+            return false;
+        });
+    });
+</script>

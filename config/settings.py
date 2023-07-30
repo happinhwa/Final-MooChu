@@ -121,18 +121,12 @@ ELASTICSEARCH_DSL = {
         'hosts': '34.64.147.118:9200'
     },
 }
-
-
 #mongodb 설정
 MONGODB_URL = 'mongodb://final:123@34.22.93.125:27017'  # 데이터베이스의 MongoDB URI를 입력해주세요.
 ALL_MONGODB_NAME = 'final'  # db 이름
 
 #daum db 설정
 DAUM_MONGODB_NAME = 'daum'  #daum db
-
-
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

@@ -56,8 +56,8 @@ class SelectedGenre(models.Model):
         
 class MovieRating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE )
-    movie_title = models.CharField(max_length=255)
+    media_id = models.CharField(max_length=1000)
     rating = models.FloatField()
 
     def __str__(self):
-        return f"{self.user.nickname} rated '{self.movie_title}' with {self.rating} points"
+        return f"{self.user.nickname} rated '{self.media_id}' with {self.rating} points"

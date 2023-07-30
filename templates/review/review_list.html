@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}최신 리뷰 목록{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="reviews h1">
+        <h1>최신 리뷰 목록</h1>
+    </div>
+
+    <div class="container my-3">
+        {% if messages %}
+            <div class="alert alert-danger my-3" role="alert">
+                {% for message in messages %}
+                    <strong>{{ message.tags }}</strong>
+                    <ul><li>{{ message.message }}</li></ul>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="reviews">
+            {% if review_list %}
+                <ul>
+                    {% for review in review_list %}
+                        <div class="review box">
+                            <h3>{{ review.movie }}</h3>
+                            <p>작성자: {{ review.user.username }}</p>
+                            <p>평점: {{ review.vote }}</p>
+                            <p>작성일: {{ review.timestamp }}</p>
+                            <p>리뷰 내용:</p>
+
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>아직 작성된 리뷰가 없습니다.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

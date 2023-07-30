@@ -30,6 +30,8 @@ urlpatterns = [
     path('mypage/', include('mypage.urls', namespace='mypage')),  # 수정된 부분
     path('board/', include('board.urls', namespace='board')),  # 수정된 부분
     path('search/', include('search.urls', namespace='search')), # 수정된 부분 (07/11)
+    path('review/', include('review.urls', namespace='review')), 
+    
 ]
 
 

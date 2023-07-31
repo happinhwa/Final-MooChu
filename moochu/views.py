@@ -33,14 +33,15 @@ def data_change(request,data):
 
     return page_obj
 
+
 def ott_media_list(request, ott, media_type):
-    ott_service = ['Netflix', 'Wavve', 'Disney', 'Tving', 'Apple','CineFox', 'CineFox', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus']
+    ott_service = ['ALL', 'Netflix', 'Wavve', 'Disney', 'Tving', 'Apple','CineFox', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus']
 
     genres=['SF', '가족', '공연', '공포(호러)', '다큐멘터리', '드라마', '멜로/로맨스', '뮤지컬', '미스터리', '범죄',
                    '서부극(웨스턴)', '서사', '서스펜스', '성인', '스릴러', '시사/교양', '애니메이션', '액션', '어드벤처(모험)',
                    '예능', '음악', '전쟁', '코미디', '키즈', '판타지']
     
-    if ott=='All':
+    if ott=='ALL':
         data = list(Media.collection.find({"media_type": media_type}, {"poster_image_url": 1, "title_kr": 1}))
 
         ## 제목으로 중복 제거를 위한 로직
@@ -68,7 +69,7 @@ def ott_media_list(request, ott, media_type):
 
 
 def genre_filter(request, ott, media_type):
-    ott_service = ['Netflix', 'Wavve', 'Disney', 'Tving', 'Apple','CineFox', 'CineFox', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus']
+    ott_service = ['ALL', 'Netflix', 'Wavve', 'Disney', 'Tving', 'Apple','CineFox', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus']
     genres=['SF', '가족', '공연', '공포(호러)', '다큐멘터리', '드라마', '멜로/로맨스', '뮤지컬', '미스터리', '범죄',
                    '서부극(웨스턴)', '서사', '서스펜스', '성인', '스릴러', '시사/교양', '애니메이션', '액션', '어드벤처(모험)',
                    '예능', '음악', '전쟁', '코미디', '키즈', '판타지']

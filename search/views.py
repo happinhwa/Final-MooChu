@@ -35,14 +35,14 @@ class SearchView(APIView):
             }
         )
 
-        data_list = trans(docs['hits']['hits'])
-        # data_list = docs['hits']['hits']
+        # data_list = trans(docs['hits']['hits'])
+        data_list = docs['hits']['hits']
         if data_list:
-            # return Response({'data': data_list})
-            return render(request, 'search/result.html',{'data': data_list})
+            return Response({'data': data_list})
+            # return render(request, 'search/result.html',{'data': data_list})
         else:
-            # return Response({'data': data_list})
-            return render(request, 'search/result.html')
+            return Response({'data': data_list})
+            # return render(request, 'search/result.html')
    
 def search(request):
     return render(request, 'search/home.html')

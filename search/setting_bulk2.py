@@ -2,12 +2,12 @@ import json
 from elasticsearch import Elasticsearch
 
 
-es = Elasticsearch()
+es = Elasticsearch(hosts=["http://localhost:9200"],
+                   headers={"Content-Type": "application/json"})
 
 es.indices.create(
     index='movies',
-    body={
-        "settings": {
+        settings = {
             "index": {
                 "analysis": {
                     "analyzer": {
@@ -18,8 +18,8 @@ es.indices.create(
                     }
                 }
             }
-        },
-          "mappings": {
+    },
+          mappings = {
             "properties": {
                 "id": {
                     "type": "keyword"
@@ -35,7 +35,6 @@ es.indices.create(
             }
         }
 
-    }
 )
 
 

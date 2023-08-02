@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Movie List{% endblock %}
+
+{% block content %}
+<style>
+    .url{
+        color:white;
+    }
+</style>
+<h1>Movie List</h1>
+
+<!-- OTT 버튼들 -->
+
+{% comment %} <a href="{% url 'ott_movie_list' ott='Apple' %}" class="ott-logo">
+    <div class="ott-item">
+        <img src="{% static 'images/AppleTV_Logo.png' %}" alt="Apple" style="width: 60px; height: 40px;">
+        <span class="ott-title">Apple</span>
+    </div>
+</a> {% endcomment %}
+
+{% comment %} 로고 {% endcomment %}
+<a href="{% url 'ott_movie_list' ott='ALL' %}" class="ott-logo">
+    <img src="{% static 'images/ALL.png' %}" alt="ALL" style="width: 60px; height: 40px;">
+</a>
+
+<a href="{% url 'ott_movie_list' ott='Apple' %}" class="ott-logo">
+    <img src="{% static 'images/AppleTV_Logo.png' %}" alt="Apple" style="width: 60px; height: 40px;">
+</a>
+<a href="{% url 'ott_movie_list' ott='CineFox' %}" class="ott-logo">
+    <img src="{% static 'images/Cinefox_Logo.png' %}" alt="CineFox" style="width: 60px; height: 40px;">
+</a>
+<a href="{% url 'ott_movie_list' ott='Coupang' %}" class="ott-logo">
+    <img src="{% static 'images/CoupangPlay_Logo.png' %}" alt="Coupang" style="width: 60px; height: 40px;">
+</a>
+<a href="{% url 'ott_movie_list' ott='Disney' %}" class="ott-logo">
+    <img src="{% static 'images/Disney_Logo.png' %}" alt="Disney" style="width: 60px; height: 40px;">
+</a>
+<a href="{% url 'ott_movie_list' ott='Google' %}" class="ott-logo">
+    <img src="{% static 'images/GooglePlay_Logo.png' %}" alt="Google" style="width: 60px; height: 40px;">
+</a>
+<a href="{% url 'ott_movie_list' ott='Laftel' %}" class="ott-logo">
+    <img src="{% static 'images/Laftel_Logo.png' %}" alt="Laftel" style="width: 60px; height: 40px;">
+</a>
+<a href="{% url 'ott_movie_list' ott='Naver' %}" class="ott-logo">
+    <img src="{% static 'images/NaverTV_Logo.png' %}" alt="Naver" style="width: 60px; height: 40px;">
+</a>
+<a href="{% url 'ott_movie_list' ott='Netflix' %}" class="ott-logo">
+    <img src="{% static 'images/Netflix_Logo.png' %}" alt="Netflix" style="width: 60px; height: 40px;">
+</a>
+<a href="{% url 'ott_movie_list' ott='Primevideo' %}" class="ott-logo">
+    <img src="{% static 'images/Primevideo_Logo.png' %}" alt="Primevideo" style="width: 60px; height: 40px;">
+</a>
+<a href="{% url 'ott_movie_list' ott='Tving' %}" class="ott-logo">
+    <img src="{% static 'images/Tving_Logo.png' %}" alt="Tving" style="width: 60px; height: 40px;">
+</a>
+<a href="{% url 'ott_movie_list' ott='UPlus' %}" class="ott-logo">
+    <img src="{% static 'images/UPlusTV_Logo.png' %}" alt="UPlus" style="width: 60px; height: 40px;">
+</a>
+<a href="{% url 'ott_movie_list' ott='Watcha' %}" class="ott-logo">
+    <img src="{% static 'images/Watcha_Logo.png' %}" alt="Watcha" style="width: 60px; height: 40px;">
+</a>
+<a href="{% url 'ott_movie_list' ott='Wavve' %}" class="ott-logo">
+    <img src="{% static 'images/Wavve_Logo.png' %}" alt="Wavve" style="width: 60px; height: 40px;">
+</a>
+
+<!-- 다른 OTT 버튼들 추가 -->
+<div id="movie_list">
+    {% for all_movie in all_movies %}
+        <img src={{ all_movie|lower }} style="width: 200px; height: 250px;" >
+    {% endfor %}
+</div>
+
+<div id="ott_movie_list">
+    {% for movie in movies %}
+        <img src={{ movie|lower }} style="width: 200px; height: 250px;" >
+    {% endfor %}
+</div>
+
+<style>
+    .pagination {
+        text-align: center;
+        margin-top: 10px;
+    }
+    .pagination a,
+    .pagination span {
+        display: inline-block;
+        padding: 5px 10px;
+        margin-right: 5px;
+        border: 1px solid #ddd;
+        background-color: #f5f5f5;
+        color: #333;
+        text-decoration: none;
+        border-radius: 3px;
+    }
+    .pagination a:hover {
+        background-color: #e9e9e9;
+    }
+    .pagination .current-page {
+        background-color: #007bff;
+        color: #fff;
+    }
+    .pagination .ellipsis {
+        margin-right: 0;
+    }
+</style>
+
+{% comment %} 페이지 분할 {% endcomment %}
+<div class="pagination">
+    {% if movies.has_previous %}
+        <a href="?page={{ movies.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    {% if movies.number > 5 %}
+        <a href="?page=1">1</a>
+        <span>...</span>
+    {% endif %}
+
+    {% for i in movies.paginator.page_range %}
+        {% if movies.number <= 5 and i <= 10 or movies.number > movies.paginator.num_pages|add:'-5' and i > movies.paginator.num_pages|add:'-10' or i > movies.number|add:'-5' and i <= movies.number|add:'5' %}
+            {% if i == movies.number %}
+                <span class="current-page">{{ i }}</span>
+            {% else %}
+                <a href="?page={{ i }}">{{ i }}</a>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% if movies.number < movies.paginator.num_pages|add:'-5' %}
+        <span>...</span>
+    {% endif %}
+
+    {% if movies.has_next %}
+        <a href="?page={{ movies.next_page_number }}">Next</a>
+    {% endif %}
+</div>
+
+
+<script src="{% static 'js/main.js' %}"></script> <!-- JavaScript 파일 로드 -->
+
+<style>
+    h1 {
+      color: white;
+    }
+</style>
+  
+<form action="{% url 'genre_filter' %}" method="GET">
+    {% for genre in genres %}
+        <label>
+            <input type="checkbox" name="genre" value="{{ genre }}" {% if genre in selected_genres %}checked{% endif %}>
+            <span style="color: white;">{{ genre }}</span>
+        </label>
+    {% endfor %}
+    <input type="submit" value="Filter">
+</form>
+
+{% endblock %}

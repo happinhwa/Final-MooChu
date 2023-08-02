@@ -78,7 +78,7 @@ def genre_filter(request, ott, media_type):
     selected_genres = request.GET.getlist('genres')
 
     # 선택된 장르에 해당하는 영화를 필터링합니다.
-    if ott=='All':
+    if ott=='ALL':
         data = list(Media.collection.find({"genres": {"$elemMatch": {"$in": selected_genres}}, "media_type":media_type}))
         ## 제목으로 중복 제거를 위한 로직
         unique_movies = OrderedDict()

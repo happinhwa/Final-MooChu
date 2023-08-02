@@ -1,50 +1,4 @@
-<!-- sidebar.html -->
-
-{% comment %}
-<div class="sidebar ott-logos-box">
-    <!-- 장르 선택 폼을 이곳에 넣어줍니다. -->
-    <div class="row">
-        <div class="col-md-4">
-            <!-- 왼쪽에 필터 버튼 배치 -->
-            <form action="{% url 'moochu:genre_filter' ott=ott %}" method="get">
-                <button type="submit">Filter</button>
-            </form>
-        </div>
-        <div class="col-md-8 justify-content-end">
-            <!-- 오른쪽에 장르 선택 버튼 2행으로 정렬 -->
-            {% if genres %}
-                <div class="ott-logos">
-                    {% for genre in genres|slice:":13" %}
-                        <div class="genre-label">
-                            <input type="checkbox" name="genres" value="{{ genre }}" id="genre_{{ forloop.counter }}">
-                            <label for="genre_{{ forloop.counter }}" onclick="toggleGenre('genre_{{ forloop.counter }}')">{{ genre }}</label>
-                        </div>
-                    {% endfor %}
-                </div>
-                <div class="ott-logos">
-                    {% for genre in genres|slice:"13:" %}
-                        <div class="genre-label">
-                            <input type="checkbox" name="genres" value="{{ genre }}" id="genre_{{ forloop.counter }}">
-                            <label for="genre_{{ forloop.counter }}" onclick="toggleGenre('genre_{{ forloop.counter }}')">{{ genre }}</label>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <h1>장르없음</h1>
-            {% endif %}
-        </div>
-    </div>
-</div>
-{% endcomment %}
-
 <style>
-    {% comment %} .sidebar {
-        /* 기존에 설정한 flex-direction: column; 스타일을 제거합니다. */
-        /* flex-direction: column; */
-        /* 가로로 가운데 정렬되도록 설정합니다. */
-        justify-content: center;
-        align-items: center;
-    } {% endcomment %}
 
     /* 가로로 일렬로 정렬되도록 스타일을 추가합니다. */
 
@@ -139,11 +93,15 @@ button[type="submit"] {
     #back-to-top.visible {
         visibility: visible;
     }
+    .back-button {
+        width: 40px;
+        height: 40px;
+    }
 </style>
 
 <div class="sidebar">
     <!-- 장르 선택 폼을 이곳에 넣어줍니다. -->
-    <form action="{% url 'moochu:genre_filter' ott=ott media_type=type%}" method="get">
+    <form id="genre-filter-form" action="{% url 'moochu:genre_filter' ott=ott media_type=type%}" method="get">
         {% if genres %}
             <div class="ott-logos" style="margin-left: auto;">
                 <div style="display: flex; flex-wrap: wrap">
@@ -162,7 +120,14 @@ button[type="submit"] {
         {% else %}
             <h1>장르없음</h1>
         {% endif %}
-        <button type="submit" title="Filter">F</button>
+        <button style="background: none; border: none;">
+            <img class="back-button" src="/static/images/Filter_Green.png" alt="Filter">
+        </button>
+        <a href="{% url 'moochu:ott_media_list' ott=ott media_type=type%}">
+            <img class="back-button" src="/static/images/Back_Green.png" alt="Back">
+        </a>
+        
+    </form>
     </form>
 </div>
 
@@ -190,4 +155,5 @@ button[type="submit"] {
             return false;
         });
     });
+    
 </script>

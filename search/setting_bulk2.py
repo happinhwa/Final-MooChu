@@ -1,9 +1,13 @@
 import json
 from elasticsearch import Elasticsearch
+import certifi
 
 
-es = Elasticsearch(hosts=["http://localhost:9200"],
-                   headers={"Content-Type": "application/json"})
+es = Elasticsearch("https://localhost:9200",
+                   
+    ssl_context=certifi.where(),
+    headers={"Content-Type" : "application/json"})
+
 
 es.indices.create(
     index='movies',

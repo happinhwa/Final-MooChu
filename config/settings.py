@@ -117,7 +117,7 @@ DATABASES = {
 
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': '34.64.147.118:9200'
+        'hosts': '127.0.0.1:9200'
     },
 }
 #mongodb 설정

@@ -35,7 +35,7 @@ def data_change(request,data):
 
 
 def ott_media_list(request, ott, media_type):
-    ott_service = ['ALL', 'Netflix', 'Wavve', 'Disney', 'Tving', 'Apple','CineFox', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus']
+    ott_service = ['ALL', 'Netflix', 'Wavve', 'Disney', 'Tving', 'Apple','CineFox', 'Watcha', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus']
 
     genres=['SF', '가족', '공연', '공포(호러)', '다큐멘터리', '드라마', '멜로/로맨스', '뮤지컬', '미스터리', '범죄',
                    '서부극(웨스턴)', '서사', '서스펜스', '성인', '스릴러', '시사/교양', '애니메이션', '액션', '어드벤처(모험)',
@@ -69,7 +69,7 @@ def ott_media_list(request, ott, media_type):
 
 
 def genre_filter(request, ott, media_type):
-    ott_service = ['ALL', 'Netflix', 'Wavve', 'Disney', 'Tving', 'Apple','CineFox', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus']
+    ott_service = ['ALL', 'Netflix', 'Wavve', 'Disney', 'Tving', 'Apple','CineFox', 'Watcha', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus']
     genres=['SF', '가족', '공연', '공포(호러)', '다큐멘터리', '드라마', '멜로/로맨스', '뮤지컬', '미스터리', '범죄',
                    '서부극(웨스턴)', '서사', '서스펜스', '성인', '스릴러', '시사/교양', '애니메이션', '액션', '어드벤처(모험)',
                    '예능', '음악', '전쟁', '코미디', '키즈', '판타지']

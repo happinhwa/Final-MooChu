@@ -101,6 +101,7 @@ GENRE_CHOICES = {
 def get_genre_name(genre_id):
     return GENRE_CHOICES.get(genre_id, 'Unknown')
 
+
 @login_required
 def movie_selection(request):
     if request.method == 'POST':
@@ -116,11 +117,11 @@ def movie_selection(request):
             movie_title_key = f"movie_title_{movie_id}"
             rating_key = f"rating_{movie_id}"
             if movie_title_key in request.POST and rating_key in request.POST:
-                movie_title = request.POST[movie_title_key]
+                movie_media_id = movie["_id"]
                 rating = request.POST[rating_key]
 
                 try:
-                    movie_rating = MovieRating(user=user, movie_title=movie_title, rating=rating)
+                    movie_rating = MovieRating(user=user, media_id=movie_media_id, rating=rating)  # 변경된 부분
                     movie_rating.save()
                     message = "영화 평점 저장이 완료되었습니다."
                 except ValidationError:
@@ -159,11 +160,9 @@ def movie_selection(request):
             movie_log.append(movie['m_id'])
             logger.info(f'{movie["m_id"]},{movie["title_kr"]},[{",".join(movie["genres"])}],{movie["indexRating"]["score"]}', extra={'user_id': user_id})
 
-            #영화아이디, 영화제목, 영화장르
-        #print(movie_log)	
-        #logger.info(f'renderMovie{",".join(movie_log)}', extra={'user_id': user_id}) # render한 모든 영화의 로그
 
         return render(request, 'common/movie_selection.html', {'movies': movie_str})
+
     
 def get_mongo_db():
     client = MongoClient('mongodb://final:123@34.22.93.125:27017/')

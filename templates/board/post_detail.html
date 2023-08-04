@@ -69,13 +69,13 @@
                     <div class="d-flex justify-content-front">
                         {% if comment.modify_date %}
                         <div class="badge badge-comment d-flex align-items-center">
-                            <div class="mr-2" style="font-size: 15px;">@{{ comment.writer.username }}</div>
+                            <div class="mr-2" style="font-size: 15px;"><a class="nickname" href="{% url 'mypage:home' nickname=comment.writer.nickname %}">@{{ comment.writer.nickname }}</a></div>
                             <div style="color: lightgray;">{{ comment.modify_date }} (수정됨)</div>
                         </div>
                         {% else %}
                         
                         <div class="badge badge-comment d-flex align-items-center">
-                            <div class="mr-2" style="font-size: 15px;">@{{ comment.writer.username }}</div>
+                            <div class="mr-2" style="font-size: 15px;"><a class="nickname" href="{% url 'mypage:home' nickname=comment.writer.nickname %}">@{{ comment.writer.nickname }}</a></div>
                             <div style="color: lightgray;">{{ comment.create_date }}</div>
                         </div>
                         

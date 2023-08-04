@@ -19,6 +19,7 @@ from django.urls import path, include
 from allauth.account.views import ConfirmEmailView
 from django.conf.urls.static import static
 from django.conf import settings
+from review.views import media_rating
 
 
 urlpatterns = [

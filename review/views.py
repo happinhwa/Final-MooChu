@@ -1,25 +1,44 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from moochu.models import Media
+from common.models import MovieRating
 from . import models, forms
+from .models import Review
 from bson import ObjectId
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-
-
+from django.forms import ValidationError
+from django.http import JsonResponse
+from django.db.models import Avg
 
 # 리뷰 리스트 기본(최신순)
-def review(request):
-    review_list = models.Review.objects.order_by('-create_date')
-    
-    context = {'review_list': review_list}
+def review(request, movie_id):
+    reviews = Review.objects.order_by('-create_date')
+    data = list(Media.collection.find({"_id": str(movie_id)}))
+    data =[
+        {
+            'id': str(movie['_id']),
+            'posterImageUrl': movie['poster_image_url'],
+            'titleKr': movie['title_kr'],
+        }
+        for movie in data
+    ]
+    context = {
+        'review_list': reviews,
+        'movie': data,
+        }
     
     return render(request, 'review/review_list.html', context)
 
 
+
 def review_detail(request, movie_id, review_id):
-    ## TV 또는 MOVIE에 맞게 media 리스트 저장
+
+    review = get_object_or_404(models.Review, pk=review_id)
+    voted = review.voter.filter(id=request.user.id).exists()
+    is_writer = request.user == review.writer
+
+
     data = list(Media.collection.find({"_id": ObjectId(movie_id)}))
-    ## 필요한 데이터 형식으로 변형
     data =[
         {
             'id': str(movie['_id']),
@@ -29,60 +48,131 @@ def review_detail(request, movie_id, review_id):
         for movie in data
     ]
 
-        # data에서 정보를 가져와서 새로운 Review 객체 생성 및 저장
-    movie_info = data[0]
-    review = models.Review.objects.create(
-        posterImageUrl=movie_info['posterImageUrl'],
-        titleKr=movie_info['titleKr'],
-        # 필요한 다른 필드들을 여기에 추가합니다.
-    )
     context = {
-            'movie': data[0],
-            'review': review, 
-            'voted': voted, 
-            'is_writer': is_writer
-        }
-    
+        'movie': data[0],
+        'review': review,
+        'voted': voted,
+        'is_writer': is_writer,
+    }
 
-    review = get_object_or_404(models.Review, pk=review_id)
-    voted = review.voter.filter(id=request.user.id).exists()
-    is_writer = request.user == review.writer
-    
     response = render(request, 'review/review_detail.html', context)
-    
-    if not request.COOKIES.get(f'review_{review_id}_viewed'):  # 쿠키 확인
+
+
+    if not request.COOKIES.get(f'post_{review_id}_viewed'):  # 쿠키 확인
         review.update_counter()  # 조회수 증가
-        response.set_cookie(f'review_{review_id}_viewed', 'true')  # 쿠키 설정
-    
+        response.set_cookie(f'post_{review_id}_viewed', 'true')  # 쿠키 설정
+
     return response
+
+
 
 @login_required
 def review_upload(request, movie_id):
     if request.method == "POST":
         form = forms.review_form(request.POST)
         if form.is_valid():
-            models.Review = form.save(commit=False)
-            models.Review.create_date = timezone.now()
-            models.Review.writer = request.user
-            models.Review.save()
-            return redirect('review:review')
+            review = form.save(commit=False)
+            review.create_date = timezone.now()
+            review.writer = request.user
+            review.media_id = movie_id
+            review.save()
+            return redirect('review:review', {'movie_id':movie_id})
     else:
         form = forms.review_form()
 
-
     data = list(Media.collection.find({"_id": ObjectId(movie_id)}))
-    ## 필요한 데이터 형식으로 변형
     data =[
         {
             'id': str(movie['_id']),
+            'posterImageUrl': movie['poster_image_url'],
+            'titleKr': movie['title_kr'],
         }
         for movie in data
     ]
 
     context = {
+        'form': form,
         'movie': data[0],
-        'form': form
     }
-    
 
     return render(request, 'review/review_upload.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+def ajax_login_required(view_func):
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'Login required'}, status=401)
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
+
+# media_rating 뷰 함수에 적용할 Ajax 인증 데코레이터
+@ajax_login_required
+def media_rating(request, movie_id):
+    user = request.user
+
+    try:
+        media_id = ObjectId(movie_id)
+    except:
+        return JsonResponse({'error': 'Invalid movie ID'}, status=400)
+    
+    data = list(Media.collection.find({"_id": ObjectId(movie_id)}))
+    movie = {
+        'id': str(data[0]['_id']),
+        'posterImageUrl': data[0]['poster_image_url'],
+        'titleKr': data[0]['title_kr'],
+        'age': data[0]['rating'],
+        'genre': data[0]['genres'],
+        'synopsis': data[0]['synopsis'],
+        'date': data[0]['released_At'],
+    }
+
+    current_rating = None
+    try:
+        movie_rating = MovieRating.objects.get(user=user, media_id=media_id)
+        current_rating = movie_rating.rating
+    except MovieRating.DoesNotExist:
+        pass
+
+    if request.method == 'POST':
+        if 'rating' in request.POST:
+            rating = request.POST['rating']
+
+            try:
+                movie_rating = MovieRating.objects.get(user=user, media_id=media_id)
+                movie_rating.rating = rating
+                movie_rating.save()
+            except MovieRating.DoesNotExist:
+                movie_rating = MovieRating(user=user, media_id=media_id, rating=rating)
+                movie_rating.save()
+
+            current_rating = rating
+
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'error': 'Invalid request'}, status=400)
+
+    
+
+    # Regular GET request, render the template with movie data
+    context = {
+        'movie': movie,
+        'current_rating': current_rating,
+    }
+    return render(request, 'moochu/media_detail.html', context)
+
+
+
+
+
+

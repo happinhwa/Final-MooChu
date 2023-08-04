@@ -6,83 +6,66 @@ input[type=submit] {
     margin-top:10px;
 }
 
-.board-menu {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    overflow: auto;
-    justify-content: flex-end;
+
+.btn-review{
+    color:#2C2E34;
+    background-color:#96FC72;
+    border-color:#96FC72;
+    font-family: 'NanumBarunpen';
+    justify-content: right;
 }
-.board-menu a{
-    font-family: 'Chonburi';
-    color: #FCA472;
-    text-decoration: none;
+.btn-review:hover{
+    color:white;
+    background-color:transparent;
+    border-color:#96FC72;
+    font-family: 'NanumBarunpen';
+    justify-content: right;
+}
+
+.title-container{
     font-size: 20px;
-    padding: 5px 5px;
+    font-weight: bolder;
+}
+.movie-container {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    border: 2px solid transparent;
+    position: relative;
+}
+.movie-info {
+    background-color: #2C2E34;
+    color: #fff;
+    margin: 0;
+    width:100%;
 }
 
-  /* 메뉴(카테고리)에 마우스 가져다 댔을 때 변환 모양*/
-.board-menu a:hover {
-    color: #FCA472;
-    text-decoration: underline;
+.poster-image {
+    position: relative;
+    margin-right: 20px; /* 이미지와 오른쪽 요소 사이 간격 */
 }
 
-.btn-moobo{
-    color:#2C2E34;
-    background-color:#FCA472;
-    border-color:#FCA472;
-    font-family: 'NanumBarunpen';
-}
-.btn-moobo:hover{
-    color:#2C2E34;
-    background-color: white;
-    font-family: 'NanumBarunpen';
-}
-/* 
-.btn-recommend{
-    background-color: transparent;
-    border-color: #FCA472;
-    border-width: 1px;
-    font-family: 'NanumBarunpen';
-}
-.btn-recommend:hover{
-    color:#2C2E34;
-    background-color: #D9DFF5;
-    font-family: 'NanumBarunpen';
-} */
+.poster-image img {
+    /* width: 600px;
+    height: 900px; */
+    width: 400px;
+    height: 600px;
 
-h3 {
-    color: #FCA472;
-    font-family: 'Chonburi';
-    text-align: center;
 }
-
-h3 > a{
-    color: #FCA472;
-    font-family: 'Chonburi';
-    text-align: center;
-}
-h3 > a:hover{
-    color: #FCA472;
-    font-family: 'Chonburi';
-    text-align: center;
-}
-
-
-
-/* 게시글 작성 부분 게시글, 제목, 내용 부분 css */
 .form-group > label, h5{
-    color: #FCA472;
+    color: #96FC72;
     font-family: 'NanumBarunpen';
 }
 
 .form-control{
     color: #2C2E34;
+    margin-bottom: 20px;
+    height: 100%;
 }
 
-.post-title {
-    color: #FCA472;
+.review-title {
+    color: #96FC72;
     font-family: 'NanumBarunpen';
     text-align: left;
     padding: 5px;
@@ -179,10 +162,6 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
     font-family: 'NanumBarunpen';
 
 }
-.nickname, .nickname:hover{
-    color:white;
-    text-decoration: none;
-}
 /* ################################## */
 
 .col-num{
@@ -261,31 +240,6 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
     border-radius: 0.375rem;
 }
 
-.btn-search{
-    color:#FCA472;
-    border: 1px solid #FCA472;
-}
-.btn-search:hover,
-.btn-search:active,
-.btn-search:after{
-    color:#FCA472;
-    border: 1px solid #FCA472;
-}
-
-.input-group {
-    min-width: 300px;
-}
-
-.grayed-input {
-    color: #FC6B02;
-    cursor: not-allowed;
-}
-
-.grayed-input:focus,
-.grayed-input:active {
-    outline: none;
-    color: #FC6B02;
-}
 
 .badge-comment{
     border: 1px solid transparent;
@@ -299,7 +253,7 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
 
 .btn-board{
     color:#D9DFF5;
-    border:1px solid #FCA472;
+    border:1px solid #96FC72;
     font-family: 'NanumBarunpen';
 }
 .btn-board:hover{

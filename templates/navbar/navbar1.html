@@ -19,6 +19,7 @@
     background-color: #2C2E34;
     }
 </style>
+<div class="container">
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid navbar">
         <a class="nav-logo a-nav" href="{% url 'moochu:main' %}"><img src="{% static 'moochu_logo.png' %}"></a>
@@ -33,10 +34,10 @@
         </button>
         <div class="collapse navbar-collapse dropdown-menu-right" id="navbarSupportedContent">
             <ul class="nav-links navbar-nav">
-                <li class="nav-item"><a class="nav-link a-nav" href="{% url 'moochu:ott_media_list' media_type='MOVIE' ott='All' %}">Movie</a></li>
-                <li class="nav-item"><a class="nav-link a-nav" href="{% url 'moochu:ott_media_list' media_type='TV' ott='All' %}">TV Shows</a></li>
-                <li class="nav-item"><a class="nav-link a-nav" href="#">What's New</a></li>
-                <li class="nav-item"><a class="nav-link a-nav" href="{% url 'board:moobo' %}">Board</a></li>
+                <li class="nav-item"><a class="nav-link a-nav" href="{% url 'moochu:ott_media_list' media_type='MOVIE' ott='All' %}">영화</a></li>
+                <li class="nav-item"><a class="nav-link a-nav" href="{% url 'moochu:ott_media_list' media_type='TV' ott='All' %}">드라마/예능</a></li>
+                <li class="nav-item"><a class="nav-link a-nav" href="#">신작</a></li>
+                <li class="nav-item"><a class="nav-link a-nav" href="{% url 'board:moobo' %}">커뮤니티</a></li>
             </ul>
         </div>
 
@@ -73,7 +74,7 @@
 
     </div>
 </nav>
-
+</div>
 {% block script %}
 <script>
     document.addEventListener("DOMContentLoaded", function() {

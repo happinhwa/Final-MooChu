@@ -6,21 +6,240 @@
 {% block content %}
 <head>
     <link rel="stylesheet" href="{% static 'media_detail.css' %}">
+    <link rel="stylesheet" href="{% static '/fonts/font.css'%}">
+    <link rel="stylesheet" href="{% static 'style-genre.css'%}">
+        <style>
+            @import 
+            url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+            .rate { display: inline-block; margin-right: 15px; width: auto;}
+            .rate > input {display: none;}
+            .rate > label {float: right;color: white; letter-spacing: 4px;}
+            .rate > label:before {display: inline-block;font-size: 1.5rem;margin: 0;cursor: pointer;font-family: FontAwesome;content: "\f005 ";}
+            .rate .half:before {content: "\f089 "; }
+            .rate input:checked ~ label, 
+            .rate label:hover,.rate label:hover ~ label { color: #96FC72 !important;  } 
+            .rate input:checked + .rate label:hover,
+            .rate input input:checked ~ label:hover,
+            .rate input:checked ~ .rate label:hover ~ label,  
+            .rate label:hover ~ input:checked ~ label { color: #96FC72 !important;  } 
+            
+            fieldset.rate {
+                /* display: inline-block; */
+                border: 0;
+                
+                float: left; /* 추가된 스타일 - 별점 왼쪽 정렬 */
+            }
+        </style>
 </head>
 
 
-<div class="movie-container">
-    <div class="background-image"></div>
-    <div class="poster-image">
-        <img src="{{ movie.posterImageUrl }}" alt="Movie Poster">
+<div class="container">
+
+    <div class="movie-container">
+        <div class="poster-image">
+            <img src="{{ movie.posterImageUrl }}" alt="Movie Poster">
+        </div>
+            <div class="movie-info">
+                <h1 class="media_title">{{ movie.titleKr }}</h1>
+                <div class="section-container">
+                    {{ movie.synopsis }}
+                </div>
+
+                <div class="genres">
+                    {% for genre in movie.genre %}
+                        <span>#{{ genre }}&nbsp</span>
+                    {% endfor %}
+                </div>
+
+                <div style="display: inline;">
+                    <span class="rating {% if movie.age == 'ALL' %}all{% elif movie.age == 'ADULT' %}adult{% elif movie.age == 'OVER15' %}over15{% elif movie.age == 'OVER12' %}over12{% else %}black{% endif %}">
+                        {{ movie.age }}
+                    </span>                  
+                    &nbsp;&nbsp;·&nbsp;&nbsp;{{ movie.date|default:"" }}
+                </div>
+
+                <div>
+                    <form id="rating-form" method="post" action="{% url 'review:media_rating' movie_id=movie.id %}">
+                            <div class="movie-rate"> 
+                                <!-- 별점 -->
+                                {% csrf_token %}
+                                <input type="hidden" id="movie-id" value="{{ movie.id }}">
+                                <input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+                                <div class="rate">
+                                    <input type="radio" id="rating10_{{ movie.id }}" name="rating_{{ movie.id }}" value="10"><label for="rating10_{{ movie.id }}" title="5점"></label>
+                                    <input type="radio" id="rating9_{{ movie.id }}" name="rating_{{ movie.id }}" value="9"><label class="half" for="rating9_{{ movie.id }}" title="4.5점"></label>
+                                    <input type="radio" id="rating8_{{ movie.id }}" name="rating_{{ movie.id }}" value="8"><label for="rating8_{{ movie.id }}" title="4점"></label>
+                                    <input type="radio" id="rating7_{{ movie.id }}" name="rating_{{ movie.id }}" value="7"><label class="half" for="rating7_{{ movie.id }}" title="3.5점"></label>
+                                    <input type="radio" id="rating6_{{ movie.id }}" name="rating_{{ movie.id }}" value="6"><label for="rating6_{{ movie.id }}" title="3점"></label>
+                                    <input type="radio" id="rating5_{{ movie.id }}" name="rating_{{ movie.id }}" value="5"><label class="half" for="rating5_{{ movie.id }}" title="2.5점"></label>
+                                    <input type="radio" id="rating4_{{ movie.id }}" name="rating_{{ movie.id }}" value="4"><label for="rating4_{{ movie.id }}" title="2점"></label>
+                                    <input type="radio" id="rating3_{{ movie.id }}" name="rating_{{ movie.id }}" value="3"><label class="half" for="rating3_{{ movie.id }}" title="1.5점"></label>
+                                    <input type="radio" id="rating2_{{ movie.id }}" name="rating_{{ movie.id }}" value="2"><label for="rating2_{{ movie.id }}" title="1점"></label>
+                                    <input type="radio" id="rating1_{{ movie.id }}" name="rating_{{ movie.id }}" value="1"><label class="half" for="rating1_{{ movie.id }}" title="0.5점"></label>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+                    {% if average_rating %}
+                        <p style="font-family: Chonburi; font-size: 20px;"><span style="color: #96FC72">{{ average_rating|floatformat:1 }}</span> / 10.0</p>
+                    {% else %}
+                        <p>No ratings yet.</p>
+                    {% endif %}
+
+            </div>
     </div>
-        <div class="movie-info">
-            <h1>{{ movie.title_kr }}</h1>
-        <p>Age: {{ movie.age }}</p>
-        <p>Genre: {{ movie.genre }}</p>
-        <p>Synopsis: {{ movie.synopsis }}</p>
-        <p>Release Date: {{ movie.date }}</p>
+<br><br>
+
+<!-- 리뷰 -->
+        <h4 style="color:white; font-family: NanumBarunpen; margin-bottom: 30px; align-items: center;">
+            <span class="movie-review">{{ movie.titleKr }}</span> 작품에 대한 감상을 짧게라도 남겨보세요!
+            <a class="btn review-all" style="float: right" href="{% url 'review:review_upload' movie.id %}">리뷰 <span style="color:#96FC72; font-family: Chonburi;">{{review_count}}</span>개 모두 보러 가기▶︎</a>
+            <a class="btn btn-review" style="float: right" href="{% url 'review:review_upload' movie.id %}">리뷰쓰러가기</a>
+        </h4>
+        {% if reviews %}
+        <div class="mt-3">
+            {% for review in reviews|slice:":3" %} {# 최신 3개만 보여주도록 슬라이싱 #}
+            <div class="card my-3" style="border: 1px solid transparent; background-color: transparent;">
+                <div class="card-body review-body">
+                    <div class="d-flex justify-content-front">
+                    {% if review.modify_date %}
+                        <div class="badge badge-review d-flex align-items-center">
+                            <div class="mr-2" style="font-size: 15px;"><a class="nickname" href="{% url 'mypage:home' nickname=review.writer.nickname %}">@{{ review.writer.nickname }}</a></div>
+                            <div style="color: lightgray;">{{ review.modify_date }} (수정됨)</div>
+                        </div>
+                    {% else %}
+                        <div class="badge badge-review d-flex align-items-center">
+                            <div class="mr-2" style="font-size: 15px;"><a class="nickname" href="{% url 'mypage:home' nickname=review.writer.nickname %}">@{{ review.writer.nickname }}</a></div>
+                            <div style="color: lightgray;">{{ review.create_date }}</div>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-text review-content" style="margin-top: 10px; margin-left: 5px; display: flex; justify-content: space-between;">
+                    {% if review.content|length > 70 %}
+                        <a class="review-content" href="{% url 'review:review_detail' movie.id review.id %}">{{ review.content|linebreaksbr|truncatechars:70 }}</a>
+                    {% else %}
+                        <a class="review-content" href="{% url 'review:review_detail' movie.id review.id %}">{{ review.content|linebreaksbr }}</a>
+                    {% endif %}
+                    <div>
+                        <a href="#" class="btn btn-sm btn-review2">수정</a>
+                        <a href="#" class="delete btn btn-sm btn-review2" data-uri="#">삭제</a>
+                    </div>
+                </div>
+                
+                
+                {% if request.user == review.writer %}
+                    <div class="my-3">
+                        <a href="#" class="btn btn-sm">
+                            <img src="{% static 'comment.png' %}" style="max-height: 30px;"> 
+                        </a>
+                        <a href="#" class="btn btn-sm">
+                            <img src="{% static 'thumbs.png' %}" style="max-height: 30px;">
+                        </a>
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+    {% else %}
+    <div class="card my-3" style="border: 1px solid transparent; background-color: transparent;">
+        <div class="card-body review-body">
+            <div class="d-flex justify-content-front">
+            <h6 style="color:white; font-family: NanumBarunpen;">아직 작성된 리뷰가 없습니다.</h6>
+            </div>
+        </div>
     </div>
+    {% endif %}
+
+
+    </div>
+    <div style="margin-bottom: 100px;">    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        const currentPageURL = window.location.href;
+
+        // 별점이 선택될 때마다 자동으로 저장하는 이벤트 처리
+        $(".rate input[type='radio']").on("change", function() {
+            const rating = $(this).val(); // 선택된 별점 값을 가져옵니다.
+
+            // 별점 저장 Ajax 요청 보내기
+            saveRating(rating);
+        });
+
+        // 별점을 선택할 때마다 자동으로 저장하는 함수
+        function saveRating(rating) {
+            // 영화 ID 값을 변수에 저장
+            const movieId = document.getElementById('movie-id').value;
+            // CSRF 토큰 값을 변수에 저장
+            const csrfToken = document.getElementById('csrf-token').value;
+
+            $.ajax({
+                type: "POST",
+                url: `{% url 'review:media_rating' movie_id=movie.id %}`,
+                data: {
+                    movieId: movieId,
+                    rating: rating, 
+                    next_page: currentPageURL,
+                    csrfmiddlewaretoken: csrfToken,
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // 별점이 성공적으로 저장되었습니다.
+                        // 서버로부터 반환된 평점 데이터를 가져와서 화면에 업데이트
+                        const currentRating = response.current_rating;
+                        updateRatingUI(currentRating);
+
+                        // Check if 'next_page' exists in the response
+                        const next_page = response.next_page;
+                        if (next_page) {
+                            // Redirect to the 'next_page' URL after successful login
+                            window.location.href = next_page;
+                            return; // Important: Return to prevent further execution
+                        }
+                    } else {
+                        // Failed to save rating or login
+                        console.error("별점 저장에 실패했습니다:", response.error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("별점 저장에 실패했습니다:", error);
+                    if (xhr.status === 401) {
+                        // 302 리다이렉트(로그인 필요)일 경우 로그인 페이지로 리다이렉트
+                        window.location.href = `{% url 'account_login' %}`; // 로그인 페이지 URL로 수정
+                    }
+                }
+            });
+        }
+    });
+
+
+
+    // CSRF 토큰을 쿠키에서 가져오는 함수
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // 쿠키 이름과 일치하는 경우 쿠키 값을 반환
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+</script>
+
+
 
 
 

@@ -23,10 +23,10 @@
                     {% for review in review_list %}
                         <div class="review box">
                             <h3>{{ review.movie }}</h3>
-                            <p>작성자: {{ review.user.username }}</p>
+                            <p>작성자: {{ review.writer.username }}</p>
                             <p>평점: {{ review.vote }}</p>
-                            <p>작성일: {{ review.timestamp }}</p>
-                            <p>리뷰 내용:</p>
+                            <p>작성일: {{ review.create_date }}</p>
+                            <p>리뷰 내용: {{ review.content }}</p>
 
                     {% endfor %}
                 </ul>

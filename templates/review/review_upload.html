@@ -3,32 +3,43 @@
 {% load static %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'board.css' %}">
+<link rel="stylesheet" href="{% static 'review.css' %}">
+<style>
+
+</style>
 
     <div class="container">
-        <h5 class="my-3 border-bottom pb-2">리뷰 작성</h5>
-        <form method="post" class="post-form my-3">
-            {% csrf_token %}
-            <!-- 오류표시 Start -->
-            {% if form.errors %}
-                <div class="alert alert-danger" role="alert">
-                {% for field in form %}
-                    {% if field.errors %}
-                    <strong>{{ field.label }}</strong>
-                    {{ field.errors }}
-                    {% endif %}
-                {% endfor %}
-                </div>
-            {% endif %}
-            <!-- 오류표시 End -->
-                <label for="title">{{movie_titleKr}}</label>
+        
+        <h5 class="border-bottom pb-2" style="color:white;">
+            <span style="font-size: 30px; color: #96FC72">{{ movie.titleKr }}&nbsp;&nbsp</span>
+        리뷰 작성</h5>
 
-            <div class="form-group">
-                <label for="content">내용</label>
-                <textarea class="form-control" name="content"
-                          id="content" rows="15">{{ form.content.value|default_if_none:'' }}</textarea>
+        <div class="movie-container">
+            <div class="poster-image">
+                <img src="{{ movie.posterImageUrl }}" alt="Movie Poster">
             </div>
-            <button type="submit" class="btn btn-moobo" style="margin-bottom: 100px;">업로드하기</button>
-        </form>
+            <div class="movie-info">
+            <form method="post" class="post-form">
+                {% csrf_token %}
+                <!-- 오류표시 Start -->
+                {% if form.errors %}
+                    <div class="alert alert-danger" role="alert">
+                    {% for field in form %}
+                        {% if field.errors %}
+                        <strong>{{ field.label }}</strong>
+                        {{ field.errors }}
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                {% endif %}
+                <!-- 오류표시 End -->
+                <div class="form-group movie-info">
+                    <textarea class="form-control" name="content"
+                            id="content" rows="22">{{ form.content.value|default_if_none:'' }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-review" style="margin-bottom: 100px;">업로드하기</button>
+            </form>
+        </div>
+        </div>
     </div>
 {% endblock %}

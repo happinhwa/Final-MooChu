@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from bson import ObjectId
 from django.http import Http404, JsonResponse,HttpResponse
-
+from django.db.models import Avg
+from common.models import MovieRating
+from review.models import Review
 from .models import Media
 from .utils import render_paginator_buttons
 from collections import OrderedDict
@@ -16,7 +18,6 @@ def mainpage(request):
     context={"num":num,}
     return render(request, 'moochu/mainpage.html', context)
     
-
 
 
 # 페이징을 위한 호출 함수
@@ -38,7 +39,7 @@ def data_change(request,data):
 
 
 def ott_media_list(request, ott, media_type):
-    ott_service = ['Netflix', 'Wavve', 'Disney', 'Tving', 'Apple','CineFox', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus']
+    ott_service = ['All', 'Netflix', 'Tving', 'Watcha', 'CoupangPlay', 'Wavve', 'Disney', 'Apple', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus', 'CineFox']
 
     genres=['SF', '가족', '공연', '공포(호러)', '다큐멘터리', '드라마', '멜로/로맨스', '뮤지컬', '미스터리', '범죄',
                    '서부극(웨스턴)', '서사', '서스펜스', '성인', '스릴러', '시사/교양', '애니메이션', '액션', '어드벤처(모험)',
@@ -82,7 +83,8 @@ def ott_media_list(request, ott, media_type):
 
 
 def genre_filter(request, ott, media_type):
-    ott_service = ['Netflix', 'Wavve', 'Disney', 'Tving', 'Apple','CineFox', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus']
+    ott_service = ['All', 'Netflix', 'Tving', 'Watcha', 'CoupangPlay', 'Wavve', 'Disney', 'Apple', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus', 'CineFox']
+
     genres=['SF', '가족', '공연', '공포(호러)', '다큐멘터리', '드라마', '멜로/로맨스', '뮤지컬', '미스터리', '범죄',
                    '서부극(웨스턴)', '서사', '서스펜스', '성인', '스릴러', '시사/교양', '애니메이션', '액션', '어드벤처(모험)',
                    '예능', '음악', '전쟁', '코미디', '키즈', '판타지']
@@ -130,6 +132,8 @@ def genre_filter(request, ott, media_type):
     return render(request, 'moochu/movie_list.html', context)
 
 
+
+
 # 영화 상세 페이지 
 def movie_detail(request, movie_id):
     ## TV 또는 MOVIE에 맞게 media 리스트 저장
@@ -148,8 +152,14 @@ def movie_detail(request, movie_id):
         for movie in data
     ]
 
+    average_rating = MovieRating.objects.filter(media_id=str(movie_id)).aggregate(Avg('rating'))['rating__avg']
+    reviews = Review.objects.filter(media_id=str(movie_id)).order_by('-create_date')
+    review_count = Review.objects.filter(media_id=str(movie_id)).count()
     context = {
             'movie': data[0],
+            'average_rating': average_rating,
+            'reviews': reviews,
+            'review_count': review_count,
         }
 
     return render(request, 'moochu/media_detail.html', context)

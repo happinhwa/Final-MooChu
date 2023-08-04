@@ -5,83 +5,78 @@
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'media_list.css' %}">
 
-<div class="ott-logos-box">
-    <div class="ott-logos">
-        {% for service in ott_service %}
-        <a href="{% url 'moochu:ott_media_list' ott=service media_type=type %}" class="ott-logo">
-            <img src="{% static 'images/ott_logo/'|add:service|add:'_Logo.png' %}" alt='{{service}}'>
-        </a>
-        {% endfor %}
-    </div>
-</div>
+<div class="container">
+    
+            <div class="ott-logos-box">
+                <div class="ott-logos">
+                    {% for service in ott_service %}
+                    <a href="{% url 'moochu:ott_media_list' ott=service media_type=type %}" class="ott-logo">
+                        <img src="{% static 'images/ott_logo/'|add:'btn_squircle_'|add:service|add:'.png' %}" alt='{{service}}'>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
 
-<div class="sidebar-contents">
-    <!-- 사이드바 추가 -->
-    {% include "navbar/sidebar.html" %}
-    <!-- 미디어 데이터  -->
-    <div class="contents-box">
-        <div class="container">
-            <div class="row">
-                {% for movie in data %}
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="card mb-4">
-                        <a href="{% url 'moochu:movie_detail' movie_id=movie.id %}">
-                            <div class="aspect-ratio-container">
-                                <div class="aspect-ratio-content">
-                                    <div class="image-container">
-                                        <img src="{{ movie.posterImageUrl }}" alt="{{ movie.titleKr }}">
-                                        <div class="overlay"></div>
-                                    </div>
-                                    <div class="card-body text-center">
-                                        <h5 class="card-title">{{ movie.titleKr }}</h5>
+
+        <!-- 사이드바 추가 -->
+        {% include "moochu/movie_genre.html" %}
+
+        <!-- <div class="contents-box"> -->
+                <div class="row">
+                    {% for movie in data %}
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="card mb-4">
+                            <a href="{% url 'moochu:movie_detail' movie_id=movie.id %}">
+                                <div class="aspect-ratio-container">
+                                    <div class="aspect-ratio-content">
+                                        <div class="image-container">
+                                            <img src="{{ movie.posterImageUrl }}" alt="{{ movie.titleKr }}">
+                                            <div class="overlay"></div>
+                                        </div>
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title">{{ movie.titleKr }}</h5>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
+                            </a>
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
+
+        <div style="border-bottom:1px solid #96FC72;"></div>
+
+        <div class="pagination">
+            <div style="display: flex; justify-content: center;">
+                {% if data.has_previous %}
+                    <a href="?page={{ data.previous_page_number }}">Previous</a>
+                {% endif %}
+
+                {% if data.number > 5 %}
+                    <a href="?page=1">1</a>
+                    <span>...</span>
+                {% endif %}
+
+                {% for i in data.paginator.page_range %}
+                    {% if data.number <= 5 and i <= 10 or data.number > data.paginator.num_pages|add:'-5' and i > data.paginator.num_pages|add:'-10' or i > data.number|add:'-5' and i <= data.number|add:'5' %}
+                        {% if i == data.number %}
+                            <span class="current-page">{{ i }}</span>
+                        {% else %}
+                            <a href="?page={{ i }}">{{ i }}</a>
+                        {% endif %}
+                    {% endif %}
                 {% endfor %}
+
+                {% if data.number < data.paginator.num_pages|add:'-5' %}
+                    <span>...</span>     
+                {% endif %}
+
+                {% if data.has_next %}
+                    <a href="?page={{ data.next_page_number }}">Next</a>
+                {% endif %}
             </div>
         </div>
-    </div>
 </div>
-
-
-
-<div class="pagination">
-    <div style="display: flex; justify-content: center;">
-        {% if data.has_previous %}
-            <a href="?page={{ data.previous_page_number }}">Previous</a>
-        {% endif %}
-
-        {% if data.number > 5 %}
-            <a href="?page=1">1</a>
-            <span>...</span>
-        {% endif %}
-
-        {% for i in data.paginator.page_range %}
-            {% if data.number <= 5 and i <= 10 or data.number > data.paginator.num_pages|add:'-5' and i > data.paginator.num_pages|add:'-10' or i > data.number|add:'-5' and i <= data.number|add:'5' %}
-                {% if i == data.number %}
-                    <span class="current-page">{{ i }}</span>
-                {% else %}
-                    <a href="?page={{ i }}">{{ i }}</a>
-                {% endif %}
-            {% endif %}
-        {% endfor %}
-
-        {% if data.number < data.paginator.num_pages|add:'-5' %}
-            <span>...</span>     
-        {% endif %}
-
-        {% if data.has_next %}
-            <a href="?page={{ data.next_page_number }}">Next</a>
-        {% endif %}
-    </div>
-</div>
-
 
 <script src="{% static 'js/main.js' %}"></script> <!-- JavaScript 파일 로드 -->
 {% endblock %}
-
-
-{% comment %} style="color:white;" {% endcomment %}

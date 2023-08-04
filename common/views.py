@@ -6,7 +6,7 @@ from .tokens import account_activation_token
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm,GenreSelectForm
-from .models import Genre,SelectedGenre,MovieRating
+from .models import Genre,SelectedGenre,MovieRating, User
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from django.forms import ValidationError

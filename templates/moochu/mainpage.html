@@ -3,7 +3,725 @@
 {% load static %}
 
 {% block content %}
-<div class="container">
-    <h1 style="color: #96FC72">메인페이지인뎁쇼?</h1>
-</div>
+<style>
+    body {
+  font-family: "나눔고딕", sans-serif;
+  }
+
+  .top1-movie {
+    margin-bottom: 20px;
+  }
+
+
+  .main-card{
+    width: 100%;
+    height: 45%;
+    overflow:scroll; /* 넘치는 부분 감추기 */
+
+  }
+  .top-ranking-left{
+    flex: 0 0 auto;
+    width: 65%;
+  }
+  .top-ranking-right{
+    flex: 0 0 auto;
+    width: 35%;
+  }
+  .top1-card{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: var(--bs-card-height);
+    word-wrap: break-word;
+    background-color: var(--bs-card-bg);
+    background-clip: border-box;
+    border: var(--bs-card-border-width) solid var(--bs-card-border-color);
+    border-radius: var(--bs-card-border-radius);
+    height: 100%;
+  }
+  .top1-card-left{
+    flex: auto;
+    width: 35%;
+    height: 100%;
+  }
+  .top1-card-right{
+    flex: 0 0 auto;
+    width: 60%;
+    height: 100%;
+    margin-left: 10px;
+  }
+  .main-row{
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--bs-gutter-y));
+    margin-right: calc(-0.5 * var(--bs-gutter-x));
+    margin-left: calc(-0.5 * var(--bs-gutter-x));
+    height: 100%;
+  }
+  .main-card-img{
+    width: 100%;
+    height: 100%;
+  }
+  .right-card-left{
+    flex: auto;
+    width: 30%;
+    height: 100%;
+  }
+  .right-card-right{
+    flex: auto;
+    width: 60%;
+    height: 100%;
+    margin-left: 5px;
+  }
+  .main-card-title {
+    color:#96FC72
+  }
+  .main-card-text {
+    color:#96FC72
+  }
+  .reviews-container{
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+  .reviews-slider1{
+    display: inline-flex;
+    transition: transform 0.3s ease-in-out;
+  }
+  .review-card{
+    width: 250px;
+    height: 150px;
+    background-color: #172036;
+    display: inline-block;
+    flex-direction: column;
+    border-radius: 10px;
+    padding: 16px;
+    overflow: hidden;
+    margin-right: 15px;
+    object-fit: cover;
+    align-items: center;
+  }
+  .reviews-card-title{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
+    letter-spacing: -.1px;
+    padding: 4px 0 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #98a4b7;
+  }
+  .reviews-coment{
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 21px;
+    letter-spacing: -.1px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    word-break: break-all;
+    color: #d4d9e1;
+  }
+  .review-user{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    color: #98a4b7;
+    margin-top: auto;
+    height: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+  }
+  .main-card-body{
+    align-items: center;
+  }
+  .top-review{
+    width: 60%;
+    height: 50%;
+    background-color: #172036;
+    flex-direction: column;
+    border-radius: 10px;
+    padding: 16px;
+    margin-right: 15px;
+    position: absolute;
+    bottom: 0;
+  }
+  .top-review-title{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
+    letter-spacing: -.1px;
+    padding: 4px 0 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #98a4b7;
+  }
+  .top-review-coment{
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 21px;
+    letter-spacing: -.1px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    word-break: break-all;
+    color: #d4d9e1;
+  }
+  .top-review-user{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    color: #98a4b7;
+    margin-top: auto;
+    height: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+  }
+</style>
+<style>
+  .poster {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+  }
+  .poster-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+  }
+  .poster-slider {
+      display: flex;
+      transition: transform 0.3s ease-in-out;
+  }
+  .poster-img {
+      width: 218px;
+      height: 316px;
+      object-fit: cover;
+      margin-right: 40px;
+      align-items: center;
+  }
+  .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      padding: 10px;
+      border: none;
+      outline: none;
+      z-index: 1;
+  }
+  .slider-btn-prev {
+      left: 10px;
+  }
+  .slider-btn-next {
+      right: 10px;
+  }
+  .poster1 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+  }
+  .poster-container1 {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+  }
+  .poster-slider1 {
+      display: flex;
+      transition: transform 0.3s ease-in-out;
+  }
+  .poster-img1 {
+      width: 218px;
+      height: 316px;
+      object-fit: cover;
+      margin-right: 40px;
+      align-items: center;
+  }
+  .slider-btn1 {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      padding: 10px;
+      border: none;
+      outline: none;
+      z-index: 1;
+  }
+  .slider-btn-prev1 {
+      left: 10px;
+  }
+  .slider-btn-next1 {
+      right: 10px;
+  }
+  .slider-btn-prev2 {
+      left: 10px;
+  }
+  .slider-btn-next2 {
+      right: 10px;
+  }
+  .slider-btn2 {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      padding: 10px;
+      border: none;
+      outline: none;
+      z-index: 1;
+  }
+  .scroll-box {
+    height: 500px;
+    overflow-y: scroll;
+}
+  </style>
+  <!-- slick 스타일시트 -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
+  <!-- slick 자바스크립트 파일 -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+
+
+<body>
+
+  <!-- 양 옆 간격 맞추기 위한 컨테이너 묶기  -->
+  <div class="container">
+
+    <!-- 어제 많이 조회한 미디어 TOP 10 -->
+    <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">오늘 MOOCHU의 TOP10 미디어</h1>
+    <div class="row" style="margin-top: 20px;">
+
+      <!-- 왼쪽 포스터 표시  -->
+      <div class="top-ranking-left">
+        <div class="top1-card ">
+          <div class="main-row">
+            <!-- 카드 안에서 왼쪽  -->
+            <div class="top1-card-left">
+              <img src="{% static 'images/poster/2.jpeg' %}" class="main-card-img" alt="Top1 영화 포스터">
+            </div>
+            <!-- 카드 안에서 오른쪽  -->
+            <div class="top1-card-right">
+              <div class="main-card-body">
+                <!-- 미디어 제목 부분 -->
+                <h5 class="main-card-title">미디어 제목</h5>
+                <!-- 미디어 줄거리 넣기 -->
+                <p class="main-card-text">간단한 미디어 설명을 여기에 입력합니다.</p>
+                <!-- 미디어 최신 리뷰 1개 -->
+                <div class="top-review">
+                  <h5 class="top-review-title"> 영화 제목</h5>
+                  <p class="top-review-coment">리뷰 내용</p>
+                  <div class="top-review-user"> 유저 닉네임 </div>
+                </div>
+              </div>            <!-- main-card-body 끝 -->
+            </div>              <!-- top1-card-right 끝 -->
+          </div>                <!-- main-row 끝 -->
+        </div>                  <!-- top1-card 끝 -->
+      </div>                    <!-- top-ranking-left 끝 -->
+
+
+      <!-- 오른쪽 포스터 표시  -->
+      <div class="top-ranking-right">
+        <div class="scroll-box">
+                <!-- Media-1 표시  -->
+          <div class="main-card">
+            <div class="main-row">
+              <!-- 카드 안에서 왼쪽  -->
+              <div class="right-card-left">
+                <img src="{% static 'images/poster/3.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
+              </div>
+              <!-- 카드 안에서 오른쪽  -->
+              <div class="right-card-right">
+                <div class="main-card-body">
+                  <h5 class="main-card-title">영화 제목</h5>
+                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
+                </div>
+              </div>
+            </div>
+          </div>        <!-- Media-1 표시 끝 -->
+        
+                  <!-- Media-2 표시  -->
+          <div class="main-card" style="margin-top: 10%;">
+            <div class="main-row">
+              <!-- 카드 안에서 왼쪽  -->
+              <div class="right-card-left">
+                <img src="{% static 'images/poster/4.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
+              </div>
+              <!-- 카드 안에서 오른쪽  -->
+              <div class="right-card-right">
+                <div class="main-card-body">
+                  <h5 class="main-card-title">영화 제목</h5>
+                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
+                </div>
+              </div>
+            </div>
+          </div>    <!-- Media-2 표시 끝 -->
+
+                    <!-- Media-3 표시  -->
+          <div class="main-card" style="margin-top: 10%;">
+            <div class="main-row">
+              <!-- 카드 안에서 왼쪽  -->
+              <div class="right-card-left">
+                <img src="{% static 'images/poster/5.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
+              </div>
+              <!-- 카드 안에서 오른쪽  -->
+              <div class="right-card-right">
+                <div class="main-card-body">
+                  <h5 class="main-card-title">영화 제목</h5>
+                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
+                </div>
+              </div>
+            </div>
+          </div>    <!-- Media-3 표시 끝 -->
+          
+          <!-- Media-4 표시  -->
+          <div class="main-card" style="margin-top: 10%;">
+            <div class="main-row">
+              <!-- 카드 안에서 왼쪽  -->
+              <div class="right-card-left">
+                <img src="{% static 'images/poster/6.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
+              </div>
+              <!-- 카드 안에서 오른쪽  -->
+              <div class="right-card-right">
+                <div class="main-card-body">
+                  <h5 class="main-card-title">영화 제목</h5>
+                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
+                </div>
+              </div>
+            </div>
+          </div>    <!-- Media-4 표시 끝 -->
+
+    
+          <!-- Media-5 표시  -->
+          <div class="main-card" style="margin-top: 10%;">
+            <div class="main-row">
+              <!-- 카드 안에서 왼쪽  -->
+              <div class="right-card-left">
+                <img src="{% static 'images/poster/7.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
+              </div>
+              <!-- 카드 안에서 오른쪽  -->
+              <div class="right-card-right">
+                <div class="main-card-body">
+                  <h5 class="main-card-title">영화 제목</h5>
+                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
+                </div>
+              </div>
+            </div>
+          </div>    <!-- Media-5 표시 끝 -->
+
+          <!-- Media-6 표시  -->
+          <div class="main-card" style="margin-top: 10%;">
+            <div class="main-row">
+              <!-- 카드 안에서 왼쪽  -->
+              <div class="right-card-left">
+                <img src="{% static 'images/poster/8.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
+              </div>
+              <!-- 카드 안에서 오른쪽  -->
+              <div class="right-card-right">
+                <div class="main-card-body">
+                  <h5 class="main-card-title">영화 제목</h5>
+                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
+                </div>
+              </div>
+            </div>
+          </div>    <!-- Media-6 표시 끝 -->
+
+          <!-- Media-7 표시  -->
+          <div class="main-card" style="margin-top: 10%;">
+            <div class="main-row">
+              <!-- 카드 안에서 왼쪽  -->
+              <div class="right-card-left">
+                <img src="{% static 'images/poster/9.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
+              </div>
+              <!-- 카드 안에서 오른쪽  -->
+              <div class="right-card-right">
+                <div class="main-card-body">
+                  <h5 class="main-card-title">영화 제목</h5>
+                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
+                </div>
+              </div>
+            </div>
+          </div>    <!-- Media-7 표시 끝 -->
+
+          <!-- Media-8 표시  -->
+          <div class="main-card" style="margin-top: 10%;">
+            <div class="main-row">
+              <!-- 카드 안에서 왼쪽  -->
+              <div class="right-card-left">
+                <img src="{% static 'images/poster/10.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
+              </div>
+              <!-- 카드 안에서 오른쪽  -->
+              <div class="right-card-right">
+                <div class="main-card-body">
+                  <h5 class="main-card-title">영화 제목</h5>
+                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
+                </div>
+              </div>
+            </div>
+          </div>    <!-- Media-8 표시 끝 -->
+
+          <!-- Media-9 표시  -->
+          <div class="main-card" style="margin-top: 10%;">
+            <div class="main-row">
+              <!-- 카드 안에서 왼쪽  -->
+              <div class="right-card-left">
+                <img src="{% static 'images/poster/11.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
+              </div>
+              <!-- 카드 안에서 오른쪽  -->
+              <div class="right-card-right">
+                <div class="main-card-body">
+                  <h5 class="main-card-title">영화 제목</h5>
+                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
+                </div>
+              </div>
+            </div>
+          </div>    <!-- Media-9 표시 끝 -->
+
+        
+          
+        </div>  
+      </div>    <!-- 오른쪽 포스터 표시 끝-->
+    </div>     <!-- div.row 오늘의 미디어 TOP10 끝 -->
+        
+  
+
+
+    
+    <!-- 추천 모델에서 나온 미디어 추천 -->
+    
+    <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">{{request.user.nickname}}님의 추천영화</h1>
+    
+    <div class="poster-container">
+      <div class="poster-slider">
+        <a href="#"><img class="poster-img" src="{% static 'images/poster/5.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img" src="{% static 'images/poster/6.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img" src="{% static 'images/poster/7.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img" src="{% static 'images/poster/8.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img" src="{% static 'images/poster/9.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img" src="{% static 'images/poster/10.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img" src="{% static 'images/poster/11.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img" src="{% static 'images/poster/12.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img" src="{% static 'images/poster/13.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img" src="{% static 'images/poster/14.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img" src="{% static 'images/poster/15.jpeg' %}" ></a>
+      </div>
+      <button class="slider-btn slider-btn-prev">&#8249;</button>
+      <button class="slider-btn slider-btn-next">&#8250;</button>
+    </div>
+    
+    <!-- 미디어 추천 슬라이드 JAVA SCRIPT -->
+    <script>
+      const slider = document.querySelector('.poster-slider');
+      const prevBtn = document.querySelector('.slider-btn-prev');
+      const nextBtn = document.querySelector('.slider-btn-next');
+      const posterWidth = document.querySelector('.poster-img').offsetWidth;
+      const posterCount = slider.childElementCount; // 이미지 개수
+      let slideIndex = 0;
+  
+      prevBtn.addEventListener('click', () => {
+          slideIndex = slideIndex - 5;
+          if (slideIndex < 0) {
+              slideIndex = 0;
+          }
+          slideToIndex(slideIndex);
+      });
+  
+      nextBtn.addEventListener('click', () => {
+          slideIndex = slideIndex + 5;
+          const maxIndex = posterCount - (posterCount % 5 || 5); // 보여질 이미지 개수로 나눈 나머지 값이 0이 아니면 나머지 값, 0이면 보여질 이미지 개수
+          if (slideIndex > maxIndex) {
+              slideIndex = maxIndex;
+          }
+          slideToIndex(slideIndex);
+      });
+  
+      function slideToIndex(index) {
+          const lastIndex = posterCount - 5; // 마지막 슬라이드 인덱스
+          if (index > lastIndex) {
+              index = lastIndex+1; // 마지막 슬라이드를 넘지 못하도록 설정
+          }
+          const translateX = -index * posterWidth;
+          slider.style.transform = `translateX(${translateX}px)`;
+      }
+  
+    </script>
+
+
+
+
+    <!-- 최신리뷰 10개 ? -->
+    <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">최신 리뷰 한줄평</h1>
+    <div class="reviews-container">
+      <div class="reviews-slider1">
+        <div class="review-card">
+          <h5 class="reviews-card-title"> 영화 제목</h5>
+          <p class="reviews-coment">리뷰 내용</p>
+          <div class="review-user"> 유저 닉네임 </div>
+        </div>
+        <div class="review-card">
+          <h5 class="reviews-card-title"> 영화 제목</h5>
+          <p class="reviews-coment">리뷰 내용</p>
+          <div class="review-user"> 유저 닉네임 </div>
+        </div>
+        <div class="review-card">
+          <h5 class="reviews-card-title"> 영화 제목</h5>
+          <p class="reviews-coment">리뷰 내용</p>
+          <div class="review-user"> 유저 닉네임 </div>
+        </div>
+        <div class="review-card">
+          <h5 class="reviews-card-title"> 영화 제목</h5>
+          <p class="reviews-coment">리뷰 내용</p>
+          <div class="review-user"> 유저 닉네임 </div>
+        </div>
+        <div class="review-card">
+          <h5 class="reviews-card-title"> 영화 제목</h5>
+          <p class="reviews-coment">리뷰 내용</p>
+          <div class="review-user"> 유저 닉네임 </div>
+        </div>
+        <div class="review-card">
+          <h5 class="reviews-card-title"> 영화 제목</h5>
+          <p class="reviews-coment">리뷰 내용</p>
+          <div class="review-user"> 유저 닉네임 </div>
+        </div><div class="review-card">
+          <h5 class="reviews-card-title"> 영화 제목</h5>
+          <p class="reviews-coment">리뷰 내용</p>
+          <div class="review-user"> 유저 닉네임 </div>
+        </div>
+        <div class="review-card">
+          <h5 class="reviews-card-title"> 영화 제목</h5>
+          <p class="reviews-coment">리뷰 내용</p>
+          <div class="review-user"> 유저 닉네임 </div>
+        </div>
+      </div>
+      <button class="slider-btn2 slider-btn-prev2">&#8249;</button>
+      <button class="slider-btn2 slider-btn-next2">&#8250;</button>
+    </div>
+
+    <!-- 최신 리뷰 슬라이드 JAVA SCRIPT -->
+    <script>
+      const slider2 = document.querySelector('.reviews-slider1');
+      const prevBtn2 = document.querySelector('.slider-btn-prev2');
+      const nextBtn2 = document.querySelector('.slider-btn-next2');
+      const reviewWidth2 = document.querySelector('.review-card').offsetWidth;
+      const reviewCount2 = slider2.childElementCount; // 카드 개수
+      let slideIndex2 = 0;
+
+      prevBtn2.addEventListener('click', () => {
+          slideIndex2 = slideIndex2 - 2;
+          if (slideIndex2 < 0) {
+              slideIndex2 = 0;
+          }
+          slideToIndex2(slideIndex2);
+      });
+
+      nextBtn2.addEventListener('click', () => {
+          slideIndex2 = slideIndex2 + 2;
+          const maxIndex2 = reviewCount2 - (reviewCount2 % 5 || 5); // 보여질 이미지 개수로 나눈 나머지 값이 0이 아니면 나머지 값, 0이면 보여질 이미지 개수
+          if (slideIndex2 > maxIndex2) {
+              slideIndex2 = maxIndex2;
+          }
+          slideToIndex2(slideIndex2);
+      });
+
+      function slideToIndex2(index2) {
+          const lastIndex2 = reviewCount2 - 3; // 마지막 슬라이드 인덱스
+          if (index2 > lastIndex2) {
+              index2 = lastIndex2-1; // 마지막 슬라이드를 넘지 못하도록 설정
+          }
+          const translateX2 = -index2 * reviewWidth2;
+          slider2.style.transform = `translateX(${translateX2}px)`;
+      }
+
+    </script>
+  
+    
+      
+    <!-- 사용자가 최근에 본 미디어 -->
+    
+    <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">{{request.user.nickname}}님이 최근 본 미디어</h1>
+    
+    <div class="poster-container1">
+      <div class="poster-slider1">
+        <a href="#"><img class="poster-img1" src="{% static 'images/poster/5.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img1" src="{% static 'images/poster/6.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img1" src="{% static 'images/poster/7.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img1" src="{% static 'images/poster/8.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img1" src="{% static 'images/poster/9.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img1" src="{% static 'images/poster/10.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img1" src="{% static 'images/poster/11.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img1" src="{% static 'images/poster/12.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img1" src="{% static 'images/poster/13.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img1" src="{% static 'images/poster/14.jpeg' %}" ></a>
+        <a href="#"><img class="poster-img1" src="{% static 'images/poster/15.jpeg' %}" ></a>
+      </div>
+      <button class="slider-btn1 slider-btn-prev1">&#8249;</button>
+      <button class="slider-btn1 slider-btn-next1">&#8250;</button>
+    </div>
+
+
+    <!-- 최근 본 미디어 슬라이드 JAVA SCRIPT -->
+    <script>
+      const slider1 = document.querySelector('.poster-slider1');
+      const prevBtn1 = document.querySelector('.slider-btn-prev1');
+      const nextBtn1 = document.querySelector('.slider-btn-next1');
+      const posterWidth1 = document.querySelector('.poster-img1').offsetWidth;
+      const posterCount1 = slider1.childElementCount; // 이미지 개수
+      let slideIndex1 = 0;
+
+      prevBtn1.addEventListener('click', () => {
+          slideIndex1 = slideIndex1 - 5;
+          if (slideIndex1 < 0) {
+              slideIndex1 = 0;
+          }
+          slideToIndex1(slideIndex1);
+      });
+
+      nextBtn1.addEventListener('click', () => {
+          slideIndex1 = slideIndex1 + 5;
+          const maxIndex1 = posterCount1 - (posterCount1 % 5 || 5); // 보여질 이미지 개수로 나눈 나머지 값이 0이 아니면 나머지 값, 0이면 보여질 이미지 개수
+          if (slideIndex1 > maxIndex1) {
+              slideIndex1 = maxIndex1;
+          }
+          slideToIndex1(slideIndex1);
+      });
+
+      function slideToIndex1(index1) {
+          const lastIndex1 = posterCount1 - 5; // 마지막 슬라이드 인덱스
+          if (index1 > lastIndex1) {
+              index1 = lastIndex1+1; // 마지막 슬라이드를 넘지 못하도록 설정
+          }
+          const translateX1 = -index1 * posterWidth1;
+          slider1.style.transform = `translateX(${translateX1}px)`;
+      }
+
+    </script>
+
+
+  </div>       <!-- div.container-->
+</body>
+
+
+</html>
+
 {% endblock %}

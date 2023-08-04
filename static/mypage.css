@@ -298,10 +298,11 @@ body {
   font-family: 'NanumBarunpen';
 }
 .poster-img {
-  width: 140px;
-  height: 190px;
+  width: 145px;
+  height: 210px;
   object-fit: cover;
   margin-right: 15px;
+  margin-bottom: 10px;
   align-items: center;
 }
 .poster-container {

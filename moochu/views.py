@@ -12,7 +12,10 @@ from collections import OrderedDict
 
 ## mainpage 함수
 def mainpage(request):
-    return render(request, 'moochu/mainpage.html')
+    num=[2,3,4,5,6,7,8,9,10]
+    context={"num":num,}
+    return render(request, 'moochu/mainpage.html', context)
+    
 
 
 
@@ -33,25 +36,36 @@ def data_change(request,data):
 
     return page_obj
 
+
 def ott_media_list(request, ott, media_type):
-    ott_service = ['Netflix', 'Wavve', 'Disney', 'Tving', 'Apple','CineFox', 'CineFox', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus']
+    ott_service = ['Netflix', 'Wavve', 'Disney', 'Tving', 'Apple','CineFox', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus']
 
     genres=['SF', '가족', '공연', '공포(호러)', '다큐멘터리', '드라마', '멜로/로맨스', '뮤지컬', '미스터리', '범죄',
                    '서부극(웨스턴)', '서사', '서스펜스', '성인', '스릴러', '시사/교양', '애니메이션', '액션', '어드벤처(모험)',
                    '예능', '음악', '전쟁', '코미디', '키즈', '판타지']
     
     if ott=='All':
-        data = list(Media.collection.find({"media_type": media_type}, {"poster_image_url": 1, "title_kr": 1}))
+        pipeline = [
+            {"$match": {"media_type": media_type, "indexRating.score": {"$gte": 73.2}}},
+            {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
+        ]
 
-        ## 제목으로 중복 제거를 위한 로직
+        movies = Media.collection.aggregate(pipeline)
+
+        # 중복제거
         unique_movies = OrderedDict()
-        for movie in data:
+        for movie in movies:
             if movie['title_kr'] not in unique_movies:
                 unique_movies[movie['title_kr']] = movie
-        
         data = list(unique_movies.values())
+        
     else:
-        data = list(Media.collection.find({"OTT":ott, "media_type":media_type}, {"poster_image_url": 1, "title_kr": 1}))
+        pipeline = [
+            {"$match": {"media_type": media_type,"OTT":ott, "indexRating.score": {"$gte": 73.2}}},
+            {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
+        ]
+
+        data = Media.collection.aggregate(pipeline)
 
     
     page_obj= data_change(request,data)
@@ -68,7 +82,7 @@ def ott_media_list(request, ott, media_type):
 
 
 def genre_filter(request, ott, media_type):
-    ott_service = ['Netflix', 'Wavve', 'Disney', 'Tving', 'Apple','CineFox', 'CineFox', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus']
+    ott_service = ['Netflix', 'Wavve', 'Disney', 'Tving', 'Apple','CineFox', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus']
     genres=['SF', '가족', '공연', '공포(호러)', '다큐멘터리', '드라마', '멜로/로맨스', '뮤지컬', '미스터리', '범죄',
                    '서부극(웨스턴)', '서사', '서스펜스', '성인', '스릴러', '시사/교양', '애니메이션', '액션', '어드벤처(모험)',
                    '예능', '음악', '전쟁', '코미디', '키즈', '판타지']
@@ -78,16 +92,27 @@ def genre_filter(request, ott, media_type):
 
     # 선택된 장르에 해당하는 영화를 필터링합니다.
     if ott=='All':
-        data = list(Media.collection.find({"genres": {"$elemMatch": {"$in": selected_genres}}, "media_type":media_type}))
-        ## 제목으로 중복 제거를 위한 로직
+        pipeline = [
+            {"$match": {"genres": {"$elemMatch": {"$in": selected_genres}}, "indexRating.score": {"$gte": 73.2}}},
+            {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
+        ]
+
+
+        movies = Media.collection.aggregate(pipeline)
+         # 중복제거
         unique_movies = OrderedDict()
-        for movie in data:
+        for movie in movies:
             if movie['title_kr'] not in unique_movies:
                 unique_movies[movie['title_kr']] = movie
-        
         data = list(unique_movies.values())
     else:
-        data = list(Media.collection.find({"genres": {"$elemMatch": {"$in": selected_genres}}, "media_type":media_type, 'OTT':ott }))
+        pipeline = [
+            {"$match": {"genres": {"$elemMatch": {"$in": selected_genres}}, "indexRating.score": {"$gte": 73.2}}},
+            {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
+        ]
+
+
+        data = Media.collection.aggregate(pipeline)
 
 
 

@@ -13,7 +13,10 @@ from collections import OrderedDict
 
 ## mainpage 함수
 def mainpage(request):
-    return render(request, 'moochu/mainpage.html')
+    num=[2,3,4,5,6,7,8,9,10]
+    context={"num":num,}
+    return render(request, 'moochu/mainpage.html', context)
+    
 
 
 # 페이징을 위한 호출 함수

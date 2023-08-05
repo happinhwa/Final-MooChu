@@ -5,7 +5,7 @@ from elasticsearch import Elasticsearch
 es = Elasticsearch()
 
 es.indices.create(
-    index='movies',
+    index='media',
     body={
         "settings": {
             "index": {
@@ -37,6 +37,7 @@ es.indices.create(
 
     }
 )
+
 
 
 with open('./OTT_merged_data.json', encoding='utf-8') as json_file:

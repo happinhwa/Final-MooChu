@@ -102,18 +102,6 @@ DATABASES = {
             'charset': 'utf8mb4', # 특수문자 지원
         },
     },
-    # 'test_mongo': {
-    #     'ENGINE': 'djongo',
-    #     'NAME': 'final_db',
-    #     'CLIENT': {
-    #         'host': 'localhost',
-    #         'port': '4001',
-    #         'username': 'root',
-    #         'password': 'root',
-    #         'authSource': 'admin',
-    #         'authMechanism': 'SCRAM-SHA-1'
-    #     }
-    # }
 }
 
 ELASTICSEARCH_DSL = {
@@ -127,6 +115,7 @@ ALL_MONGODB_NAME = 'final'  # db 이름
 
 #daum db 설정
 DAUM_MONGODB_NAME = 'daum'  #daum db
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

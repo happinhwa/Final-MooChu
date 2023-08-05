@@ -4,7 +4,9 @@ from urllib3 import HTTPResponse
 from rest_framework.response import Response
 from .forms import GuestBookForm,ProfileUpdateForm
 from . import models
+from common.models import MovieRating
 from moochu.models import Media
+from review.models import Review, Review_comment, MyList
 from collections import OrderedDict
 
 # Create your views here.
@@ -44,23 +46,34 @@ def profile_data(nickname, request):
 def home(request, nickname):
     profile = profile_data(nickname, request)
 
-    ## 이제 인생 명작 리스트 보내기 
+    ## 이제 인생 명작 리스트 보내기
+    toplist = {"toplist":models.MyToplist.objects.filter(writer=profile['master'].id)}
+    profile.update(toplist)
                     ## 코드 ## 
     return render(request, 'mypage/mypage.html', profile)
+
+
 
 @api_view(['GET'])
 def mylist(request, nickname):
     form = profile_data(nickname, request)
-    mylist={"mylist":models.mylist.objects.filter(user=form['master'])}
+    print(request.user.id)
+    mylist = MyList.objects.filter(user_id=form['master'].id)
+    for x in mylist:
+        x.media_id = str(x.media_id)
+    mylist={"mylist":mylist}
     form.update(mylist)
     return render(request, 'mypage/mylist.html', form)
 
 
 def reviews(request, nickname):
     profile = profile_data(nickname, request)
-    reviews = {"reviews": models.review.objects.filter(user_id=profile['master'].id)}
+    reviews = {"reviews": Review.objects.filter(writer_id=profile['master'].id)}
+        ## 평점 데이터도 같이 보내야함
 
     profile.update(reviews)
+    votes = {"votes": MovieRating.objects.filter(user=profile['master'].id)}
+    profile.update(votes)
     return render(request, 'mypage/reviews.html', profile)
 
 
@@ -123,13 +136,24 @@ def edit(request, nickname):
 
 
 ## 사용자의 리뷰 전체 list
-def reviews_total(request):
-    pass
+def reviews_total(request, nickname):
+    profile = profile_data(nickname, request)
+    reviews = {"reviews": Review.objects.filter(writer_id=profile['master'].id)}
+        ## 평점 데이터도 같이 보내야함
+    profile.update(reviews)
+    return render(request, 'mypage/review_total.html', profile)
 
 
 ## 사용자의 평점 전체 list
-def votes(request):
-    pass
+def votes(request, nickname):
+    profile = profile_data(nickname, request)
+    
+                ######## 평점 데이터 보내야 함 #############
+    votes = {"votes": MovieRating.objects.filter(user=profile['master'].id)}
+    profile.update(votes)
+    return render(request, 'mypage/vote_total.html', profile)
+
+
 
 @api_view(['POST','DELETE', 'GET'])
 def follow(request, nickname):
@@ -157,3 +181,6 @@ def follower(request, follow_id):
         
         return Response(status=200)
     
+@api_view(['GET, POST, DELETE'])
+def Toplist(request, nickname):
+    pass

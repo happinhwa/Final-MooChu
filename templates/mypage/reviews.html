@@ -16,82 +16,54 @@
 
             <div class="box content-box">
               <div class="scroll-box">
-                <div class="box-title">{{ master.nickname }}님이 남긴 리뷰<a class="toggle-reviews" href="#">전체보기</a></div>
+                <div class="box-title">
+                  {{ master.nickname }}님이 남긴 리뷰
+                  {% if reviews.count > 6 %}
+                    <a class="toggle-reviews" href="{% url 'mypage:reviews_total' nickname=master.nickname %}">
+                    전체보기
+                  </a>
+                  {% endif %}
+                </div>
+
                 <div class="review-container"> 
+                  {% if reviews %}
                   {% for review in reviews %} 
-                  <span class="review-text"><a style="font-weight: bold;">{{ review.movie_title }} :</a> {{review.content}}</span>
+                  <span class="review-text">{{review.content}}</span>
                   <hr>
                   {% endfor %}
-                  <span class="review-text">이거는 진짜 너무 재밌다 저의 인생 명작입니다.</span>
-                  <hr>
-                  <span class="review-text">이거는 진짜 </span>
-                  <hr>
-                  <span class="review-text">이거는 진짜 너무 </span>
-                  <hr>
-                  <span class="review-text">이거는 진짜 너무 재밌다 </span>
-                  <hr>
-                  <span class="review-text">이거는 진짜 너무 재밌다 저의 </span>
-                  <hr>
-                  <span class="review-text">이거는 진짜 너무 재밌다 저의 인생 </span>
-                  <hr>
-                  <span class="review-text">이거는 진짜 너무 재밌다 저의 인생 명작입니다.</span>
-                  <hr>
+                  {% else %}
+                    <h2>남긴 평점이 없습니다.</h2>
+                  {% endif %} 
                 </div>  
                 <br />
 
 
-                <div class="box-title">{{ master.nickname }}님이 남긴 평점<a class="toggle-votes"><a href="/" id="view-all-votes">전체보기</a></div>
+                <div class="box-title">{{ master.nickname }}님이 남긴 평점<a class="toggle-votes">
+                  {% if votes.count > 8 %}
+                  <a href="{% url 'mypage:votes' nickname=master.nickname %}" id="view-all-votes">
+                    전체보기
+                  </a>
+                  {% endif %}
+                </div>
+
                 <div class="card-container-vote">
+                  {% if votes %}
+                  {% for vote in votes %}
                   <div class="card">
-                    <img class="card-img" src="/static/images/1_2.jpg" alt="영화 포스터">
-                    <span class="card-text">스파이더맨</span>
-                    <span class="card-text"><a style="color: #96FC72"> ★ </a>4.0</span>
+                    <a href="{% url 'moochu:movie_detail' movie_id=vote.media_id %}"><img class="card-img" src='https://storage.googleapis.com/moochu/{{vote.media_id}}.jpg' alt="영화 포스터"></a>
+                    <span class="card-text"><a style="color: #96FC72"> ★ </a>{{vote.rating}}</span>
                   </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/2.jpeg" alt="영화 포스터">
-                    <span class="card-text">엘라멘탈</span>
-                    <span class="card-text"><a style="color: #96FC72"> ★ </a>5.0</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/3.jpeg" alt="영화 포스터">
-                    <span class="card-text">범죄도시3</span>
-                    <span class="card-text"><a style="color: #96FC72"> ★ </a>5.0</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/4.jpeg" alt="영화 포스터">
-                    <span class="card-text">귀공자</span>
-                    <span class="card-text">★3.5</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/5.jpeg" alt="영화 포스터">
-                    <span class="card-text">인디아나존스</span>
-                    <span class="card-text">★3.0</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/6.jpeg" alt="영화 포스터">
-                    <span class="card-text">플래시</span>
-                    <span class="card-text">★2.5</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/7.jpeg" alt="영화 포스터">
-                    <span class="card-text">샤이닝</span>
-                    <span class="card-text">★2.0</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/8.jpeg" alt="영화 포스터">
-                    <span class="card-text">슬램덩크</span>
-                    <span class="card-text">★4.5</span>
-                  </div>
-                  <div class="card">
-                    <img class="card-img" src="/static/images/9.jpeg" alt="영화 포스터">
-                    <span class="card-text">트랜스포머</span>
-                    <span class="card-text">★4.0</span>
-                  </div>
+                  {% endfor %}
+                  {% else %}
+                    <h1> 남긴 평점이 없습니다. </h1>
+                  {% endif %}
+                </div>
                   
-                </div>             
+                            
               </div>
               
             </div>
+
           </div>
           
           <!-- 메뉴 버튼 구성 요소-->
@@ -99,4 +71,26 @@
         </div>
       </div>
     </div>
+{% endblock %}
+
+{% block script %}
+<script>
+  // 모든 card-text 요소에 대해 처리
+  const cardTexts = document.querySelectorAll('.card-text');
+  cardTexts.forEach((cardText) => {
+    const text = cardText.textContent;
+    const maxLength = 10; // 최대 길이 설정
+    if (text.length > maxLength) {
+      const truncatedText = text.substring(0, maxLength) + '...';
+      cardText.textContent = truncatedText;
+      cardText.addEventListener('click', function () {
+        if (cardText.textContent === truncatedText) {
+          cardText.textContent = text;
+        } else {
+          cardText.textContent = truncatedText;
+        }
+      });
+    }
+  });
+</script>
 {% endblock %}

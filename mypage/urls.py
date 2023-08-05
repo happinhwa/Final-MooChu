@@ -8,14 +8,18 @@ app_name = 'mypage'
 urlpatterns = [
     ## 홈 
     path('<str:nickname>/', views.home, name="home"),
+                ## 인생작 추가 및 삭제 
+    path('<str:nickname>/Toplist/', views.Toplist, name="Toplist"),
     
     ## 찜 
-    path('<str:nickname>/mylist', views.mylist, name="mylist"),
+    path('<str:nickname>/mylist/', views.mylist, name="mylist"),
 
     ## 리뷰 & 평점 
-    path('<str:nickname>/reviews', views.reviews, name="reviews"),
-    path('reviews/', views.reviews_total, name="reviews_total"), ## 사용자의 리뷰 전체 list
-    path('votes/', views.votes, name="votes"), ## 사용자의 평점 전체 list
+    path('<str:nickname>/reviews/', views.reviews, name="reviews"),
+                ## 사용자의 리뷰 전체 list
+    path('<str:nickname>/reviews/All/', views.reviews_total, name="reviews_total"),
+                ## 사용자의 평점 전체 list
+    path('<str:nickname>/votes/', views.votes, name="votes"), 
 
     ## 방명록
     path('<str:nickname>/guestbook/', views.guestbook, name="book"),

@@ -27,7 +27,7 @@ AUTH_USER_MODEL = 'common.User'
 SECRET_KEY = "django-insecure-z+i-5d9*d+s!vp_a+6#aj(hvwaciv0_+!2a*(0a!bqia$^c)i&"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False 
 
 ALLOWED_HOSTS = ['*']
 
@@ -151,11 +151,25 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+# 먼저 BASE_DIR 변수를 정의합니다.
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# ROOT_DIR 변수를 정의합니다.
+ROOT_DIR = BASE_DIR
+
+STATIC_URL = '/static/'
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    STATIC_DIR,
 ]
+
+# ROOT_DIR 변수를 정의한 이후에 STATIC_ROOT를 설정합니다.
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
+#STATIC_URL = "static/"
+
+#STATICFILES_DIRS = [
+#    BASE_DIR / 'static',
+#]
 
 # 장고디비에 이미지 파일올리기
 

@@ -6,7 +6,6 @@ from django.db.models import Avg
 from common.models import MovieRating
 from review.models import Review
 from .models import Media
-from .utils import render_paginator_buttons
 from collections import OrderedDict
 # Create your views here.
 
@@ -155,11 +154,18 @@ def movie_detail(request, movie_id):
     average_rating = MovieRating.objects.filter(media_id=str(movie_id)).aggregate(Avg('rating'))['rating__avg']
     reviews = Review.objects.filter(media_id=str(movie_id)).order_by('-create_date')
     review_count = Review.objects.filter(media_id=str(movie_id)).count()
+
+    if request.user.is_authenticated:
+        user_review = Review.objects.filter(media_id=str(movie_id), writer=request.user).first()
+    else:
+        user_review = None
+
     context = {
             'movie': data[0],
             'average_rating': average_rating,
             'reviews': reviews,
             'review_count': review_count,
+            'user_review': user_review,
         }
 
     return render(request, 'moochu/media_detail.html', context)

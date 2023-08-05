@@ -10,9 +10,8 @@ from django.forms import ValidationError
 from django.http import JsonResponse
 from django.db.models import Avg
 
-# 리뷰 리스트 기본(최신순)
-def review(request, movie_id):
-    reviews = Review.objects.order_by('-create_date')
+def get_movie_data(movie_id):
+
     data = list(Media.collection.find({"_id": str(movie_id)}))
     data =[
         {
@@ -22,12 +21,25 @@ def review(request, movie_id):
         }
         for movie in data
     ]
+
+    return data
+
+# 리뷰 리스트 기본(최신순)
+def review(request):
+    reviews = Review.objects.order_by('-create_date')
+
+    movie_data = {}
+    for review in reviews:
+        movie_data[review.media_id] = get_movie_data(review.media_id)
+
     context = {
-        'review_list': reviews,
-        'movie': data,
-        }
-    
-    return render(request, 'review/review_list.html', context)
+        'reviews': reviews,
+        'movie_data': movie_data,
+    }
+    print(movie_data)
+    return render(request, 'review/review_all.html', context)
+
+
 
 
 

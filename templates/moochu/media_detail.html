@@ -6,7 +6,6 @@
 {% block content %}
 <head>
     <link rel="stylesheet" href="{% static 'media_detail.css' %}">
-    <link rel="stylesheet" href="{% static '/fonts/font.css'%}">
     <link rel="stylesheet" href="{% static 'style-genre.css'%}">
         <style>
             @import 
@@ -90,12 +89,18 @@
     </div>
 <br><br>
 
-<!-- 리뷰 -->
-        <h4 style="color:white; font-family: NanumBarunpen; margin-bottom: 30px; align-items: center;">
-            <span class="movie-review">{{ movie.titleKr }}</span> 작품에 대한 감상을 짧게라도 남겨보세요!
-            <a class="btn review-all" style="float: right" href="{% url 'review:review_upload' movie.id %}">리뷰 <span style="color:#96FC72; font-family: Chonburi;">{{review_count}}</span>개 모두 보러 가기▶︎</a>
-            <a class="btn btn-review" style="float: right" href="{% url 'review:review_upload' movie.id %}">리뷰쓰러가기</a>
-        </h4>
+        <!-- 리뷰 -->
+
+        <div class="d-flex align-items-center" style="font-size:1.5rem; height: 50px;color:white; font-family: NanumBarunpen; margin-bottom: 10px;">
+            <span class="movie-review">{{ movie.titleKr }}</span> &nbsp; 작품에 대한 감상을 짧게라도 남겨보세요!
+            {% if reviews %}
+            <a class="btn review-all" style="margin-left: auto; margin-right: 20px;" href="{% url 'review:review_by_id' movie.id %}">리뷰 <span style="color:#96FC72; font-family: Chonburi;">{{review_count}}</span>개 모두 보러 가기▶︎</a>
+            <a class="btn btn-review" href="{% url 'review:review_upload' movie.id %}">리뷰쓰러가기</a>
+            {% else %}
+            <a class="btn btn-review" style="margin-left: auto;" href="{% url 'review:review_upload' movie.id %}">리뷰쓰러가기</a>
+            {% endif %}
+        </div>
+
         {% if reviews %}
         <div class="mt-3">
             {% for review in reviews|slice:":3" %} {# 최신 3개만 보여주도록 슬라이싱 #}

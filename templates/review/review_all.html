@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}최신 리뷰 목록{% endblock %}
+{% load review_movie %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'media_detail.css' %}">
+<link rel="stylesheet" href="{% static 'review.css' %}">
+
+<div class="container">
+    <div class="d-flex align-items-center" style="font-size: 1.5rem; height: 50px;color:white; font-family: NanumBarunpen; margin-bottom: 10px;">
+        최신 리뷰 목록
+    </div>
+    {% if reviews %}
+        {% for review in reviews %}
+            <div class="card my-3" style="border: 1px solid transparent; background-color: transparent;">
+                <div class="card-body review-body">
+                    <div class="d-flex justify-content-front">
+                        {% if review.modify_date %}
+                        <div class="badge badge-review d-flex align-items-center">
+                            <div class="mr-2" style="font-size: 15px;"><a class="nickname" href="{% url 'mypage:home' nickname=review.writer.nickname %}">@{{ review.writer.nickname }}</a></div>
+                            <div style="color: lightgray;">{{ review.modify_date }} (수정됨)</div>
+                        </div>
+                        {% else %}
+                        <div class="badge badge-review d-flex align-items-center">
+                            <div class="mr-2" style="font-size: 15px;"><a class="nickname" href="{% url 'mypage:home' nickname=review.writer.nickname %}">@{{ review.writer.nickname }}</a></div>
+                            <div style="color: lightgray;">{{ review.create_date }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-text review-content" style="margin-top: 10px; margin-left: 5px; display: flex; justify-content: space-between;">
+                        <div style="width:20%;">
+                            <img src="{% static 'images/5.jpeg' %}">
+                            
+                            {% with movie=movie_data|get_item:review.media_id %}
+                               
+                                    <img src="{{ movie.posterImageUrl }}" alt="{{ movie.titleKr }}">
+                                
+                            {% endwith %}
+                            
+                        </div>
+                        <div style="width:80%;">
+                            <div class="card-text review-content" style="width: 75%; display: flex; justify-content: space-between;">
+                    
+                                {% if review.content|length > 70 %}
+                                    <a class="review-content" href="{% url 'review:review_detail' movie_id=review.media_id review_id=review.id %}">
+                                {% else %}
+                                    <a class="review-content" href="{% url 'review:review_detail' movie_id=review.media_id review_id=review.id %}">{{ review.content|linebreaksbr }}</a>
+                                {% endif %}
+                        
+                                    {% if request.user == review.writer %}
+                                    <div>
+                                        <a href="#" class="btn btn-sm btn-review2">수정</a>
+                                        <a href="#" class="delete btn btn-sm btn-review2" data-uri="#">삭제</a>
+                                    </div>
+                                    {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="my-3">
+                        <a href="#" class="btn btn-sm">
+                            <img src="{% static 'comment.png' %}" style="max-height: 30px;"> 
+                        </a>
+                        <a href="#" class="btn btn-sm">
+                            <img src="{% static 'thumbs.png' %}" style="max-height: 30px;">
+                        </a>
+                    </div>
+
+            </div>
+        {% endfor %}
+    {% else %}
+    <div class="card my-3" style="border: 1px solid transparent; background-color: transparent;">
+        <div class="card-body review-body">
+            <div class="d-flex justify-content-front">
+                <h6 style="color:white; font-family: NanumBarunpen;">아직 작성된 리뷰가 없습니다.</h6>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}

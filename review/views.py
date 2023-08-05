@@ -6,13 +6,41 @@ from .models import Review
 from bson import ObjectId
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-from django.forms import ValidationError
 from django.http import JsonResponse
-from django.db.models import Avg
+
 
 # 리뷰 리스트 기본(최신순)
-def review(request, movie_id):
+def review(request):
     reviews = Review.objects.order_by('-create_date')
+
+    movie_data = {}
+    for review in reviews:
+        movie_data[review.media_id] = get_movie_data(review.media_id)
+
+    context = {
+        'reviews': reviews,
+        'movie_data': movie_data,
+    }
+
+    return render(request, 'review/review_all.html', context)
+
+def get_movie_data(movie_id):
+    data = list(Media.collection.find({"_id": movie_id}))
+    data =[
+        {
+            'id': str(movie['_id']),
+            'posterImageUrl': movie['poster_image_url'],
+            'titleKr': movie['title_kr'],
+        }
+        for movie in data
+    ]
+
+    return data
+
+# 리뷰 리스트 기본(최신순)
+def review_by_id(request, movie_id):
+    reviews = Review.objects.filter(media_id=str(movie_id)).order_by('-create_date')
+    
     data = list(Media.collection.find({"_id": str(movie_id)}))
     data =[
         {
@@ -23,12 +51,12 @@ def review(request, movie_id):
         for movie in data
     ]
     context = {
-        'review_list': reviews,
+        'reviews': reviews,
         'movie': data,
+        'movie_id': movie_id,
         }
     
     return render(request, 'review/review_list.html', context)
-
 
 
 def review_detail(request, movie_id, review_id):

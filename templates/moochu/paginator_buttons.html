@@ -6,7 +6,7 @@
 
 {% if page_obj.has_previous %}
   <a href="/mlist/page=1/?page=1" class="page-button">&laquo;</a>
-  <a href="/mlist/page={{ page_obj.previous_page_number }}" class="page-button">{% trans 'previous' %}</a>
+  <a href="/mlist/page={{ page_obj.previous_page_number }}" class="page-button">{% trans '이전' %}</a>
 {% else %}
   <span class="page-button">&laquo;</span>
   <span class="page-button">{% trans 'previous' %}</span>
@@ -24,6 +24,6 @@
   <a href="/mlist/page={{ page_obj.next_page_number }}" class="page-button">{% trans 'next' %}</a>
   <a href="/mlist/page={{ paginator.num_pages }}" class="page-button">&raquo;</a>
 {% else %}
-  <span class="page-button">{% trans 'next' %}</span>
+  <span class="page-button">{% trans '다음' %}</span>
   <span class="page-button">&raquo;</span>
 {% endif %}

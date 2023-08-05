@@ -1,39 +1,77 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}최신 리뷰 목록{% endblock %}
 
 {% block content %}
+
+<link rel="stylesheet" href="{% static 'media_detail.css' %}">
+
+
 <div class="container">
-    <div class="reviews h1">
-        <h1>최신 리뷰 목록</h1>
+
+    <div class="d-flex align-items-center" style="font-size:1.5rem; height: 50px;color:white; font-family: NanumBarunpen; margin-bottom: 10px;">
+        <span class="movie-review">{{ movie.titleKr }}</span> &nbsp; 모든 리뷰
+        <a class="btn btn-review" style="margin-left: auto;" href="{% url 'review:review_upload' movie_id %}">리뷰쓰러가기</a>
+    </div>
+    <div>
+
     </div>
 
-    <div class="container my-3">
-        {% if messages %}
-            <div class="alert alert-danger my-3" role="alert">
-                {% for message in messages %}
-                    <strong>{{ message.tags }}</strong>
-                    <ul><li>{{ message.message }}</li></ul>
-                {% endfor %}
+    {% if reviews %}
+    <div class="mt-3">
+        {% for review in reviews %}
+            <div class="card my-3" style="border: 1px solid transparent; background-color: transparent;">
+                <div class="card-body review-body">
+                    <div class="d-flex justify-content-front">
+                    {% if review.modify_date %}
+                        <div class="badge badge-review d-flex align-items-center">
+                            <div class="mr-2" style="font-size: 15px;"><a class="nickname" href="{% url 'mypage:home' nickname=review.writer.nickname %}">@{{ review.writer.nickname }}</a></div>
+                            <div style="color: lightgray;">{{ review.modify_date }} (수정됨)</div>
+                        </div>
+                    {% else %}
+                        <div class="badge badge-review d-flex align-items-center">
+                            <div class="mr-2" style="font-size: 15px;"><a class="nickname" href="{% url 'mypage:home' nickname=review.writer.nickname %}">@{{ review.writer.nickname }}</a></div>
+                            <div style="color: lightgray;">{{ review.create_date }}</div>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-text review-content" style="margin-top: 10px; margin-left: 5px; display: flex; justify-content: space-between;">
+                    {% if review.content|length > 70 %}
+                        <a class="review-content" href="{% url 'review:review_detail' movie_id review.id %}">{{ review.content|linebreaksbr|truncatechars:70 }}</a>
+                    {% else %}
+                        <a class="review-content" href="{% url 'review:review_detail' movie_id review.id %}">{{ review.content|linebreaksbr }}</a>
+                    {% endif %}
+                    <div>
+                        <a href="#" class="btn btn-sm btn-review2">수정</a>
+                        <a href="#" class="delete btn btn-sm btn-review2" data-uri="#">삭제</a>
+                    </div>
+                </div>
+                
+                
+                {% if request.user == review.writer %}
+                    <div class="my-3">
+                        <a href="#" class="btn btn-sm">
+                            <img src="{% static 'comment.png' %}" style="max-height: 30px;"> 
+                        </a>
+                        <a href="#" class="btn btn-sm">
+                            <img src="{% static 'thumbs.png' %}" style="max-height: 30px;">
+                        </a>
+                    </div>
+                {% endif %}
+                </div>
             </div>
-        {% endif %}
-
-        <div class="reviews">
-            {% if review_list %}
-                <ul>
-                    {% for review in review_list %}
-                        <div class="review box">
-                            <h3>{{ review.movie }}</h3>
-                            <p>작성자: {{ review.writer.username }}</p>
-                            <p>평점: {{ review.vote }}</p>
-                            <p>작성일: {{ review.create_date }}</p>
-                            <p>리뷰 내용: {{ review.content }}</p>
-
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>아직 작성된 리뷰가 없습니다.</p>
-            {% endif %}
+        {% endfor %}
         </div>
-    </div>
+    {% else %}
+        <div class="card my-3" style="border: 1px solid transparent; background-color: transparent;">
+            <div class="card-body review-body">
+                <div class="d-flex justify-content-front">
+                <h6 style="color:white; font-family: NanumBarunpen;">아직 작성된 리뷰가 없습니다.</h6>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
 </div>
 {% endblock %}

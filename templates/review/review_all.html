@@ -30,7 +30,7 @@
                     </div>
                     <div class="card-text review-content" style="margin-top: 10px; margin-left: 5px; display: flex; justify-content: space-between;">
                         <div style="width:20%;">
-                            <img src="{% static 'images/5.jpeg' %}">
+                            <img src="https://storage.googleapis.com/end_moochu/{{review.media_id}}.jpg">
                             
                             {% with movie=movie_data|get_item:review.media_id %}
                                

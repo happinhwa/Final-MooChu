@@ -19,17 +19,19 @@
         <div class="box content-box">
           <div class="scroll-box">
               <div class="box-title">인생 명작 TOP 5
+                {% if writer.id == master.id %}
                 <a class="toggle-votes">
-                  <a href="{% url 'mypage:Toplist' nickname=master.nickname %}" id="view-all-votes">
-                    수정
+                  <a method="POST" href="{% url 'mypage:Toplist' nickname=master.nickname %}" id="view-all-votes">
+                    추가 및 삭제
                   </a>
+                  {% endif %}
               </div>
 
               <div class="poster-container">
                 {% if toplist %}
-                {% for media in toplist %}    
-                  <a href="{% url 'moochu:movie_detail' movie_id=media.media_id %}"><img class="poster-img" src="https://storage.googleapis.com/moochu/{{media.media_id}}.jpg" ></a>
-                {% endfor %}
+                  {% for media in toplist %}    
+                    <a href="{% url 'moochu:movie_detail' movie_id=media.media_id %}"><img class="poster-img" src="https://storage.googleapis.com/end_moochu/{{media.media_id}}.jpg" ></a>
+                  {% endfor %}
                 {% else %}
                   <h3 class="no-note"><span style="font-weight: 900;">{{ master.nickname }}</span> 님의 인생작 목록이 존재하지 않습니다.</h3>
                 {% endif %}

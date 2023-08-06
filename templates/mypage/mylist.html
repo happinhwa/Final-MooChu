@@ -21,7 +21,7 @@
             <div class="poster-container">
               {% if mylist %}
               {% for media in mylist %}    
-              <a href="{% url 'moochu:movie_detail' movie_id=media.media_id %}"><img class="poster-img" src="https://storage.googleapis.com/moochu/{{media.media_id}}.jpg" ></a>
+              <a href="{% url 'moochu:movie_detail' movie_id=media.media_id %}"><img class="poster-img" src="https://storage.googleapis.com/end_moochu/{{media.media_id}}.jpg" ></a>
               {% endfor %}
               {% else %}
               <h3 class="no-note"><span style="font-weight: 900;">{{ master.nickname }}</span> 님의 찜 목록이 존재하지 않습니다.</h3>

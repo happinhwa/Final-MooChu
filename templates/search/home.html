@@ -113,7 +113,12 @@
           </ul>
         </div>
       </div>
-      
+      {% for media in data %}
+        <div class="search-card">
+            <img class="search-img" src="https://storage.googleapis.com/end_moochu/{{media.id}}.jpg" alt="영화 포스터" title="{{ media.title_kr }}">
+            <span class="search-text">{{ media.title_kr}}</span>
+          </div>
+    {% endfor %}
       
 </div>
 

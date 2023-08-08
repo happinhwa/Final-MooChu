@@ -6,7 +6,15 @@ input[type=submit] {
     margin-top:10px;
 }
 
+.image-title-container {
+    display: flex;
+    align-items: center;
+}
 
+.image-container {
+    margin-right: 10px; 
+    margin-bottom: 10px;
+}
 .btn-review{
     color:#2C2E34;
     background-color:#96FC72;
@@ -21,10 +29,24 @@ input[type=submit] {
     font-family: 'NanumBarunpen';
     justify-content: right;
 }
-
+.btn-review1{
+    color:white;
+    background-color:transparent;
+    border-color:white;
+    font-family: 'NanumBarunpen';
+    margin-left:10px;
+}
+.btn-review1:hover{
+    color:#96FC72;
+    background-color:transparent;
+    border-color:#96FC72;
+    font-family: 'NanumBarunpen';
+}
 .title-container{
     font-size: 20px;
     font-weight: bolder;
+    font-family: NanumBarunpen;
+    color:white;
 }
 .movie-container {
     margin-bottom: 20px;
@@ -40,7 +62,9 @@ input[type=submit] {
     margin: 0;
     width:100%;
 }
-
+.hanja-font {
+    font-family: 'Heiti'; /* 한자용 글꼴 설정 */
+}
 .poster-image {
     position: relative;
     margin-right: 20px; /* 이미지와 오른쪽 요소 사이 간격 */
@@ -63,7 +87,6 @@ input[type=submit] {
     margin-bottom: 20px;
     height: 100%;
 }
-
 .review-title {
     color: #96FC72;
     font-family: 'NanumBarunpen';
@@ -73,7 +96,7 @@ input[type=submit] {
 
 table {
     table-layout: fixed;
-    width: 100%; /* Set the desired width for the table */
+    width: 100%; 
 }
 
 th.col-num,
@@ -103,24 +126,22 @@ td a.col-title, td a.title{
 }
 
   
-table td,.table th{padding:.75rem;vertical-align:top;border-top:1px solid #FCA472;font-family: 'NanumBarunpen';}
-.table thead th{font-size: 20px;color:#D9DFF5;vertical-align:bottom;border-bottom:1.5px solid #FCA472}
-.table tbody+tbody{border-top:1px solid #FCA472;}
+table td,.table th{padding:.75rem;vertical-align:top;border-top:1px solid #96FC72;font-family: 'NanumBarunpen';}
+.table thead th{font-size: 20px;color:#D9DFF5;vertical-align:bottom;border-bottom:1.5px solid #96FC72;}
+.table tbody+tbody{border-top:1px solid #96FC72;}
 
 .table-dark th {
     background-color: #2C2E34;
 }
 
-table tr > td{ /* '질문이 없습니다' 워딩 css */
+table tr > td{ 
     color: #D9DFF5;
     font-family: 'NanumBarunpen'
 }
 
 /* ################################## */
-/* post_detail에서 게시글 정보 보여주는 css */
 .info {
     padding: 15px;
-    /* border-bottom: 1px solid #D9DFF5; */
     font-size: 0;
     border-top: 1px dashed #D9DFF5;
     border-bottom: 1px solid #2C2E34;
@@ -149,66 +170,23 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
     display: inline-block;
     font-size: 17px;
     font-family: 'NanumBarunpen';
-    color: #FCA472;
+    color: #96FC72;
 }
 .info dl dd {
     margin-left: 10px;
-    color:#D9DFF5;
+    color:white;
 }
 
 .content {
     margin-left: 10px;
-    color:#D9DFF5;
+    color:#C0DBB6;
     font-family: 'NanumBarunpen';
-
+    font-size: 18px;
 }
 /* ################################## */
 
-.col-num{
-    width: 10%;
-    text-align: center;
-}
-.col-title, .title{ /* post 목록에서 글 제목 css */
-    text-decoration: none ;
-    color:#D9DFF5;
-    width: 40%;
-    text-align: left;
-}
-.title:hover{ /* post 목록에서 글 제목 마우스 가져다 댔을 때 css */
-    text-decoration: none ;
-    color:#FCA472;
-    text-align: left;
-}
-.col-writer{
-    width: 10%;
-    text-align: center;
-}
-.col-date{
-    width: 10%;
-    text-align: center;
-}
-.col-count{
-    width: 10%;
-    text-align: center;
-}
-
-.col-content {
-    border-bottom: 1px solid #D9DFF5;
-    padding: 10px;
-    padding-bottom: 20px;
-    color:#D9DFF5;
-    margin-bottom: 10px;
-    font-family: 'NanumBarunpen';
-}
-
-
-.comment-count2 { /* 글 목록에서 보여지는 댓글 갯수 */
-    color: #FCA472;
-    font-family: Arial, Helvetica, sans-serif;
-    margin-top: 20px;
-}
-.comment-count { /* 게시판 글에 달린 댓글 갯수 */
-    color: #D9DFF5;
+.comment-count { /* 글에 달린 댓글 갯수 */
+    color: white;
     font-family: 'NanumBarunpen';
     margin-top: 20px;
 }
@@ -219,7 +197,7 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
 }
 
 .comment-content{
-    color: #FCA472;
+    color: #96FC72;
     font-family: 'NanumBarunpen';
 }
 .comment-detail{
@@ -228,7 +206,7 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
 }
 
 .vote {
-    color: #FCA472; /* Text color */
+    color: #96FC72; /* Text color */
     /* text-shadow: -1px -1px 0 #D9DFF5, 1px -1px 0 #D9DFF5, -1px 1px 0 #D9DFF5, 1px 1px 0 #D9DFF5; Text outline color */
     font-family: NanumBarunpen;
     font-size: 20px;

@@ -18,7 +18,10 @@
     font-family: 'NanumBarunpen';
     src: url('/static/fonts/NanumBarunpenR.ttf') format('truetype');
 }
-
+@font-face {
+  font-family: 'Heiti';
+  src: url('/static/fonts/STHeitiTC_Medium.ttf') format('truetype');
+}
 
 
 /* mypage */

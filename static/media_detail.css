@@ -16,6 +16,9 @@
     border: 2px solid #96FC72;
     position: relative;
 }
+.hanja-font {
+    font-family: 'Heiti'; /* 한자용 글꼴 설정 */
+}
 /* 리뷰 작성 폼 */
 .review-container {
     display: flex;
@@ -56,6 +59,7 @@
     color: #C0DBB6;
     font-family: 'NanumBarunpen';
     text-decoration: none;
+    font-size: 20px;
 }
 .review-content:hover{
     color: #C0DBB6;
@@ -67,21 +71,16 @@
 }
 .review-body{
     background-color: #2C2E34; 
-    /* border:1px solid #96FC72; */
     border-top: 1px solid #96FC72;
 }
 .poster-image {
     position: relative;
     margin-right: 20px; /* 이미지와 오른쪽 요소 사이 간격 */
 }
-
 .poster-image img {
-    /* width: 600px;
-    height: 900px; */
     width: 400px;
     height: 600px;
 }
-
 .media_title{
     color: #96FC72;
     /* 테두리 효과 */
@@ -89,7 +88,7 @@
     font-weight: bolder;
     letter-spacing: 3px;
     padding: 5px 0 10px 0;
-    font-family: NanumBarunpen;
+    font-family: NanumBarunpen, Heiti;
 }
 .movie-info {
     background-color: #2C2E34;
@@ -99,7 +98,6 @@
 .movie-info h1, .movie-info h3, .movie-info h5 {
     margin: 0;
 }
-
 .genres {
     display: flex;
     align-items: center;

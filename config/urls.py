@@ -24,13 +24,13 @@ from review.views import media_rating
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('common/', include('common.urls', namespace='common')),  # 수정된 부분
-    path('moochu/', include('moochu.urls', namespace='moochu')),  # 수정된 부분
+    path('common/', include('common.urls', namespace='common')),
+    path('moochu/', include('moochu.urls', namespace='moochu')),  
     path('accounts/', include('allauth.urls')),
     path('accounts/confirm-email/<str:key>/', ConfirmEmailView.as_view(), name='account_confirm_email'),
-    path('mypage/', include('mypage.urls', namespace='mypage')),  # 수정된 부분
-    path('board/', include('board.urls', namespace='board')),  # 수정된 부분
-    path('search/', include('search.urls', namespace='search')), # 수정된 부분 (07/11)
+    path('mypage/', include('mypage.urls', namespace='mypage')), 
+    path('board/', include('board.urls', namespace='board')),  
+    path('search/', include('search.urls', namespace='search')), 
     path('review/', include('review.urls', namespace='review')), 
     
 ]

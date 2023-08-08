@@ -6,7 +6,7 @@ from common.models import User
 class Review(models.Model):
     writer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviewer', default=None)
     content = models.CharField(max_length=1000)
-    create_date = models.DateField(auto_now_add=True)
+    create_date = models.DateTimeField(auto_now_add=True)
     modify_date = models.DateTimeField(null=True, blank=True)
     voter = models.ManyToManyField(User, related_name='voter_review') # 추천수
     n_hit = models.PositiveIntegerField(default=0) # 조회수

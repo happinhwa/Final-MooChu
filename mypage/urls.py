@@ -10,6 +10,7 @@ urlpatterns = [
     path('<str:nickname>/', views.home, name="home"),
                 ## 인생작 추가 및 삭제 
     path('<str:nickname>/Toplist/', views.Toplist, name="Toplist"),
+    path('<str:nickname>/Toplist/delete', views.top_del, name="delete"),
     
     ## 찜 
     path('<str:nickname>/mylist/', views.mylist, name="mylist"),

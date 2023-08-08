@@ -3,11 +3,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* padding: 0 20px; */
     width: 100%;
     position: sticky;
     top: 0;
-    /* border-bottom: #FCA472 solid 5px; */
 }
 
 .nav-logo img {
@@ -32,12 +30,10 @@
 }
 
 .nav-links li {
-  /* margin-left: 20px; */
   margin-right: 5px;
 }
 /* 메뉴(카테고리) 기본 디자인 */
 .nav-links a {
-  /* font-family: 'Helvetica'; */
   font-family: NanumBarunpen;
   color: #96FC72;
   text-decoration: none;
@@ -90,10 +86,10 @@ li {
 }
 
 .nav-link1{
-  font-family: 'Chonburi';
+  font-family: 'NanumBarunpen';
   color: #96FC72;
   text-decoration: none;
-  font-size: 15px;
+  font-size: 16px;
 }
 .nav-link1:hover{
   color: white;
@@ -182,8 +178,8 @@ li {
 
 
 .dropdown-menu {
-  background-color: #2C2E34; /* 원하는 배경 색상 코드 입력 */
-  color: #96FC72; /* 글자 색상 코드 입력 */
+  background-color: #2C2E34;
+  color: #96FC72;
   text-align: center;
   padding: 10px;
   margin-top: 10px;

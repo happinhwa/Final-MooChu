@@ -329,7 +329,7 @@ body {
   /* border: 1px solid #ccc; */
   border-radius: 5px;
   margin-top: 15px;
-  display: inline-block; /* 추가 */
+  display: inline-block;
   margin-right:27px;
 }
 
@@ -427,29 +427,6 @@ body {
 
 
 /* 방명록에 해당하는 css */
-/* .profile-card {
-  flex-direction: column;
-  align-items: center;
-  height: 200px;
-  width: 200px;
-  padding: 10px;
-  border-radius: 5px;
-  margin-top: 15px;
-  display: inline-block; 
-  margin-right:1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.profile-card-text {
-  font-weight: bold;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
-  font-size: 15px;
-} */
 .delete-button {
   background-color: #FCA472;
   color: #fff;
@@ -498,11 +475,6 @@ body {
 .span-note:hover{
   color:#FF8540;
 }
-/* .guest-content{
-  padding: 1.25rem 0;
-  display: flex;
-  align-items: center;
-} */
 
 .no-note{
   font-family: NanumBarunpen;

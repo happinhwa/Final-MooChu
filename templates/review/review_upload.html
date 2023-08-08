@@ -1,27 +1,35 @@
 {% extends 'base.html' %}
 {% block title %}review{% endblock %}
 {% load static %}
+{% load hanja_filter %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'review.css' %}">
-<style>
 
-</style>
 
     <div class="container">
         
         <h5 class="border-bottom pb-2" style="color:white;">
-            <span style="font-size: 30px; color: #96FC72">{{ movie.titleKr }}&nbsp;&nbsp</span>
-        리뷰 작성</h5>
+            {% if movie.titleKr|hanja_style %}
+                <span style="font-size: 30px; color: #96FC72">{{ movie.titleKr|hanja_style|safe }}</span> <!-- 한자 부분에 한자용 글꼴 적용 -->
+            {% else %}
+                <span style="font-size: 30px; color: #96FC72">{{ movie.titleKr|safe }}</span> <!-- 한글 부분은 일반 글꼴 적용 -->
+            {% endif %}
+            &nbsp;리뷰 작성
+        </h5>
 
         <div class="movie-container">
             <div class="poster-image">
-                <img src="{{ movie.posterImageUrl }}" alt="Movie Poster">
+                {% if movie.posterImageUrl %}
+                    <img src="{{ movie.posterImageUrl }}" alt="{{ movie.titleKr }} 포스터">
+                {% else %}
+                    <img src="{% static 'images/poster.png' %}" alt="기본 사진">
+                {% endif %}
             </div>
             <div class="movie-info">
             <form method="post" class="post-form">
                 {% csrf_token %}
-                <!-- 오류표시 Start -->
+                <!-- 오류표시 -->
                 {% if form.errors %}
                     <div class="alert alert-danger" role="alert">
                     {% for field in form %}
@@ -32,7 +40,6 @@
                     {% endfor %}
                     </div>
                 {% endif %}
-                <!-- 오류표시 End -->
                 <div class="form-group movie-info">
                     <textarea class="form-control" name="content"
                             id="content" rows="22">{{ form.content.value|default_if_none:'' }}</textarea>

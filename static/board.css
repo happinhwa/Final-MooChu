@@ -39,18 +39,6 @@ input[type=submit] {
     background-color: white;
     font-family: 'NanumBarunpen';
 }
-/* 
-.btn-recommend{
-    background-color: transparent;
-    border-color: #FCA472;
-    border-width: 1px;
-    font-family: 'NanumBarunpen';
-}
-.btn-recommend:hover{
-    color:#2C2E34;
-    background-color: #D9DFF5;
-    font-family: 'NanumBarunpen';
-} */
 
 h3 {
     color: #FCA472;
@@ -90,7 +78,7 @@ h3 > a:hover{
 
 table {
     table-layout: fixed;
-    width: 100%; /* Set the desired width for the table */
+    width: 100%; 
 }
 
 th.col-num,
@@ -249,7 +237,7 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
 }
 
 .vote {
-    color: #FCA472; /* Text color */
+    color: #FCA472; 
     /* text-shadow: -1px -1px 0 #D9DFF5, 1px -1px 0 #D9DFF5, -1px 1px 0 #D9DFF5, 1px 1px 0 #D9DFF5; Text outline color */
     font-family: NanumBarunpen;
     font-size: 20px;
@@ -294,8 +282,6 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
     background-color: #2C2E34; 
     border:1px solid #FCA472;
 }
-
-
 
 .btn-board{
     color:#D9DFF5;

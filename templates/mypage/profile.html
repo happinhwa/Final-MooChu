@@ -30,7 +30,6 @@
     </div>
 
                 <!-- 소개글 밑에 나오는 구성 -->
-            <!-- 팔로우 버튼을 넣으면 어떨지 고민중 -->
       <br />   
       {% if writer.id != master.id %}
       {% if allow %}     
@@ -64,12 +63,9 @@
           xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
         },
         success: function(response) {
-          // 성공적인 응답을 처리하세요
-          // console.log('팔로우 취소되었습니다.');
           location.reload();
         },
         error: function(xhr, status, error) {
-          // 에러 응답을 처리하세요
           console.error('팔로우 취소에 실패했습니다:', error);
         }
       });

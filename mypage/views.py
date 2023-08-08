@@ -9,7 +9,6 @@ from moochu.models import Media
 from review.models import Review, Review_comment, MyList
 from collections import OrderedDict
 
-# Create your views here.
 
 ## 마이페이지에 공통으로 보낼 데이터 
 def profile_data(nickname, request):
@@ -47,7 +46,7 @@ def home(request, nickname):
     profile = profile_data(nickname, request)
 
     ## 이제 인생 명작 리스트 보내기
-    toplist = {"toplist":models.MyToplist.objects.filter(writer=profile['master'].id)}
+    toplist = {"toplist":models.MyToplist.objects.filter(writer=profile['master'].id)[:5]}
     profile.update(toplist)
                     ## 코드 ## 
     return render(request, 'mypage/mypage.html', profile)
@@ -74,7 +73,7 @@ def reviews(request, nickname):
     profile.update(reviews)
     votes = {"votes": MovieRating.objects.filter(user=profile['master'].id)}
     profile.update(votes)
-    return render(request, 'mypage/reviews.html', profile)
+    return render(request, 'mypage/user_activity.html', profile)
 
 
 
@@ -141,7 +140,7 @@ def reviews_total(request, nickname):
     reviews = {"reviews": Review.objects.filter(writer_id=profile['master'].id)}
         ## 평점 데이터도 같이 보내야함
     profile.update(reviews)
-    return render(request, 'mypage/review_total.html', profile)
+    return render(request, 'mypage/reviews.html', profile)
 
 
 ## 사용자의 평점 전체 list
@@ -151,7 +150,7 @@ def votes(request, nickname):
                 ######## 평점 데이터 보내야 함 #############
     votes = {"votes": MovieRating.objects.filter(user=profile['master'].id)}
     profile.update(votes)
-    return render(request, 'mypage/vote_total.html', profile)
+    return render(request, 'mypage/votes.html', profile)
 
 
 
@@ -181,6 +180,38 @@ def follower(request, follow_id):
         
         return Response(status=200)
     
-@api_view(['GET, POST, DELETE'])
+@api_view(['GET', 'POST'])
+
 def Toplist(request, nickname):
-    pass
+    if request.method=='GET':
+
+        profile = profile_data(nickname, request)
+        reviews = {"reviews": Review.objects.filter(writer_id=profile['master'].id)}
+
+        toplist_media_ids = set([top.media_id for top in models.MyToplist.objects.filter(writer=profile['master'].id)])
+
+        filtered_reviews = reviews["reviews"].exclude(media_id__in=toplist_media_ids)
+
+        reviews.update({"reviews": filtered_reviews})
+
+        profile.update(reviews)
+
+        toplist = {"toplist": models.MyToplist.objects.filter(writer=profile['master'].id)}
+        profile.update(toplist)
+        return render(request, 'mypage/Toplist.html', profile)
+    
+    elif request.method=='POST':
+        # 사용자가 선택한 영화 id 리스트를 POST 데이터에서 추출합니다.
+        selected_medias = request.POST.getlist("media_id")
+
+        for media in selected_medias:
+            models.MyToplist.objects.create(writer=request.user, media_id=media)
+
+        return redirect('mypage:home', nickname)
+    
+def top_del(request, nickname):
+    if request.method == 'POST':
+        selected_medias = request.POST.getlist("media_id")
+        for media in selected_medias:
+                models.MyToplist.objects.get(writer=request.user, media_id=media).delete()
+        return redirect('mypage:home', nickname)

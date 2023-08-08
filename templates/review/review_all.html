@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}최신 리뷰 목록{% endblock %}
 {% load review_movie %}
+{% load hanja_filter %}
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'media_detail.css' %}">
@@ -12,52 +13,55 @@
         최신 리뷰 목록
     </div>
     {% if reviews %}
-        {% for review in reviews %}
-            <div class="card my-3" style="border: 1px solid transparent; background-color: transparent;">
-                <div class="card-body review-body">
-                    <div class="d-flex justify-content-front">
-                        {% if review.modify_date %}
+    {% for review in reviews %}
+        <div class="card my-3" style="border: 1px solid transparent; background-color: transparent;">
+            <div class="card-body review-body d-flex justify-content-between">
+                <div style="width:15%; text-align: center;">
+                    <a href="{% url 'moochu:movie_detail' movie_id=review.media_id %}" style="text-decoration: none;">
+                        {% if review.media_id %}
+                            {% with poster_url="https://storage.googleapis.com/end_moochu/"|add:review.media_id|add:".jpg" %}
+                                {% if poster_url|url_exists %}
+                                    <img src="{{ poster_url }}" style="height: 200px; margin: auto;" alt="{{ movie.titleKr }}">
+                                {% else %}
+                                    <img src="{% static 'images/poster.png' %}" style="height: 200px; margin-left: auto;" alt="기본 사진">
+                                {% endif %}
+                            {% endwith %}
+                        {% endif %}
+                        
+                        <div style="color:#96FC72;">
+                            {% for movie in movie %}
+                                    {% if movie.id == review.media_id %}
+                                        {% if movie.titleKr|is_hanja %}
+                                            {{ movie.titleKr|hanja_style|safe }}
+                                        {% else %}
+                                            {{ movie.titleKr|truncatechars:15|safe }}
+                                        {% endif %}  
+                                    {% endif %}
+                            {% endfor %}
+                        </div>
+                    </a>
+                </div>
+                <div style="width: 85%;">
+                    {% if review.modify_date %}
                         <div class="badge badge-review d-flex align-items-center">
                             <div class="mr-2" style="font-size: 15px;"><a class="nickname" href="{% url 'mypage:home' nickname=review.writer.nickname %}">@{{ review.writer.nickname }}</a></div>
                             <div style="color: lightgray;">{{ review.modify_date }} (수정됨)</div>
                         </div>
-                        {% else %}
+                    {% else %}
                         <div class="badge badge-review d-flex align-items-center">
                             <div class="mr-2" style="font-size: 15px;"><a class="nickname" href="{% url 'mypage:home' nickname=review.writer.nickname %}">@{{ review.writer.nickname }}</a></div>
                             <div style="color: lightgray;">{{ review.create_date }}</div>
                         </div>
-                        {% endif %}
+                    {% endif %}
+                    <div class="card-text review-content" style="margin-top: 10px; margin-left: 5px;">
+                        <a class="review-content" href="{% url 'review:review_detail' movie_id=review.media_id review_id=review.id %}">{{ review.content|linebreaksbr|text_cut|safe }}</a>
                     </div>
-                    <div class="card-text review-content" style="margin-top: 10px; margin-left: 5px; display: flex; justify-content: space-between;">
-                        <div style="width:20%;">
-                            <img src="https://storage.googleapis.com/end_moochu/{{review.media_id}}.jpg">
-                            
-                            {% with movie=movie_data|get_item:review.media_id %}
-                               
-                                    <img src="{{ movie.posterImageUrl }}" alt="{{ movie.titleKr }}">
-                                
-                            {% endwith %}
-                            
+                    {% if request.user == review.writer %}
+                        <div class="d-flex justify-content-end"> <!-- 수정, 삭제 버튼 오른쪽 정렬 -->
+                            <a href="{% url 'review:review_edit' review.media_id review.id %}" class="btn btn-sm btn-review1">수정</a>
+                            <a href="#" class="delete btn btn-sm btn-review1" data-uri="{% url 'review:review_delete' review.id %}">삭제</a>
                         </div>
-                        <div style="width:80%;">
-                            <div class="card-text review-content" style="width: 75%; display: flex; justify-content: space-between;">
-                    
-                                {% if review.content|length > 70 %}
-                                    <a class="review-content" href="{% url 'review:review_detail' movie_id=review.media_id review_id=review.id %}">
-                                {% else %}
-                                    <a class="review-content" href="{% url 'review:review_detail' movie_id=review.media_id review_id=review.id %}">{{ review.content|linebreaksbr }}</a>
-                                {% endif %}
-                        
-                                    {% if request.user == review.writer %}
-                                    <div>
-                                        <a href="#" class="btn btn-sm btn-review2">수정</a>
-                                        <a href="#" class="delete btn btn-sm btn-review2" data-uri="#">삭제</a>
-                                    </div>
-                                    {% endif %}
-                            </div>
-                        </div>
-                    </div>
-
+                    {% endif %}
                     <div class="my-3">
                         <a href="#" class="btn btn-sm">
                             <img src="{% static 'comment.png' %}" style="max-height: 30px;"> 
@@ -66,10 +70,11 @@
                             <img src="{% static 'thumbs.png' %}" style="max-height: 30px;">
                         </a>
                     </div>
-
+                </div>
             </div>
-        {% endfor %}
-    {% else %}
+        </div>
+    {% endfor %}
+{% else %}
     <div class="card my-3" style="border: 1px solid transparent; background-color: transparent;">
         <div class="card-body review-body">
             <div class="d-flex justify-content-front">
@@ -77,8 +82,37 @@
             </div>
         </div>
     </div>
-    {% endif %}
+{% endif %}
 </div>
 
-
+{% endblock %}
+{% block script %}
+<script type='text/javascript'>
+    $(document).ready(function() {
+        $(".delete").on('click', function() {
+            if (confirm("리뷰를 정말로 삭제하시겠습니까?")) {
+                location.href = $(this).data('uri');
+            }
+        });
+        
+        $(".recommend").on('click', function() {
+            var errorMessage = "";
+            if (confirm("정말로 추천하시겠습니까?")) {
+                if ($(this).data('voted')) {
+                    errorMessage = "이미 추천했습니다.";
+                } else if ($(this).data('is-writer')) {
+                    errorMessage = "본인 글에는 추천할 수 없습니다.";
+                } else {
+                    location.href = $(this).data('uri');
+                }
+            }
+            
+            if (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    });
+</script>
+    
+    
 {% endblock %}

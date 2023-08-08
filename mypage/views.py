@@ -10,8 +10,6 @@ from review.models import Review, Review_comment, MyList
 from collections import OrderedDict
 
 
-# Create your views here.
-
 ## 마이페이지에 공통으로 보낼 데이터 
 def profile_data(nickname, request):
     ## 현재 로그인한 사용자
@@ -190,16 +188,12 @@ def Toplist(request, nickname):
         profile = profile_data(nickname, request)
         reviews = {"reviews": Review.objects.filter(writer_id=profile['master'].id)}
 
-        # Get list of media ids in toplist
         toplist_media_ids = set([top.media_id for top in models.MyToplist.objects.filter(writer=profile['master'].id)])
 
-        # Filter out reviews with media ids in the toplist
         filtered_reviews = reviews["reviews"].exclude(media_id__in=toplist_media_ids)
 
-        # Update reviews with the filtered reviews list
         reviews.update({"reviews": filtered_reviews})
 
-        # Update profile dictionary with reviews
         profile.update(reviews)
 
         toplist = {"toplist": models.MyToplist.objects.filter(writer=profile['master'].id)}

@@ -113,12 +113,15 @@ def movie_selection(request):
 
         return render(request, 'moochu/mainpage.html')
     else: # 처음에 post요청이 없을때 보여주는 용. 
+        client = MongoClient('mongodb://final:123@34.22.93.125:27017/')
+        db = client['final']
+        collection = db['movies']
         select_genres = SelectedGenre.objects.filter(user=request.user).values_list('genre', flat=True)  # 가져온 필드를 사용하여 장르를 선택
         select_genre_names = [get_genre_name(int(g)) for g in select_genres]  # 선택된 장르 번호를 이름으로 매핑
         # 수정할 부분: 선택한 장르와 관련된 영화
         pipeline = [
             {"$match": {"genres": {"$elemMatch": {"$in": select_genre_names}}, "indexRating.score": {"$gte": 73.2}}},
-            {"$sample": {"size": 30}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
+            {"$sample": {"size": 1000}}
         ]
 
         movies = Media.collection.aggregate(pipeline)

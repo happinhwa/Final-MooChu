@@ -13,7 +13,7 @@
         {% for movie in movies %}
             <li class="movie">
                 <div>
-                    <img src="{% static movie.title|add:'.jpg' %}" class="poster">
+                    <img src="https://storage.googleapis.com/end_moochu/{{ movie.m_id }}.jpg" class="poster">
                 </div>
                 <div> 
                     <div style="display: flex; flex-direction: column;">

@@ -2,19 +2,11 @@
 {% block title %}Review{% endblock %}
 {% load static %}
 {% load board_filter %}
+{% load hanja_filter %}
+
+
 {% block content %}
 <link rel="stylesheet" href="{% static 'review.css' %}">
-
-<style>
-    .image-title-container {
-        display: flex;
-        align-items: center;
-    }
-
-    .image-container {
-        margin-right: 10px; 
-    }
-</style>
 
 
 <div class="container">
@@ -25,11 +17,17 @@
     <div class="post-title">
         <div class="image-title-container">
             <div class="image-container">
-                <img src="{{ movie.posterImageUrl }}" style="height: 100px;" alt="{{ movie.titleKr }}">
+                {% if movie.posterImageUrl %}
+                    <img src="{{ movie.posterImageUrl }}" style="height: 100px;" alt="{{ movie.titleKr }} 포스터">
+                {% else %}
+                    <img src="{% static 'images/poster.png' %}" style="height: 100px;" alt="기본 사진">
+                {% endif %}
             </div>
-            <div class="title-container">
-                {{ movie.titleKr }}
-            </div>
+            {% if movie.titleKr|hanja_style %}
+                <div class="title-container">{{ movie.titleKr|hanja_style|safe }}</div> <!-- 한자 부분에 한자용 글꼴 적용 -->
+            {% else %}
+                <div class="title-container">{{ movie.titleKr|safe }}</div>
+            {% endif %}
         </div>
     </div>
     
@@ -52,7 +50,7 @@
 
     <!-- 게시판 글 내용 -->
     <div class="content">
-        {{ review.content|linebreaksbr }}      <!-- linebreaksbr: enter인식해서 보여줌 -->
+        {{ review.content|linebreaksbr|safe }}      <!-- linebreaksbr: enter인식해서 보여줌 -->
     </div>
 
     <div class="row my-3">
@@ -64,10 +62,10 @@
                   {{ Review.voter.count }}
             </div> -->
     
-            {% if request.user == Review.writer %}
+            {% if request.user == review.writer %}
             <div class="my-3">
-                <a href="#" class="btn btn-board btn-sm">수정</a>
-                <a href="#" class="delete btn btn-board btn-sm" data-uri="#">삭제</a>
+                <a href="{% url 'review:review_edit' review.media_id review.id %}" class="btn btn-sm btn-review1">수정</a>
+                <a href="#" class="delete btn btn-sm btn-review1" data-uri="{% url 'review:review_delete' review.id %}">삭제</a>
             </div>
             {% endif %}    
         </div>

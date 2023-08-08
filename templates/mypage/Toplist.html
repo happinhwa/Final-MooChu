@@ -10,23 +10,6 @@
       border: 3px solid  #96FC72;
     }
 </style>
-s
-
-{% block scripts %}
-<script>
-function toggleSelection(event, media_id) {
-    const checkbox = document.getElementById(`checkbox-${media_id}`);
-    const img = event.target;
-    checkbox.checked = !checkbox.checked;
-
-    if (checkbox.checked) {
-        img.classList.add('selected');
-    } else {
-        img.classList.remove('selected');
-    }
-}
-</script>
-{% endblock %}
 
 <div class="bookcover">
     <div class="bookdot">
@@ -99,3 +82,19 @@ function toggleSelection(event, media_id) {
 </div> <!-- bookcover --> 
 {% endblock %}
 
+
+{% block scripts %}
+<script>
+function toggleSelection(event, media_id) {
+    const checkbox = document.getElementById(`checkbox-${media_id}`);
+    const img = event.target;
+    checkbox.checked = !checkbox.checked;
+
+    if (checkbox.checked) {
+        img.classList.add('selected');
+    } else {
+        img.classList.remove('selected');
+    }
+}
+</script>
+{% endblock %}

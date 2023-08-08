@@ -1,16 +1,27 @@
 from django.shortcuts import render, redirect
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator
 from bson import ObjectId
-from django.http import Http404, JsonResponse,HttpResponse
 from django.db.models import Avg
 from common.models import MovieRating
 from review.models import Review
 from .models import Media
 from collections import OrderedDict
+<<<<<<< HEAD
 import redis
 import random
+=======
+from datetime import datetime
+from collections import defaultdict
+import redis
+>>>>>>> f3b5f9197b1dbd715743dc25537a1c3a3f4ac705
 
 # Create your views here.
+def convert_to_movie_dict(media_data):
+    return {
+        'id': str(media_data["_id"]),
+        'title': media_data["title_kr"]
+    }
+
 def convert_to_movie_dict(media_data):
     return {
         'id': str(media_data["_id"]),
@@ -90,6 +101,7 @@ def mainpage(request):
         
         recent.append(data)
                                                 ## 추천 결과 미디어 랜덤으로 20개 
+<<<<<<< HEAD
     try:
         r3 = redis.StrictRedis(host='34.22.93.125', port=6379, db=3)
         if r3.lrange(str(request.user.id), 1, 100):
@@ -104,13 +116,22 @@ def mainpage(request):
         recommendation = [(item.decode('utf-8')) for item in items]
     except:
         recommendation= None
+=======
+    r = redis.StrictRedis(host='34.22.93.125', port=6379, db=2)
+    
+
+>>>>>>> f3b5f9197b1dbd715743dc25537a1c3a3f4ac705
     context = {"top1": top1,
                "top2": top2, 
                "reviews": reviews,
                'top1_review':top1_review,
                'combined_data':combined_data,
+<<<<<<< HEAD
                'recent': recent,
                 'recommendation':recommendation }
+=======
+               'recent': recent }
+>>>>>>> f3b5f9197b1dbd715743dc25537a1c3a3f4ac705
     
     
     return render(request, 'moochu/mainpage.html', context)
@@ -136,7 +157,7 @@ def data_change(request,data):
 
 
 def ott_media_list(request, ott, media_type):
-    ott_service = ['All', 'Netflix', 'Tving', 'Watcha', 'CoupangPlay', 'Wavve', 'Disney', 'Apple', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus', 'CineFox']
+    ott_service = ['All', 'Netflix', 'Tving', 'Watcha', 'Coupang', 'Wavve', 'Disney', 'Apple', 'Google', 'Laftel', 'Serieson', 'Primevideo', 'UPlus', 'CineFox']
 
     genres=['SF', '가족', '공연', '공포(호러)', '다큐멘터리', '드라마', '멜로/로맨스', '뮤지컬', '미스터리', '범죄',
                    '서부극(웨스턴)', '서사', '서스펜스', '성인', '스릴러', '시사/교양', '애니메이션', '액션', '어드벤처(모험)',
@@ -145,15 +166,20 @@ def ott_media_list(request, ott, media_type):
     if ott=='All':
         pipeline = [
             {"$match": {"media_type": media_type, "indexRating.score": {"$gte": 73.2}}},
-            {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
+            {"$sample": {"size": 1000}} 
         ]
 
         data = Media.collection.aggregate(pipeline)
 
     else:
         pipeline = [
+<<<<<<< HEAD
             {"$match": {"media_type": media_type,"OTT": {"$elemMatch": {"$in": ott}}, "indexRating.score": {"$gte": 73.2}}},
             {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
+=======
+            {"$match": {"media_type": media_type,"OTT":ott, "indexRating.score": {"$gte": 73.2}}},
+            {"$sample": {"size": 1000}} 
+>>>>>>> f3b5f9197b1dbd715743dc25537a1c3a3f4ac705
         ]
 
         data = Media.collection.aggregate(pipeline)
@@ -173,20 +199,18 @@ def ott_media_list(request, ott, media_type):
 
 
 def genre_filter(request, ott, media_type):
-    ott_service = ['All', 'Netflix', 'Tving', 'Watcha', 'CoupangPlay', 'Wavve', 'Disney', 'Apple', 'Google', 'Laftel', 'Naver', 'Primevideo', 'UPlus', 'CineFox']
+    ott_service = ['All', 'Netflix', 'Tving', 'Watcha', 'Coupang', 'Wavve', 'Disney', 'Apple', 'Google', 'Laftel', 'Serieson', 'Primevideo', 'UPlus', 'CineFox']
 
     genres=['SF', '가족', '공연', '공포(호러)', '다큐멘터리', '드라마', '멜로/로맨스', '뮤지컬', '미스터리', '범죄',
                    '서부극(웨스턴)', '서사', '서스펜스', '성인', '스릴러', '시사/교양', '애니메이션', '액션', '어드벤처(모험)',
                    '예능', '음악', '전쟁', '코미디', '키즈', '판타지']
     
-    # 선택된 장르들을 가져옵니다.
     selected_genres = request.GET.getlist('genres')
 
-    # 선택된 장르에 해당하는 영화를 필터링합니다.
     if ott=='All':
         pipeline = [
             {"$match": {"genres": {"$elemMatch": {"$in": selected_genres}}, "indexRating.score": {"$gte": 73.2}}},
-            {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
+            {"$sample": {"size": 1000}}  
         ]
 
 
@@ -200,7 +224,7 @@ def genre_filter(request, ott, media_type):
     else:
         pipeline = [
             {"$match": {"genres": {"$elemMatch": {"$in": selected_genres}}, "indexRating.score": {"$gte": 73.2}}},
-            {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
+            {"$sample": {"size": 1000}} 
         ]
 
 
@@ -226,9 +250,7 @@ def genre_filter(request, ott, media_type):
 
 # 영화 상세 페이지 
 def movie_detail(request, movie_id):
-    ## TV 또는 MOVIE에 맞게 media 리스트 저장
     data = list(Media.collection.find({"_id": ObjectId(movie_id)}))
-    ## 필요한 데이터 형식으로 변형
     data =[
         {
             'id': str(movie['_id']),
@@ -257,10 +279,68 @@ def movie_detail(request, movie_id):
             'reviews': reviews,
             'review_count': review_count,
             'user_review': user_review,
+            'movie_id': movie_id,
         }
 
     return render(request, 'moochu/media_detail.html', context)
 
+
+
+
+
+def coming_next(request):    
+    data = list(Media.collection.find({"coming": "TRUE"}, {"_id": 1, "poster_image_url": 1, "title_kr": 1, "released_At": 1, "OTT": 1}))
+    today = datetime.today().date()
+
+    
+    # Dday 정렬하기
+    grouped_movies = defaultdict(list)
+    for movie in data:
+        release_date = movie.get('released_At')
+        if release_date and '-' in release_date:
+            date_format = "%Y-%m-%d"  
+            try:
+                release_date = datetime.strptime(release_date, date_format).date()
+            except ValueError:
+                continue
+            
+            d_day = (release_date - today).days
+            
+            if d_day < 0 or d_day > 14:  # 14일 기준으로 보여줌
+                continue
+            
+            movie['Dday'] = d_day
+            movie['id'] = str(movie.pop('_id'))  # _id to id
+            grouped_movies[d_day].append(movie)
+    
+    # 같은 제목의 경우 ott 추가 및 제외
+    for day, movies in grouped_movies.items():
+        deduplicated_movies = []
+        merged_ott = defaultdict(list)
+        movie_titles = {}
+        
+        for movie in movies:
+            key = (re.sub(r'[^\w\s]', '', movie['title_kr']).replace(' ', ''), movie['released_At']) # 정제된 title_kr 값을 사용, 공백 삭제
+            movie_titles[key] = movie
+            ott = movie['OTT']
+            if isinstance(ott, str):
+                ott = [ott]
+            elif not isinstance(ott, list):
+                continue
+            merged_ott[key].extend(ott)
+            
+        for key, movie in movie_titles.items():
+            movie['OTT'] = list(set(merged_ott[key]))
+            deduplicated_movies.append(movie)
+    
+    
+
+        deduplicated_movies = sorted(deduplicated_movies, key=lambda x: x['Dday'], reverse=True)
+   
+        grouped_movies[day] = deduplicated_movies
+    
+    sorted_groups = sorted(grouped_movies.items(), key=lambda x: x[0])
+    return render(request, 'moochu/coming_next.html', {'sorted_groups': sorted_groups})
 
 
 

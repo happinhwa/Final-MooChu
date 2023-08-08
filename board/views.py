@@ -14,9 +14,6 @@ def moobo(request):
 
 
 def detail(request, post_id):
-    """
-    게시판 글 내용 출력
-    """
     post = get_object_or_404(models.board, pk=post_id)
     voted = post.voter.filter(id=request.user.id).exists()
     is_writer = request.user == post.writer
@@ -49,9 +46,6 @@ def post(request):
 
 @login_required
 def post_edit(request, post_id):
-    """
-    게시판 글 수정
-    """
     post = get_object_or_404(models.board, pk=post_id)
     if request.user != post.writer:
         messages.error(request, '수정권한이 없습니다')
@@ -74,9 +68,6 @@ def post_edit(request, post_id):
 
 @login_required
 def post_delete(request, post_id):
-    """
-    게시판 글 삭제
-    """
     post = get_object_or_404(models.board, pk=post_id)
     if request.user != post.writer:
         messages.error(request, '삭제권한이 없습니다')
@@ -96,9 +87,6 @@ def comment(request, post_id):
 
 @login_required
 def comment_create(request, post_id):
-    """
-    게시글 작성
-    """
     post = get_object_or_404(models.board, pk=post_id)
     if request.method == "POST":
         form = forms.comment_form(request.POST)
@@ -119,9 +107,6 @@ def comment_create(request, post_id):
 
 @login_required
 def comment_edit(request, comment_id):
-    """
-    게시글 댓글수정
-    """
     comment = get_object_or_404(models.comment, pk=comment_id)
     if request.user != comment.writer:
         messages.error(request, '수정권한이 없습니다')
@@ -143,9 +128,6 @@ def comment_edit(request, comment_id):
 
 @login_required
 def comment_delete(request, comment_id):
-    """
-    게시글 댓글삭제 
-    """
     comment = get_object_or_404(models.comment, pk=comment_id)
     if request.user != comment.writer:
         messages.error(request, '삭제권한이 없습니다')
@@ -158,9 +140,6 @@ def comment_delete(request, comment_id):
 
 @login_required
 def vote_post(request, post_id):
-    """
-    게시글 추천
-    """
     post = get_object_or_404(models.board, pk=post_id)
     if request.user == post.writer:
         pass # 오류메세지는 js로 작성 post_detail.html 맨 아래쪽 script 코드 참조
@@ -174,9 +153,6 @@ def vote_post(request, post_id):
 
 @login_required
 def vote_comment(request, comment_id):
-    """
-    댓글 추천
-    """
     comment = get_object_or_404(comment, pk=comment_id)
     if request.user == comment.writer:
         pass # 오류메세지는 js로 작성 post_detail.html 맨 아래쪽 script 코드 참조

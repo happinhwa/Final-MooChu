@@ -8,7 +8,38 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-def get_movie_data(movie_id):
+
+# 최신 리뷰 리스트 기본(최신순)
+def review(request):
+    reviews = Review.objects.order_by('-create_date')
+    data = []
+
+    for review in reviews:
+        movie = get_movie_data(review.media_id)
+        if movie:
+            data.append({
+                'id': str(movie['_id']),
+                'posterImageUrl': movie['poster_image_url'],
+                'titleKr': movie['title_kr'],
+            })
+
+    context = {
+        'reviews': reviews,
+        'movie': data,
+    }
+
+    return render(request, 'review/review_all.html', context)
+
+
+def get_movie_data(media_id):
+    movie = Media.collection.find_one({"_id": ObjectId(media_id)})
+    return movie
+
+
+# 해당 영화 리뷰 리스트 기본(최신순)
+def review_by_id(request, movie_id):
+    reviews = Review.objects.filter(media_id=str(movie_id)).order_by('-create_date')
+    
     data = list(Media.collection.find({"_id": ObjectId(movie_id)}))
     data =[
         {
@@ -18,43 +49,13 @@ def get_movie_data(movie_id):
         }
         for movie in data
     ]
-
-    return data
-
-# 리뷰 리스트 기본(최신순)
-def review(request):
-    reviews = Review.objects.order_by('-create_date')
-
-    movie_data = {}
-    for review in reviews:
-        movie_data[review.media_id] = get_movie_data(review.media_id)
-   
-
     context = {
         'reviews': reviews,
-        'movie_data': movie_data,
-    }
-
-    
-    return render(request, 'review/review_all.html', context)
-
-
-# 리뷰 리스트 기본(최신순)
-def review_by_id(request, movie_id):
-    reviews = Review.objects.filter(media_id=str(movie_id)).order_by('-create_date')
-    
-    data = list(Media.collection.find({"_id": str(movie_id)}))
-    data =[
-        {
-            'id': str(movie['_id']),
-            'posterImageUrl': movie['poster_image_url'],
-            'titleKr': movie['title_kr'],
+        'movie': data[0],
+        'movie_id': movie_id,
         }
-        for movie in data
-    ]
-
-    return data
-
+    
+    return render(request, 'review/review_list.html', context)
 
 
 def review_detail(request, movie_id, review_id):
@@ -102,7 +103,7 @@ def review_upload(request, movie_id):
             review.writer = request.user
             review.media_id = movie_id
             review.save()
-            return redirect('review:review', {'movie_id':movie_id})
+            return redirect('moochu:movie_detail', movie_id=review.media_id)
     else:
         form = forms.review_form()
 
@@ -125,15 +126,60 @@ def review_upload(request, movie_id):
 
 
 
+@login_required
+def review_edit(request, movie_id, review_id):
+    review = get_object_or_404(models.Review, pk=review_id)
+    
+    if request.user != review.writer:
+        return redirect('moochu:movie_detail', movie_id=review.media_id)
+
+    if request.method == "POST":
+        form = forms.review_form(request.POST, instance=review)
+        if form.is_valid():
+            Review = form.save(commit=False)
+            Review.writer = request.user
+            Review.modify_date = timezone.now()
+            Review.save()
+            return redirect('moochu:movie_detail', movie_id=review.media_id)
+    else:
+        form = forms.review_form(instance=review)
+    
+    data = list(Media.collection.find({"_id": ObjectId(movie_id)}))
+    data =[
+        {
+            'id': str(movie['_id']),
+            'posterImageUrl': movie['poster_image_url'],
+            'titleKr': movie['title_kr'],
+        }
+        for movie in data
+    ]
+
+    context = {
+        'form': form,
+        'movie': data[0],
+    }
+    return render(request, 'review/review_upload.html', context)
+
+
+@login_required
+def review_delete(request, review_id):
+    review = get_object_or_404(models.Review, pk=review_id)
+    if request.user != review.writer:
+        return redirect('moochu:movie_detail', movie_id=review.media_id)
+
+    # 삭제 전 이전 페이지의 URL을 가져옴
+    previous_url = request.META.get('HTTP_REFERER')
+
+    review.delete()
+
+    # 이전 페이지로 리다이렉트
+    return redirect(previous_url)
 
 
 
 
 
-
-
-
-
+################################################################################################################
 
 def ajax_login_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
@@ -190,7 +236,6 @@ def media_rating(request, movie_id):
 
     
 
-    # Regular GET request, render the template with movie data
     context = {
         'movie': movie,
         'current_rating': current_rating,

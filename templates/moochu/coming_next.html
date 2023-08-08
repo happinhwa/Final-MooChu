@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Movie List{% endblock %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'coming_next.css' %}">
+
+<div class="container">
+    <div class="coming-movie-content">
+      <h1 class="coming-movie-content-head">개봉예정작</h1>
+      {% for d_day, movies in sorted_groups %}
+      <div class='coming-movie-groups'>
+        <div class='d-day-container'>
+          <h3 class='coming-movie-groups-head'>D - {{ d_day }}</h3>
+        </div>
+        <div class="slider-container">
+          <div class="slider-wrapper1">
+            <div class="images-row d-flex">
+              {% for movie in movies %}
+              <div class="coming-movie-card">
+                <a href="{% url 'moochu:movie_detail' movie_id=movie.id %}">
+                  {% if movie.poster_image_url %}
+                    <img class="coming-movie-card-img" src="{{ movie.poster_image_url }}" />
+                  {% else %}
+                    <img class="coming-movie-card-img" src="{% static 'images/ott_logo/moochu.png' %}" />
+                  {% endif %}
+                  <div class="coming-movie-card-bottom">
+                    {{ movie.title_kr }}
+                  </div>
+                  <div class="coming-movie-logo">
+                    <div class="logo-container">
+                      {% for ott in movie.OTT %}
+                      <img class="coming-movie-logo-img" src="{% static 'images/ott_logo/btn_squircle_'|add:ott|add:'.png' %}" alt="{{ ott }} logo">
+                      {% endfor %}
+                    </div>
+                  </div>
+                </a>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% if movies|length > 4 %}
+          <button class="slider-btn slider-btn-prev">&#8249;</button>
+          <button class="slider-btn slider-btn-next">&#8250;</button>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    const slideWidth = $('.images-row').width();
+  
+    $('.slider-btn-next').click(function() {
+      const wrapper = $(this).siblings('.slider-wrapper');
+      const scrollPosition = wrapper.scrollLeft();
+      wrapper.animate({ scrollLeft: scrollPosition + slideWidth }, 250);
+    });
+  
+    $('.slider-btn-prev').click(function() {
+      const wrapper = $(this).siblings('.slider-wrapper');
+      const scrollPosition = wrapper.scrollLeft();
+      wrapper.animate({ scrollLeft: scrollPosition - slideWidth }, 250);
+    });
+  });
+</script>
+{% endblock %}

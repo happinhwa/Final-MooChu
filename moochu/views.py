@@ -7,14 +7,112 @@ from common.models import MovieRating
 from review.models import Review
 from .models import Media
 from collections import OrderedDict
-# Create your views here.
+import redis
+import random
 
+# Create your views here.
+def convert_to_movie_dict(media_data):
+    return {
+        'id': str(media_data["_id"]),
+        'title': media_data["title_kr"]
+    }
 
 
 ## mainpage 함수
 def mainpage(request):
-    num=[2,3,4,5,6,7,8,9,10]
-    context={"num":num,}
+
+    # Redis 클라이언트 생성
+    r = redis.StrictRedis(host='34.22.93.125', port=6379, db=0)
+
+
+                                                  ## 오늘의 영화 TOP10 데이터 
+    # Redis에서 'popularity'에 해당하는 값을 가져옴
+    value = r.zrevrange('popularity', 0, -1, withscores=True)
+
+    # ByteArray를 디코드하여 문자열로 변환
+    value = [(item[0].decode('utf-8'), item[1]) for item in value]
+
+    # 첫 번째 값만 다른 변수에 저장
+    top1 = list(value[0])
+    data = Media.collection.find_one({'_id': ObjectId(top1[0])})
+    reviews = Review.objects.filter(media_id=str(data['_id'])).order_by('-create_date')
+    top1_review = reviews.first()
+    top1 ={
+            'id': str(data['_id']),
+            'title': data['title_kr'],
+            'synopsis': data['synopsis'],
+        }
+    
+    # 나머지 값들은 value에 저장
+    ranking = value[1:]
+    top2=[]
+    for media in ranking:
+        data = Media.collection.find_one({'_id': ObjectId(media[0])})
+        data ={
+            'id': str(data['_id']),
+            'title': data['title_kr'],
+            'synopsis': data['synopsis']
+        }
+        
+        top2.append(data)
+    
+                                                ## 최신 리뷰 데이터 들고오기 
+    reviews = Review.objects.order_by('-create_date')
+    combined_data = []
+
+    for review in reviews:
+        media_id = review.media_id
+        media_data = Media.collection.find_one({'_id': ObjectId(media_id)})
+        movie = convert_to_movie_dict(media_data)
+        
+        combined_review_movie_data = {
+            'movie': movie,
+            'review': review,
+        }
+        
+        combined_data.append(combined_review_movie_data)
+    
+
+
+                                                ## 최근 본 미디어 데이터 
+    value = r.lrange(str(request.user.id), 1, 10)
+
+    value = [(item.decode('utf-8')) for item in value]
+    print(value)
+    recent=[]
+    for media in value:
+        data = Media.collection.find_one({'_id': ObjectId(media)})
+        data ={
+            'id': str(data['_id']),
+            'title': data['title_kr'],
+            'synopsis': data['synopsis']
+        }
+        
+        recent.append(data)
+                                                ## 추천 결과 미디어 랜덤으로 20개 
+    try:
+        r3 = redis.StrictRedis(host='34.22.93.125', port=6379, db=3)
+        if r3.lrange(str(request.user.id), 1, 100):
+            value = r3.lrange(str(request.user.id), 1, 100)
+        else:
+            r2 = redis.StrictRedis(host='34.22.93.125', port=6379, db=2)
+            value = r2.lrange(str(request.user.id), 1, 100)
+
+
+        # 랜덤하게 20개 선택
+        items = random.sample(value, 20)
+        recommendation = [(item.decode('utf-8')) for item in items]
+    except:
+        recommendation= None
+    context = {"top1": top1,
+               "top2": top2, 
+               "reviews": reviews,
+               'top1_review':top1_review,
+               'combined_data':combined_data,
+               'recent': recent,
+                'recommendation':recommendation }
+    
+    
     return render(request, 'moochu/mainpage.html', context)
     
 
@@ -50,18 +148,11 @@ def ott_media_list(request, ott, media_type):
             {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
         ]
 
-        movies = Media.collection.aggregate(pipeline)
+        data = Media.collection.aggregate(pipeline)
 
-        # 중복제거
-        unique_movies = OrderedDict()
-        for movie in movies:
-            if movie['title_kr'] not in unique_movies:
-                unique_movies[movie['title_kr']] = movie
-        data = list(unique_movies.values())
-        
     else:
         pipeline = [
-            {"$match": {"media_type": media_type,"OTT":ott, "indexRating.score": {"$gte": 73.2}}},
+            {"$match": {"media_type": media_type,"OTT": {"$elemMatch": {"$in": ott}}, "indexRating.score": {"$gte": 73.2}}},
             {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
         ]
 

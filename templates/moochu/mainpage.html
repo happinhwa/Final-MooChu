@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 {% block title %}moochu{% endblock %}
 {% load static %}
-
+{% load hanja_filter %}
 {% block content %}
 <style>
-    body {
-  font-family: "나눔고딕", sans-serif;
+  .hanja-font {
+    font-family: 'Heiti'; /* 한자용 글꼴 설정 */
+  }
+  body {
+  font-family: "NanumBarunpen", sans-serif;
   }
 
   .top1-movie {
@@ -17,8 +20,10 @@
     width: 100%;
     height: 45%;
     overflow:scroll; /* 넘치는 부분 감추기 */
-
+    text-decoration: none;
+    margin-bottom: 15px;
   }
+
   .top-ranking-left{
     flex: 0 0 auto;
     width: 65%;
@@ -75,12 +80,19 @@
     width: 60%;
     height: 100%;
     margin-left: 5px;
+    padding: 5%;
+    text-decoration: none;
   }
   .main-card-title {
-    color:#96FC72
+    color:#96FC72;
+    text-decoration: none;
+
   }
   .main-card-text {
-    color:#96FC72
+    color:#96FC72;
+    margin-top: 5%;
+    text-decoration: none;
+
   }
   .reviews-container{
     position: relative;
@@ -319,20 +331,28 @@
           <div class="main-row">
             <!-- 카드 안에서 왼쪽  -->
             <div class="top1-card-left">
-              <img src="{% static 'images/poster/2.jpeg' %}" class="main-card-img" alt="Top1 영화 포스터">
+              <img src="https://storage.googleapis.com/end_moochu/{{top1.id}}.jpg" class="main-card-img" alt="Top1 영화 포스터">
             </div>
             <!-- 카드 안에서 오른쪽  -->
             <div class="top1-card-right">
               <div class="main-card-body">
                 <!-- 미디어 제목 부분 -->
-                <h5 class="main-card-title">미디어 제목</h5>
+                {% if top1.title|hanja_style %}
+                <h5 class="main-card-title">{{top1.title|hanja_style|safe}}</h5>
+                {% else %}
+                <h5 class="main-card-title">{{top1.title|safe}}</h5>
+                {% endif %}
                 <!-- 미디어 줄거리 넣기 -->
-                <p class="main-card-text">간단한 미디어 설명을 여기에 입력합니다.</p>
+                <p class="main-card-text">{{top1.synopsis}}</p>
                 <!-- 미디어 최신 리뷰 1개 -->
                 <div class="top-review">
-                  <h5 class="top-review-title"> 영화 제목</h5>
-                  <p class="top-review-coment">리뷰 내용</p>
-                  <div class="top-review-user"> 유저 닉네임 </div>
+                  {% if top1.title|hanja_style %}
+                  <h5 class="top-review-title">{{ top1.title|hanja_style|safe }}</h5>
+                  {% else %}
+                  <h5 class="top-review-title">{{ top1.title|safe }}</h5>
+                  {% endif %}
+                  <p class="top-review-coment">{{ top1_review.content }}</p>
+                  <div class="top-review-user">{{ top1_review.writer.nickname }}</div>
                 </div>
               </div>            <!-- main-card-body 끝 -->
             </div>              <!-- top1-card-right 끝 -->
@@ -345,160 +365,28 @@
       <div class="top-ranking-right">
         <div class="scroll-box">
                 <!-- Media-1 표시  -->
-          <div class="main-card">
+                {%for media in top2 %}
+          <a href="{% url 'moochu:movie_detail' movie_id=media.id %}" style="text-decoration: none;">
+            <div class="main-card">
             <div class="main-row">
               <!-- 카드 안에서 왼쪽  -->
               <div class="right-card-left">
-                <img src="{% static 'images/poster/3.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
+                <img src="https://storage.googleapis.com/end_moochu/{{media.id}}.jpg" class="main-card-img" alt="Top{{i}} 영화 포스터">
               </div>
               <!-- 카드 안에서 오른쪽  -->
               <div class="right-card-right">
                 <div class="main-card-body">
-                  <h5 class="main-card-title">영화 제목</h5>
-                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
+                  {% if media.title|hanja_style %}
+                  <h5 class="main-card-title">{{ media.title|truncatechars:14|hanja_style|safe  }}</h5>
+                  {% else %}
+                  <h5 class="main-card-title">{{ media.title|truncatechars:14|safe  }}</h5>
+                  {% endif %}
+                  <p class="main-card-text">{{ media.synopsis|truncatechars:60 }}</p>
                 </div>
               </div>
             </div>
-          </div>        <!-- Media-1 표시 끝 -->
-        
-                  <!-- Media-2 표시  -->
-          <div class="main-card" style="margin-top: 10%;">
-            <div class="main-row">
-              <!-- 카드 안에서 왼쪽  -->
-              <div class="right-card-left">
-                <img src="{% static 'images/poster/4.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
-              </div>
-              <!-- 카드 안에서 오른쪽  -->
-              <div class="right-card-right">
-                <div class="main-card-body">
-                  <h5 class="main-card-title">영화 제목</h5>
-                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
-                </div>
-              </div>
-            </div>
-          </div>    <!-- Media-2 표시 끝 -->
-
-                    <!-- Media-3 표시  -->
-          <div class="main-card" style="margin-top: 10%;">
-            <div class="main-row">
-              <!-- 카드 안에서 왼쪽  -->
-              <div class="right-card-left">
-                <img src="{% static 'images/poster/5.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
-              </div>
-              <!-- 카드 안에서 오른쪽  -->
-              <div class="right-card-right">
-                <div class="main-card-body">
-                  <h5 class="main-card-title">영화 제목</h5>
-                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
-                </div>
-              </div>
-            </div>
-          </div>    <!-- Media-3 표시 끝 -->
-          
-          <!-- Media-4 표시  -->
-          <div class="main-card" style="margin-top: 10%;">
-            <div class="main-row">
-              <!-- 카드 안에서 왼쪽  -->
-              <div class="right-card-left">
-                <img src="{% static 'images/poster/6.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
-              </div>
-              <!-- 카드 안에서 오른쪽  -->
-              <div class="right-card-right">
-                <div class="main-card-body">
-                  <h5 class="main-card-title">영화 제목</h5>
-                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
-                </div>
-              </div>
-            </div>
-          </div>    <!-- Media-4 표시 끝 -->
-
-    
-          <!-- Media-5 표시  -->
-          <div class="main-card" style="margin-top: 10%;">
-            <div class="main-row">
-              <!-- 카드 안에서 왼쪽  -->
-              <div class="right-card-left">
-                <img src="{% static 'images/poster/7.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
-              </div>
-              <!-- 카드 안에서 오른쪽  -->
-              <div class="right-card-right">
-                <div class="main-card-body">
-                  <h5 class="main-card-title">영화 제목</h5>
-                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
-                </div>
-              </div>
-            </div>
-          </div>    <!-- Media-5 표시 끝 -->
-
-          <!-- Media-6 표시  -->
-          <div class="main-card" style="margin-top: 10%;">
-            <div class="main-row">
-              <!-- 카드 안에서 왼쪽  -->
-              <div class="right-card-left">
-                <img src="{% static 'images/poster/8.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
-              </div>
-              <!-- 카드 안에서 오른쪽  -->
-              <div class="right-card-right">
-                <div class="main-card-body">
-                  <h5 class="main-card-title">영화 제목</h5>
-                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
-                </div>
-              </div>
-            </div>
-          </div>    <!-- Media-6 표시 끝 -->
-
-          <!-- Media-7 표시  -->
-          <div class="main-card" style="margin-top: 10%;">
-            <div class="main-row">
-              <!-- 카드 안에서 왼쪽  -->
-              <div class="right-card-left">
-                <img src="{% static 'images/poster/9.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
-              </div>
-              <!-- 카드 안에서 오른쪽  -->
-              <div class="right-card-right">
-                <div class="main-card-body">
-                  <h5 class="main-card-title">영화 제목</h5>
-                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
-                </div>
-              </div>
-            </div>
-          </div>    <!-- Media-7 표시 끝 -->
-
-          <!-- Media-8 표시  -->
-          <div class="main-card" style="margin-top: 10%;">
-            <div class="main-row">
-              <!-- 카드 안에서 왼쪽  -->
-              <div class="right-card-left">
-                <img src="{% static 'images/poster/10.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
-              </div>
-              <!-- 카드 안에서 오른쪽  -->
-              <div class="right-card-right">
-                <div class="main-card-body">
-                  <h5 class="main-card-title">영화 제목</h5>
-                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
-                </div>
-              </div>
-            </div>
-          </div>    <!-- Media-8 표시 끝 -->
-
-          <!-- Media-9 표시  -->
-          <div class="main-card" style="margin-top: 10%;">
-            <div class="main-row">
-              <!-- 카드 안에서 왼쪽  -->
-              <div class="right-card-left">
-                <img src="{% static 'images/poster/11.jpeg' %}" class="main-card-img" alt="Top{{i}} 영화 포스터">
-              </div>
-              <!-- 카드 안에서 오른쪽  -->
-              <div class="right-card-right">
-                <div class="main-card-body">
-                  <h5 class="main-card-title">영화 제목</h5>
-                  <p class="main-card-text">간단한 영화 설명을 여기에 입력합니다.</p>
-                </div>
-              </div>
-            </div>
-          </div>    <!-- Media-9 표시 끝 -->
-
-        
+          </div></a>        <!-- Media-1 표시 끝 -->
+        {% endfor %}
           
         </div>  
       </div>    <!-- 오른쪽 포스터 표시 끝-->
@@ -512,23 +400,21 @@
     
     <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">{{request.user.nickname}}님의 추천영화</h1>
     
+    {% if recommendation %}
     <div class="poster-container">
       <div class="poster-slider">
-        <a href="#"><img class="poster-img" src="{% static 'images/poster/5.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img" src="{% static 'images/poster/6.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img" src="{% static 'images/poster/7.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img" src="{% static 'images/poster/8.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img" src="{% static 'images/poster/9.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img" src="{% static 'images/poster/10.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img" src="{% static 'images/poster/11.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img" src="{% static 'images/poster/12.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img" src="{% static 'images/poster/13.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img" src="{% static 'images/poster/14.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img" src="{% static 'images/poster/15.jpeg' %}" ></a>
+        {% for id in recommendation %}
+        <a href="{% url 'moochu:movie_detail' movie_id=id %}"><img class="poster-img" src="https://storage.googleapis.com/end_moochu/{{id}}.jpg" ></a>
+        {% endfor %}
       </div>
       <button class="slider-btn slider-btn-prev">&#8249;</button>
       <button class="slider-btn slider-btn-next">&#8250;</button>
     </div>
+    {% else %}
+      <h3 style="color: #96FC72; /* 글자 색상 코드 입력 */">관심 장르를 선택하시면 추천 미디어를 확인하실 수 있습니다.</h1>
+
+      <a href="{% url 'common:genre_selection' %}"> 장르 선택하러 가기 </a>
+    {% endif %}
     
     <!-- 미디어 추천 슬라이드 JAVA SCRIPT -->
     <script>
@@ -574,45 +460,18 @@
     <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">최신 리뷰 한줄평</h1>
     <div class="reviews-container">
       <div class="reviews-slider1">
+        {% for item in combined_data %}
         <div class="review-card">
-          <h5 class="reviews-card-title"> 영화 제목</h5>
-          <p class="reviews-coment">리뷰 내용</p>
-          <div class="review-user"> 유저 닉네임 </div>
+          {% if item.movie.title|hanja_style %}
+          <h5 class="reviews-card-title">{{ item.movie.title|hanja_style|safe }}</h5>
+          {% else %}
+          <h5 class="reviews-card-title">{{ item.movie.title|safe }}</h5>
+          {% endif %}
+          <p class="reviews-coment">{{ item.review.content }}</p>
+          <div class="review-user"> {{ item.review.writer.nickname }}</div>
         </div>
-        <div class="review-card">
-          <h5 class="reviews-card-title"> 영화 제목</h5>
-          <p class="reviews-coment">리뷰 내용</p>
-          <div class="review-user"> 유저 닉네임 </div>
-        </div>
-        <div class="review-card">
-          <h5 class="reviews-card-title"> 영화 제목</h5>
-          <p class="reviews-coment">리뷰 내용</p>
-          <div class="review-user"> 유저 닉네임 </div>
-        </div>
-        <div class="review-card">
-          <h5 class="reviews-card-title"> 영화 제목</h5>
-          <p class="reviews-coment">리뷰 내용</p>
-          <div class="review-user"> 유저 닉네임 </div>
-        </div>
-        <div class="review-card">
-          <h5 class="reviews-card-title"> 영화 제목</h5>
-          <p class="reviews-coment">리뷰 내용</p>
-          <div class="review-user"> 유저 닉네임 </div>
-        </div>
-        <div class="review-card">
-          <h5 class="reviews-card-title"> 영화 제목</h5>
-          <p class="reviews-coment">리뷰 내용</p>
-          <div class="review-user"> 유저 닉네임 </div>
-        </div><div class="review-card">
-          <h5 class="reviews-card-title"> 영화 제목</h5>
-          <p class="reviews-coment">리뷰 내용</p>
-          <div class="review-user"> 유저 닉네임 </div>
-        </div>
-        <div class="review-card">
-          <h5 class="reviews-card-title"> 영화 제목</h5>
-          <p class="reviews-coment">리뷰 내용</p>
-          <div class="review-user"> 유저 닉네임 </div>
-        </div>
+        {% endfor %}
+       
       </div>
       <button class="slider-btn2 slider-btn-prev2">&#8249;</button>
       <button class="slider-btn2 slider-btn-next2">&#8250;</button>
@@ -658,27 +517,20 @@
     
       
     <!-- 사용자가 최근에 본 미디어 -->
-    
+    {% if recent %}
     <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">{{request.user.nickname}}님이 최근 본 미디어</h1>
     
     <div class="poster-container1">
       <div class="poster-slider1">
-        <a href="#"><img class="poster-img1" src="{% static 'images/poster/5.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img1" src="{% static 'images/poster/6.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img1" src="{% static 'images/poster/7.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img1" src="{% static 'images/poster/8.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img1" src="{% static 'images/poster/9.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img1" src="{% static 'images/poster/10.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img1" src="{% static 'images/poster/11.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img1" src="{% static 'images/poster/12.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img1" src="{% static 'images/poster/13.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img1" src="{% static 'images/poster/14.jpeg' %}" ></a>
-        <a href="#"><img class="poster-img1" src="{% static 'images/poster/15.jpeg' %}" ></a>
+        {% for media in recent %}
+          <a href="{% url 'moochu:movie_detail' movie_id=media.id %}"><img class="poster-img1" src="https://storage.googleapis.com/end_moochu/{{media.id}}.jpg" ></a>
+        {% endfor %}
+       
       </div>
       <button class="slider-btn1 slider-btn-prev1">&#8249;</button>
       <button class="slider-btn1 slider-btn-next1">&#8250;</button>
     </div>
-
+    {% endif %}
 
     <!-- 최근 본 미디어 슬라이드 JAVA SCRIPT -->
     <script>

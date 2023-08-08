@@ -261,3 +261,6 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
     background-color: white;
     font-family: 'NanumBarunpen';
 }
+.hanja-font {
+    font-family: 'Heiti'; /* 한자용 글꼴 설정 */
+  }

@@ -15,7 +15,7 @@ media_db= mongo_client[settings.ALL_MONGODB_NAME]
 daum_db = mongo_client[settings.DAUM_MONGODB_NAME]
 
 class Media:
-    collection=media_db.movies
+    collection=media_db.movies2
 
 
 

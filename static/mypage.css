@@ -298,8 +298,8 @@ body {
   font-family: 'NanumBarunpen';
 }
 .poster-img {
-  width: 145px;
-  height: 210px;
+  width: 130px;
+  height: 193px;
   object-fit: cover;
   margin-right: 15px;
   margin-bottom: 10px;
@@ -580,7 +580,7 @@ textarea {
 .toggle-reviews {
   cursor: pointer;
   position: absolute;
-  margin-left: 470px;
+  margin-left: 65%;
   padding: 5px;
   color: #333;
   font-size: 14px;
@@ -603,7 +603,7 @@ textarea {
 #view-all-votes {
   cursor: pointer;
   position: absolute;
-  margin-left: 470px;  
+  margin-left: 65%;  
   padding: 5px;
   color: #333;
   font-size: 14px;

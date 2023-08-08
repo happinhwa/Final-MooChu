@@ -21,6 +21,45 @@
         margin: auto;
         font-family: NanumBarunpen;
   }
+
+.ranking-list {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+}
+.ranking-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color:#96FC72;
+    justify-content: center;
+    list-style: none;
+}
+    .badge {
+      width: 24px;
+      height: 24px;
+
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+.row{
+    margin: auto;
+}
 </style>
 
 
@@ -31,5 +70,56 @@
             <button class="btn btn-search" type="submit">검색</button>
         </div>
     </form>
+    <!-- 실시간 급상승 검색어 순위 -->
+    <div class="row justify-content-center">
+        <!-- 1위부터 5위까지 표시 -->
+        <div class="col-md-3 mb-3 d-flex justify-content-start">
+          <ul class="ranking-list">
+            <li class="ranking-item">
+              <span class="badge">1</span>검색어 1
+            </li>
+            <li class="ranking-item">
+              <span class="badge">2</span>검색어 2
+            </li>
+            <li class="ranking-item">
+              <span class="badge">3</span>검색어 3
+            </li>
+            <li class="ranking-item">
+              <span class="badge">4</span>검색어 4
+            </li>
+            <li class="ranking-item">
+              <span class="badge">5</span>검색어 5
+            </li>
+          </ul>
+        </div>
+        <!-- 6위부터 10위까지 표시 -->
+        <div class="col-md-3 mb-3 d-flex justify-content-start">
+          <ul class="ranking-list">
+            <li class="ranking-item">
+              <span class="badge">6</span>검색어 6
+            </li>
+            <li class="ranking-item">
+              <span class="badge">7</span>검색어 7
+            </li>
+            <li class="ranking-item">
+              <span class="badge">8</span>검색어 8
+            </li>
+            <li class="ranking-item">
+              <span class="badge">9</span>검색어 9
+            </li>
+            <li class="ranking-item">
+              <span class="badge">10</span>검색어 10
+            </li>
+          </ul>
+        </div>
+      </div>
+      {% for media in data %}
+        <div class="search-card">
+            <img class="search-img" src="https://storage.googleapis.com/end_moochu/{{media.id}}.jpg" alt="영화 포스터" title="{{ media.title_kr }}">
+            <span class="search-text">{{ media.title_kr}}</span>
+          </div>
+    {% endfor %}
+      
 </div>
+
 {% endblock %}

@@ -60,7 +60,7 @@ class SearchView(APIView):
         search = [(item[0].decode('utf-8'), item[1]) for item in search]
         search = [x[0] for x in search]
         top5 = search[:5]
-        top10 = search[5:11]
+        top10 = search[5:10]
 
         if data_list:
             context = {
@@ -116,7 +116,7 @@ def search(request):
     search = [(item[0].decode('utf-8'), item[1]) for item in search]
     search = [x[0] for x in search]
     top5 = search[:5]
-    top10 = search[5:]
+    top10 = search[5:10]
     context = {
         'data': page_obj,
         'top5': top5,

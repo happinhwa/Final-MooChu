@@ -17,7 +17,7 @@
   <div class="container">
 
     <!-- 어제 많이 조회한 미디어 TOP 10 -->
-    <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">오늘 MOOCHU의 TOP10 미디어</h1>
+    <h1 style="color: #96FC72;font-family: Chonburi;">MooChu's <span style="color:white;">TOP 10</span> Today</h1>
     <div class="row" style="margin-top: 20px; margin-bottom: 7%;">
 
       <!-- 왼쪽 포스터 표시  -->
@@ -36,12 +36,12 @@
 
                   <!-- 미디어 제목 부분 -->
                   {% if top1.title|hanja_style %}
-                  <h5 class="main-card-title">{{top1.title|hanja_style|safe}}</h5>
+                  <h4 class="main-card-title">{{top1.title|hanja_style|safe}}</h5>
                   {% else %}
-                  <h5 class="main-card-title">{{top1.title|safe}}</h5>
+                  <h4 class="main-card-title">{{top1.title|safe}}</h5>
                   {% endif %}
                     <!-- 미디어 줄거리 넣기 -->
-                    <p class="main-card-text">{{top1.synopsis}}</p>
+                    <p class="main-card-text">{{top1.synopsis|truncatechars:300 }}</p>
                   
                   <!-- 미디어 최신 리뷰 1개 -->
                 <div class="top-review">

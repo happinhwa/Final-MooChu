@@ -57,6 +57,7 @@
     width: 60%;
     height: 100%;
     margin-left: 10px;
+    padding:10px 5px;
   }
   .main-row{
     --bs-gutter-x: 1.5rem;
@@ -88,13 +89,11 @@
   .main-card-title {
     color:#96FC72;
     text-decoration: none;
-
   }
   .main-card-text {
-    color:#96FC72;
+    color:white;
     margin-top: 5%;
     text-decoration: none;
-
   }
   .reviews-container{
     position: relative;

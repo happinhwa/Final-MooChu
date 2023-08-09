@@ -208,11 +208,11 @@ def ott_media_list(request, ott, media_type):
 
     else:
         pipeline = [
-            {"$match": {"media_type": media_type,"OTT": {"$elemMatch": {"$in": ott}}, "indexRating.score": {"$gte": 73.2}}},
-            {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
+            {"$match": {"media_type": media_type, "OTT": {"$in": [ott]}, "indexRating.score": {"$gte": 73.2}}},
+            {"$sample": {"size": 1000}}
         ]
-
         data = Media.collection.aggregate(pipeline)
+
 
     
     page_obj= data_change(request,data)

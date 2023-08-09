@@ -163,7 +163,9 @@
     <!-- 최신리뷰 10개 ? -->
     <div class="d-flex align-items-center">
       <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">최신 리뷰 한줄평</h1>
+      {% if reviews %}
       <a class="btn review-all" style="margin-left: auto; margin-right: 20px; margin-top:30px;" href="{% url 'review:review' %}">리뷰 <span style="color:#96FC72; font-family: Chonburi;">{{review_count}}</span>개 모두 보러 가기▶︎</a>
+      {% endif %}
     </div>
     <div class="reviews-container">
       <div class="reviews-slider1">

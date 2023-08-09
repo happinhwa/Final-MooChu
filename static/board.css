@@ -165,7 +165,7 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
     margin-left: 10px;
     color:#D9DFF5;
     font-family: 'NanumBarunpen';
-
+    font-size: 20px;
 }
 .nickname, .nickname:hover{
     color:white;
@@ -237,9 +237,9 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
 }
 
 .vote {
-    color: #FCA472; 
+    color: #D9DFF5; 
     /* text-shadow: -1px -1px 0 #D9DFF5, 1px -1px 0 #D9DFF5, -1px 1px 0 #D9DFF5, 1px 1px 0 #D9DFF5; Text outline color */
-    font-family: NanumBarunpen;
+    font-family: Chonburi;
     font-size: 20px;
     font-weight: bold;
     align-items: center;
@@ -291,5 +291,19 @@ table tr > td{ /* '질문이 없습니다' 워딩 css */
 .btn-board:hover{
     color:#2C2E34;
     background-color: white;
+    font-family: 'NanumBarunpen';
+}
+
+
+.btn-board1{
+    color:white;
+    background-color:transparent;
+    border-color:white;
+    font-family: 'NanumBarunpen';
+}
+.btn-board1:hover{
+    color:#FCA472;
+    background-color:transparent;
+    border-color:#FCA472;
     font-family: 'NanumBarunpen';
 }

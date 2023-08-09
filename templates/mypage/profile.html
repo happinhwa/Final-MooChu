@@ -35,12 +35,16 @@
       {% if allow %}     
         <form id="follow-form" action="{% url 'mypage:follow' nickname=master.nickname %}" method="POST">
           {% csrf_token %}
-          <button class="prof-follow-btn" type="submit">팔로우 취소</button>
+          <button class="prof-follow-btn" type="submit">팔로우 취소
+            <i class="fa-solid fa-user-minus" style="color: #2c2e34; margin-bottom: 3px;"></i>
+          </button>
         </form>
       {% else %}     
         <form action="{% url 'mypage:follow' nickname=master.nickname %}" method="post">
           {% csrf_token %}
-          <button class="prof-follow-btn" type="submit">팔로우  <img src="{% static 'follow.png' %}" style="max-height: 20px; margin-bottom: 3px;"></button>
+          <button class="prof-follow-btn" type="submit">팔로우  
+            <i class="fa-solid fa-user-plus" style="color: #2c2e34; margin-bottom: 3px;"></i>
+          </button>
         </form>
       {% endif %}
     {% endif %}

@@ -9,7 +9,7 @@ from collections import OrderedDict
 from datetime import datetime
 from collections import defaultdict
 import redis
-
+import re
 
 def convert_to_movie_dict(media_data):
     return {
@@ -22,39 +22,50 @@ def convert_to_movie_dict(media_data):
 def mainpage(request):
 
     # Redis 클라이언트 생성
-    r = redis.StrictRedis(host='34.22.93.125', port=6379, db=0)
+    r0 = redis.StrictRedis(host='34.22.93.125', port=6379, db=0)
 
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='main'
+    logger.info(f'moochu,{info_string}', extra={'user_id': user_id})
 
                                                   ## 오늘의 영화 TOP10 데이터 
     # Redis에서 'popularity'에 해당하는 값을 가져옴
-    value = r.zrevrange('popularity', 0, -1, withscores=True)
+    value = r0.zrevrange('popularity', 0, -1, withscores=True)
 
     # ByteArray를 디코드하여 문자열로 변환
     value = [(item[0].decode('utf-8'), item[1]) for item in value]
 
     # 첫 번째 값만 다른 변수에 저장
     top1 = list(value[0])
-    data = Media.collection.find_one({'_id': ObjectId(top1[0])})
-    reviews = Review.objects.filter(media_id=str(data['_id'])).order_by('-create_date')
-    top1_review = reviews.first()
+    top1_data = Media.collection.find_one({'_id': ObjectId(top1[0])})
+    top1_reviews = Review.objects.filter(media_id=str(top1_data['_id'])).order_by('-create_date')
+    top1_review = top1_reviews.first()
+
+
     top1 ={
-            'id': str(data['_id']),
-            'title': data['title_kr'],
-            'synopsis': data['synopsis'],
+            'id': str(top1_data['_id']),
+            'title': top1_data['title_kr'],
+            'synopsis': top1_data['synopsis'],
         }
     
+
     # 나머지 값들은 value에 저장
-    ranking = value[1:]
+    ranking = value[1:10]
     top2=[]
+
     for media in ranking:
-        data = Media.collection.find_one({'_id': ObjectId(media[0])})
-        data ={
-            'id': str(data['_id']),
-            'title': data['title_kr'],
-            'synopsis': data['synopsis']
+        media = list(media)
+        top2_data = Media.collection.find_one({'_id': ObjectId(media[0])})
+        top2_data ={
+            'id':str(top2_data['_id']),
+            'title': top2_data['title_kr'],
+            'synopsis': top2_data['synopsis']
         }
         
-        top2.append(data)
+        top2.append(top2_data)
     
                                                 ## 최신 리뷰 데이터 들고오기 
     reviews = Review.objects.order_by('-create_date')
@@ -64,45 +75,80 @@ def mainpage(request):
         media_id = review.media_id
         media_data = Media.collection.find_one({'_id': ObjectId(media_id)})
         movie = convert_to_movie_dict(media_data)
-        
-        combined_review_movie_data = {
-            'movie': movie,
-            'review': review,
-        }
-        
-        combined_data.append(combined_review_movie_data)
+        if movie is not None:  # Check if movie is not None before appending to the list
+            combined_review_movie_data = {
+                'movie': movie,
+                'review': review,
+            }
+
+            combined_data.append(combined_review_movie_data)
+
     
 
 
-                                                ## 최근 본 미디어 데이터 
-    value = r.lrange(str(request.user.id), 1, 10)
+     
+                                               ## 최근 본 미디어 데이터 
+    try:
+        value = r0.lrange(str(request.user.id), 1, 10)
 
-    value = [(item.decode('utf-8')) for item in value]
-    print(value)
-    recent=[]
-    for media in value:
-        data = Media.collection.find_one({'_id': ObjectId(media)})
-        data ={
-            'id': str(data['_id']),
-            'title': data['title_kr'],
-            'synopsis': data['synopsis']
-        }
-        
-        recent.append(data)
+        value = [(item.decode('utf-8')) for item in value]
+
+        recent=[]
+        for media in value:
+            recent_data = Media.collection.find_one({'_id': ObjectId(media)})
+            recent_data ={
+                'id': str(recent_data['_id']),
+                'title': recent_data['title_kr'],
+                'synopsis': recent_data['synopsis']
+            }
+            
+            recent.append(recent_data)
+    except:
+        recent = None
+
                                                 ## 추천 결과 미디어 랜덤으로 20개 
-    r = redis.StrictRedis(host='34.22.93.125', port=6379, db=2)
+    try:
+        r3 = redis.StrictRedis(host='34.22.93.125', port=6379, db=3)
+        if r3.lrange(str(request.user.id), 1, 100):
+            value = r3.lrange(str(request.user.id), 1, 100)
+        else:
+            r2 = redis.StrictRedis(host='34.22.93.125', port=6379, db=2)
+            value = r2.lrange(str(request.user.id), 1, 100)
+
+
+        # 랜덤하게 20개 선택
+        items = random.sample(value, 20)
+        recommendation = [(item.decode('utf-8')) for item in items]
+    except:
+        recommendation= None
+
+                                                ## 인기 영화 20개 
+    pipeline = [
+            {"$match": {"media_type": "MOVIE","indexRating.score": {"$gte": 99}}},
+            {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
+        ]
+
+    recommendation_data = Media.collection.aggregate(pipeline)
+
     
+
+    page_obj= data_change(request,recommendation_data)
+
 
     context = {"top1": top1,
                "top2": top2, 
                "reviews": reviews,
                'top1_review':top1_review,
                'combined_data':combined_data,
-               'recent': recent }
+               'recent': recent,
+                'recommendation':recommendation,
+                 'popu' : page_obj }
     
     
     return render(request, 'moochu/mainpage.html', context)
     
+
+
 
 
 # 페이징을 위한 호출 함수

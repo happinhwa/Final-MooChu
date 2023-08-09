@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from moochu.models import Media
 from common.models import MovieRating
 from . import models, forms
@@ -7,55 +7,56 @@ from bson import ObjectId
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-
-
-# 최신 리뷰 리스트 기본(최신순)
-def review(request):
-    reviews = Review.objects.order_by('-create_date')
-    data = []
-
-    for review in reviews:
-        movie = get_movie_data(review.media_id)
-        if movie:
-            data.append({
-                'id': str(movie['_id']),
-                'posterImageUrl': movie['poster_image_url'],
-                'titleKr': movie['title_kr'],
-            })
-
-    context = {
-        'reviews': reviews,
-        'movie': data,
-    }
-
-    return render(request, 'review/review_all.html', context)
-
+from django.contrib import messages
+from moochu.views import convert_to_movie_dict
 
 def get_movie_data(media_id):
     movie = Media.collection.find_one({"_id": ObjectId(media_id)})
     return movie
 
+# 최신 리뷰 리스트 기본(최신순)
+def review(request):
+    
+    reviews = Review.objects.order_by('-create_date')
+    review_all = []
+
+    for review in reviews:
+        media_id = review.media_id
+        media_data = Media.collection.find_one({'_id': ObjectId(media_id)})
+        movie = convert_to_movie_dict(media_data)
+
+        data1 = {'movie':movie, 'review':review }
+
+        review_all.append(data1)
+    context = {
+        'reviews': review_all,
+        'review_all': True, 
+    }
+
+    return render(request, 'review/review_all.html', context)
 
 # 해당 영화 리뷰 리스트 기본(최신순)
 def review_by_id(request, movie_id):
     reviews = Review.objects.filter(media_id=str(movie_id)).order_by('-create_date')
     
-    data = list(Media.collection.find({"_id": ObjectId(movie_id)}))
-    data =[
-        {
-            'id': str(movie['_id']),
-            'posterImageUrl': movie['poster_image_url'],
-            'titleKr': movie['title_kr'],
-        }
-        for movie in data
-    ]
-    context = {
-        'reviews': reviews,
-        'movie': data[0],
-        'movie_id': movie_id,
-        }
+    data = convert_to_movie_dict(Media.collection.find_one({"_id": ObjectId(movie_id)}))
+    movie_title = data['title']
+
+    review_all = []
+    for review in reviews:
+        data1={'review': review, 'movie':data}
+        review_all.append(data1)
+
     
-    return render(request, 'review/review_list.html', context)
+
+    context = {
+        'review_all': False, 
+        'reviews': review_all,
+        'movie_id': movie_id,
+        'movie_title': movie_title,
+        }
+
+    return render(request, 'review/review_all.html', context)
 
 
 def review_detail(request, movie_id, review_id):
@@ -175,11 +176,108 @@ def review_delete(request, review_id):
     # 이전 페이지로 리다이렉트
     return redirect(previous_url)
 
+################################################################################################################
+# 리뷰 댓글 관련
+
+def review_comment(request, review_id): 
+    review = get_object_or_404(models.Review, pk=review_id)
+    review.review_comment_set.create(content=request.POST.get('content'), create_date=timezone.now())
+    return redirect('review:review_detail', movie_id=review.media_id, review_id = review.id)
+
+
+@login_required
+def review_comment_create(request, review_id):
+    review = get_object_or_404(models.Review, pk=review_id)
+    if request.method == "POST":
+        form = forms.review_comment_form(request.POST)
+        if form.is_valid():
+            review_comment = form.save(commit=False)
+            review_comment.writer = request.user
+            review_comment.create_date = timezone.now()
+            review_comment.review = review
+            review_comment.save()
+            return redirect('{}#comment_{}'.format(
+                resolve_url('review:review_detail', movie_id=review.media_id, review_id=review_comment.review.id), review_comment.id))
+    else:
+        form = forms.review_comment_form()
+    context = {'form': form}
+    return render(request, 'review/comment_create.html', context)
+
+
+
+@login_required
+def review_comment_edit(request, review_comment_id):
+    review_comment = get_object_or_404(models.Review_comment, pk=review_comment_id)
+    if request.user != review_comment.writer:
+        return redirect('review:review_detail', review_id=review_comment.review.id)
+
+    if request.method == "POST":
+        form = forms.review_comment_form(request.POST, instance=review_comment)
+        if form.is_valid():
+            review_comment = form.save(commit=False)
+            review_comment.writer = request.user
+            review_comment.modify_date = timezone.now()
+            review_comment.save()
+            return redirect('review:review_detail', movie_id=review_comment.review.media_id, review_id=review_comment.review.id)
+    else:
+        form = forms.review_comment_form(instance=review_comment)
+    context = {'review_comment': review_comment, 'form': form}
+    return render(request, 'review/review_comment_create.html', context)
+
+
+@login_required
+def review_comment_delete(request, review_comment_id):
+    review_comment = get_object_or_404(models.Review_comment, pk=review_comment_id)
+    if request.user != review_comment.writer:
+        messages.error(request, '삭제권한이 없습니다')
+    else:
+        review_comment.delete()
+    return redirect('review:review_detail', movie_id=review_comment.review.media_id, review_id=review_comment.review.id)
+
+
+################################################################################################################
+# 리뷰 추천 관련
+
+ 
+@login_required
+def vote_review(request, review_id):
+    review = get_object_or_404(models.Review, pk=review_id)
+    if request.user == review.writer:
+        pass # 오류메세지는 js로 작성 reivew_detail.html 맨 아래쪽 script 코드 참조
+    elif review.voter.filter(id=request.user.id).exists():
+        pass # 오류메세지는 js로 작성 review_detail.html 맨 아래쪽 script 코드 참조
+    else:
+        review.voter.add(request.user)
+    
+    return redirect('review:review_detail', movie_id=review.media_id, review_id=review.id)
+
+
+
+
+
+
+# @login_required
+# def vote_review_comment(request, review_comment_id):
+#     review_comment = get_object_or_404(models.Review_comment, pk=review_comment_id)
+#     if request.user == review_comment.writer:
+#         pass # 오류메세지는 js로 작성 review_detail.html 맨 아래쪽 script 코드 참조
+#     elif review_comment.voter.filter(id=request.user.id).exits():
+#         pass # 오류메세지는 js로 작성 review_detail.html 맨 아래쪽 script 코드 참조
+#     else:
+#         review_comment.voter.add(request.user)
+#     return redirect('review:review_detail', review_comment_id=review_comment.review.id)
+
+
+
+
+
+
 
 
 
 
 ################################################################################################################
+# 영화 평점 매기기 - media_detail에서.. 
 
 def ajax_login_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
@@ -233,7 +331,6 @@ def media_rating(request, movie_id):
             return JsonResponse({'success': True})
         else:
             return JsonResponse({'error': 'Invalid request'}, status=400)
-
     
 
     context = {

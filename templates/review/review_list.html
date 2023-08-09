@@ -19,13 +19,13 @@
         </span>&nbsp;의 모든 리뷰
     </div>
     {% if reviews %}
-    {% for review in reviews %}
+    {% for review in reviews %} 
         <div class="card my-3" style="border: 1px solid transparent; background-color: transparent;">
             <div class="card-body review-body d-flex justify-content-between">
                 <div style="width:15%;">
-                    <a href="{% url 'moochu:movie_detail' movie_id=movie.id %}">
+                    <a href="{% url 'moochu:movie_detail' movie_id=review.media_id %}" style="text-decoration: none;">
                         {% if review.media_id %}
-                            {% with poster_url="https://storage.googleapis.com/end_moochu/{{review.media_id}}.jpg" %}
+                            {% with poster_url="https://storage.googleapis.com/end_moochu/"|add:review.media_id|add:".jpg" %}
                                 {% if poster_url|url_exists %}
                                     <img src="{{ poster_url }}" style="height: 200px; margin: auto;" alt="{{ movie.titleKr }}">
                                 {% else %}

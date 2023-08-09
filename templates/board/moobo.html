@@ -11,7 +11,9 @@
         <ul class="board-menu">
             <li><a href="{% url 'board:moobo' %}">Board</a></li>
             <li><a href="{% url 'board:post' %}">Upload</a></li>
-            <li><a href="#">My Posts</a></li>
+            {% if user.id %}
+                <li><a href="{% url 'board:my_posts' user.id %}">My Posts</a></li>
+            {% endif %}
         </ul>
     </div>
 
@@ -23,14 +25,14 @@
                 <option value="popular" {% if so == 'popular' %}selected{% endif %}>인기순</option>
             </select>
         </div> -->
-        <div class="col-2 input-group">
+        <!-- <div class="col-2 input-group">
             <input type="text" class="form-control grayed-input" placeholder="🔍">
             <div class="input-group-append">
                 <button class="btn btn-search" type="button" id="btn_search">검색</button>
             </div>
         </div>
         <br>
-        
+         -->
         <table class="table">
             <thead>
             <tr class="table-dark">
@@ -57,7 +59,7 @@
                     </td>
                     
                     <td class="col-writer">{{ post.writer }}</td>
-                    <td class="col-date">{{ post.create_date }}</td>
+                    <td class="col-date">{{ post.create_date|date:"Y년 m월 d일" }}</td>
                     <td class="col-count">{{ post.n_hit}}</td> 
                     <td class="col-count">{{ post.voter.all.count }}</td>
                 </tr>

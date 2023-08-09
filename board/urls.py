@@ -14,4 +14,5 @@ urlpatterns = [
     path('comment/delete/post/<int:comment_id>/', views.comment_delete, name='comment_delete'), # 댓글 삭제
     path('vote/post/<int:post_id>/', views.vote_post, name='vote_post'), # 글 정말 추천하시겠읍니까? 페이지
     path('vote/comment/<int:comment_id>/', views.vote_comment, name='vote_comment'), # 댓글 정말 추천하시겠읍니까? 페이지
+    path('<int:user_id>/my_posts/', views.my_posts, name='my_posts'), 
 ]

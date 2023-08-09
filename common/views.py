@@ -7,17 +7,12 @@ from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm,GenreSelectForm
 from .models import Genre,SelectedGenre,MovieRating, User
-from pymongo import MongoClient
-from bson.objectid import ObjectId
 from django.forms import ValidationError
-from django.shortcuts import render, redirect, get_object_or_404
-from urllib3 import HTTPResponse
-## 회원가입 
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from rest_framework.decorators import api_view
 import logging
-from collections import OrderedDict # 중복제거시 필요함
 from django.http import JsonResponse
+from moochu.models import Media
 
 logger=logging.getLogger('common')
 
@@ -99,16 +94,10 @@ GENRE_CHOICES = {
 def get_genre_name(genre_id):
     return GENRE_CHOICES.get(genre_id, 'Unknown')
 
-
-@login_required
 def movie_selection(request):
     if request.method == 'POST': # post로 평점 매기면 저장하는 코드.
         user = request.user
-
-        db = get_mongo_db()  # 기존에 사용된 MongoDB 접속 함수를 가져옵니다.
-
-        movies = db['movies'].find({})  # MongoDB에 저장된 모든 영화 정보를 가져옵니다.
-
+        movies = Media.collection.find({})
         for movie in movies:
             movie_id = str(movie['_id'])
             rating_key = f"rating_{movie_id}"
@@ -117,55 +106,41 @@ def movie_selection(request):
                 rating = request.POST[rating_key]
 
                 try:
-                    movie_rating = MovieRating(user=user, media_id=media_id, rating=rating)  # 변경된 부분
-                    movie_rating.save()
+                    # 변경된 부분: get_or_create를 사용해 중복 저장을 방지합니다.
+                    movie_rating, created = MovieRating.objects.get_or_create(user=user, media_id=media_id, defaults={'rating': rating})
+
+                    # 만약 이미 존재하는 평점이라면 이전에 저장된 결과를 업데이트합니다.
+                    if not created:
+                        movie_rating.rating = rating
+                        movie_rating.save()
+
                 except ValidationError:
                     pass
 
-        return render(request, 'common/register_complete.html')
+        return redirect('moochu:main')
     else: # 처음에 post요청이 없을때 보여주는 용. 
-        client = MongoClient('mongodb://final:123@34.22.93.125:27017/')
-        db = client['final']
-        collection = db['movies']
         select_genres = SelectedGenre.objects.filter(user=request.user).values_list('genre', flat=True)  # 가져온 필드를 사용하여 장르를 선택
         select_genre_names = [get_genre_name(int(g)) for g in select_genres]  # 선택된 장르 번호를 이름으로 매핑
         # 수정할 부분: 선택한 장르와 관련된 영화
         pipeline = [
             {"$match": {"genres": {"$elemMatch": {"$in": select_genre_names}}, "indexRating.score": {"$gte": 73.2}}},
-            {"$sample": {"size": 1000}}
+            {"$sample": {"size": 30}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
         ]
 
-        movies = collection.aggregate(pipeline)
-
-        # 중복제거
-        unique_movies = OrderedDict()
-        for movie in movies:
-            if movie['title_kr'] not in unique_movies:
-                unique_movies[movie['title_kr']] = movie
-        movies = list(unique_movies.values())[:30]
-
+        movies = Media.collection.aggregate(pipeline)
 
         if request.user.is_authenticated:
             user_id = request.user.id
         else:
             user_id = None
         movie_str = []
-        movie_log=[]
+        info_string='recommend_movie'
         for movie in movies:
             movie['m_id'] = str(movie['_id'])
             movie_str.append(movie)
-            movie_log.append(movie['m_id'])
-            logger.info(f'{movie["m_id"]},{movie["title_kr"]},[{",".join(movie["genres"])}],{movie["indexRating"]["score"]}', extra={'user_id': user_id})
-
+            logger.info(f'{movie["m_id"]},{info_string}', extra={'user_id': user_id})
 
         return render(request, 'common/movie_selection.html', {'movies': movie_str})
-
-    
-def get_mongo_db():
-    client = MongoClient('mongodb://final:123@34.22.93.125:27017/')
-    db = client['final']
-    return db
-
 
 def genre_selection(request):
     if request.method == 'POST':
@@ -175,7 +150,6 @@ def genre_selection(request):
             selected_genres = form.cleaned_data.get('selected_genres')
 
             for genre in selected_genres: 
-                # 이미 Genre 객체이므로 genre_id를 사용할 필요가 없습니다.
                 selected_genre = SelectedGenre(user=user, genre=genre) 
                 selected_genre.save()
 
@@ -186,12 +160,9 @@ def genre_selection(request):
 
         return render(request, 'common/genre_selection.html', {'form': form, 'genres': genres})
 
-
-
-
 @login_required
 def save_genre(request):
-    all_genres = get_all_genres()
+    all_genres = get_genre_name()
 
     if request.method == 'POST':
       form = GenreSelectForm(request.POST, genre_choices=all_genres)
@@ -207,8 +178,6 @@ def save_genre(request):
         form = GenreSelectForm(genre_choices=all_genres)
 
     return render(request, 'common/genre_selection.html', {'form': form})
-
-
 
 
 # 계정 활성화 함수(토큰을 통해 인증)

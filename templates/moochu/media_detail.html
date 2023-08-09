@@ -2,6 +2,7 @@
 {% load static %}
 {% load hanja_filter %}
 {% block title %}Media Detail{% endblock %}
+{% load review_movie %}
 
 
 {% block content %}
@@ -15,18 +16,17 @@
             .rate > input {display: none;}
             .rate > label {float: right;color: white; letter-spacing: 4px;}
             .rate > label:before {display: inline-block;font-size: 1.5rem;margin: 0;cursor: pointer;font-family: FontAwesome;content: "\f005 ";}
-            .rate .half:before {content: "\f089 "; }
+            .rate .half:before {content: "\f089 ";position: absolute;padding-right: 0; }
             .rate input:checked ~ label, 
             .rate label:hover,.rate label:hover ~ label { color: #96FC72 !important;  } 
             .rate input:checked + .rate label:hover,
             .rate input input:checked ~ label:hover,
             .rate input:checked ~ .rate label:hover ~ label,  
             .rate label:hover ~ input:checked ~ label { color: #96FC72 !important;  } 
-            
+
             fieldset.rate {
                 /* display: inline-block; */
                 border: 0;
-                
                 float: left; /* 별점 왼쪽 정렬 */
             }
         </style>
@@ -37,13 +37,13 @@
 
     <div class="movie-container">
         <div class="poster-image">
-            {% if movie.posterImageUrl %}
-                <!-- 영화 포스터가 있는 경우 -->
-                <img src="{{ movie.posterImageUrl }}" alt="{{ movie.titleKr }} 포스터">
-            {% else %}
-                <!-- 영화 포스터가 없는 경우 기본 사진 표시 -->
-                <img src="{% static 'images/poster.png' %}" alt="기본 사진">
-            {% endif %}
+            {% with poster_url="https://storage.googleapis.com/end_moochu/"|add:movie.id|add:".jpg" %}
+                {% if poster_url|url_exists %}
+                    <img src="{{ poster_url }}" style="margin: auto;" alt="{{ movie.titleKr }}">
+                {% else %}
+                    <img src="{% static 'images/poster.png' %}" style="margin-left: auto;" alt="기본 사진">
+                {% endif %}
+            {% endwith %}
         </div>
             <div class="movie-info">
                 {% if movie.titleKr|hanja_style %}
@@ -52,7 +52,7 @@
                     <h1 class="media_title">{{ movie.titleKr|safe }}</h1> <!-- 한글 부분은 일반 글꼴 적용 -->
                 {% endif %}
                 <div class="section-container">
-                    {{ movie.synopsis }}
+                    {{ movie.synopsis|default:"작품 정보가 존재하지 않습니다."|safe }}
                 </div>
 
                 <div class="genres">
@@ -151,15 +151,18 @@
                 </div>
                 
                 <div class="my-3">
-                    <a href="#" class="btn btn-sm">
-                        <img src="{% static 'comment.png' %}" style="max-height: 30px;"> 
+                    <a href="{% url 'review:review_detail' movie_id review.id %}" class="btn btn-sm">
+                        <span class="icon-comments" style="color: #96fc72; font-size: 20px;"></span>
+                        <span style="font-family: Chonburi; font-size: 17px; color: white;margin-left: 5px;">{{review.review_comments.count}}</span>
                     </a>
-                    <a href="#" class="btn btn-sm">
-                        <img src="{% static 'thumbs.png' %}" style="max-height: 30px;">
+                    <a href="#" data-uri="{% url 'review:vote_review' review.id %}" style="text-decoration: none;"
+                        class="recommend" data-voted="{{ voted|lower }}" data-is-writer="{{ is_writer|lower }}">
+                        <span class="icon-thumbs-up" style="color: #96fc72; font-size: 20px;"></span>
+                        <span style="font-family: Chonburi; font-size: 17px; color: white;margin-left: 5px;">{{ review.voter.count }}</span>
                     </a>
+                    
                 </div>
                 
-                </div>
             </div>
             {% endfor %}
             </div>
@@ -182,6 +185,34 @@
 
 {% block script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script type='text/javascript'>
+    $(document).ready(function() {
+        $(".delete").on('click', function() {
+            if (confirm("정말로 삭제하시겠습니까?")) {
+                location.href = $(this).data('uri');
+            }
+        });
+        
+        $(".recommend").on('click', function() {
+            var errorMessage = "";
+            if (confirm("추천은 리뷰 상세페이지에서 가능합니다. 확인을 누르시면 상세페이지로 이동합니다.")) {
+                if ($(this).data('voted') === 'true') {
+                    errorMessage = "이미 추천했습니다.";
+                } else if ($(this).data('is-writer') === 'true') {
+                    errorMessage = "본인 글에는 추천할 수 없습니다.";
+                } else {
+                    location.href = $(this).data('uri');
+                }
+            }
+            
+            if (errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    });
+</script>
+
 <script>
     $(document).ready(function() {
         const currentPageURL = window.location.href;
@@ -237,6 +268,7 @@
                 }
             });
         }
+
     });
 
 
@@ -257,6 +289,7 @@
         }
         return cookieValue;
     }
-
 </script>
+
+
 {% endblock %}

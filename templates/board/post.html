@@ -10,7 +10,9 @@
         <ul class="board-menu">
             <li><a href="{% url 'board:moobo' %}">Board</a></li>
             <li><a href="{% url 'board:post' %}">Upload</a></li>
-            <li><a href="#">My Posts</a></li>
+            {% if user.id %}
+                <li><a href="{% url 'board:my_posts' user.id %}">My Posts</a></li>
+            {% endif %}
 		</ul>
         <h5 class="my-3 border-bottom pb-2">게시글 작성</h5>
         <form method="post" class="post-form my-3">

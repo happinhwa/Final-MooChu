@@ -6,8 +6,13 @@
 
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'review.css' %}">
 
+<link rel="stylesheet" href="{% static 'review.css' %}">
+    <style>
+        @import 
+        url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+    
+    </style>
 
 <div class="container">
     {% csrf_token %}
@@ -55,12 +60,13 @@
 
     <div class="row my-3">
         <div class="d-flex justify-content-between align-items-center">
-            <!-- <div class="vote"> 추천 영역
-                <a href="#" data-uri="#"
+            <div class="vote">
+                <a href="#" data-uri="{% url 'review:vote_review' review.id %}" style="text-decoration: none;"
                     class="recommend" data-voted="{{ voted|lower }}" data-is-writer="{{ is_writer|lower }}">
-                <img src="{% static 'thumbs_orange.png' %}" style="max-height: 30px;"></a>
-                  {{ Review.voter.count }}
-            </div> -->
+                    <span class="icon-thumbs-up" style="color: #96fc72; font-size: 20px;"></span>
+                    <span style="font-family: Chonburi; font-size: 17px; color: white;margin-left: 5px;">{{ review.voter.count }}</span>
+                </a>
+            </div>
     
             {% if request.user == review.writer %}
             <div class="my-3">
@@ -72,45 +78,41 @@
     </div>
     
 
-
-    <h9 class="comment-count">개의 댓글이 있습니다.</h9> <!-- 리뷰에 달린 댓글 갯수 -->
-
-    {% if review.comments.count > 0 %}
+ 
+    <h9 class="comment-count"><span style="font-family: Chonburi; font-size: 17px; color:#96FC72;margin-left: 5px;">{{ review.review_comments.count|default_if_none:"0" }}</span>&nbsp;개의 댓글이 있습니다.</h9> <!-- 리뷰에 달린 댓글 갯수 -->
+ 
+    {% if review.review_comments.count > 0 %}
         <div class="mt-3">
-            {% for comment in review.comments.all %}
-            <div class="card my-3" style="border: 1px solid transparent; background-color: transparent;">
-                <div class="card-body comment-body">
-                    <div class="d-flex justify-content-front">
-                        {% if review_comment.modify_date %}
-                        <div class="badge badge-comment d-flex align-items-center">
-                            <div class="mr-2" style="font-size: 15px;">@{{ review_comment.writer.username }}</div>
-                            <div style="color: lightgray;">{{ review_comment.modify_date }} (수정됨)</div>
-                        </div>
-                        {% else %}
-                        
-                        <div class="badge badge-comment d-flex align-items-center">
-                            <div class="mr-2" style="font-size: 15px;">@{{ review_comment.writer.username }}</div>
-                            <div style="color: lightgray;">{{ review_comment.create_date }}</div>
-                        </div>
-                        
-                        {% endif %}
-                    </div>
-                    <div class="card-text comment-content" style="white-space: pre-line; margin-top: 10px; margin-left: 5px;">{{ Review_comment.content }}</div>
-                    {% if request.user == review_comment.writer %}
-                    <div class="my-3">
-                        <a href="#" class="btn btn-sm btn-board">수정</a>
-                        <a href="#" class="delete btn btn-sm btn-board" data-uri="#">삭제</a>
-                    </div>
-                    {% endif %}
-                    </div>
+            {% for review_comment in review.review_comments.all %}
+<div class="card my-3" style="border: 1px solid transparent; background-color: transparent;">
+    <div class="card-body comment-body">
+        <div class="badge badge-comment d-flex align-items-center">
+            <div class="mr-2" style="font-size: 15px;">@{{ review_comment.writer.username }}</div>
+            {% if review_comment.modify_date %}
+            <div style="color: lightgray;">{{ review_comment.modify_date }} (수정됨)</div>
+            {% else %}
+            <div style="color: lightgray;">{{ review_comment.create_date }}</div>
+            {% endif %}
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="card-text review_comment-content" style="white-space: pre-line; margin-top: 10px; margin-left: 5px;">{{ review_comment.content|safe }}</div>
+            {% if request.user == review_comment.writer %}
+            <div class="my-3">
+                <a href="{% url 'review:review_comment_edit' review_comment.id  %}" class="btn btn-sm btn-review1 mr-2" style="margin-left:0;">수정</a>
+                <a href="#" class="delete btn btn-sm btn-review1" style="margin-left:0;" data-uri="{% url 'review:review_comment_delete' review_comment.id  %}">삭제</a>
             </div>
-            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+
             
         </div>
     {% endif %}
 
 
-    <form action="#" method="post" style="margin-top: 10px;">
+    <form action="{% url 'review:review_comment_create' review.id %}" method="post" style="margin-top: 10px;">
     {% csrf_token %}
     <textarea class="comment_text" name="content" id="content" rows="2" required></textarea>
     <input class="btn btn-review" type="submit" value="댓글 작성" style="font-family: 'NanumBarunpen'; margin-bottom: 100px;">

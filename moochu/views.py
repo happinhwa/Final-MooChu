@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from bson import ObjectId
@@ -6,16 +7,37 @@ from common.models import MovieRating
 from review.models import Review
 from .models import Media
 from collections import OrderedDict
-from datetime import datetime
-from collections import defaultdict
 import redis
 import re
+import random
+from datetime import datetime
+from collections import defaultdict
+import logging
 
+logger=logging.getLogger('moochu')
+# Create your views here.
 def convert_to_movie_dict(media_data):
     return {
         'id': str(media_data["_id"]),
         'title': media_data["title_kr"]
     }
+
+# 페이징을 위한 호출 함수
+def data_change(request,data):
+    data =[
+        {
+            'id': str(movie['_id']),
+            'posterImageUrl': movie['poster_image_url'],
+            'titleKr': movie['title_kr'],
+        }
+        for movie in data
+    ]
+
+    paginator = Paginator(data, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return page_obj
 
 
 ## mainpage 함수
@@ -182,19 +204,12 @@ def ott_media_list(request, ott, media_type):
             {"$sample": {"size": 1000}} 
         ]
 
-        movies = Media.collection.aggregate(pipeline)
+        data = Media.collection.aggregate(pipeline)
 
-        # 중복제거
-        unique_movies = OrderedDict()
-        for movie in movies:
-            if movie['title_kr'] not in unique_movies:
-                unique_movies[movie['title_kr']] = movie
-        data = list(unique_movies.values())
-        
     else:
         pipeline = [
-            {"$match": {"media_type": media_type,"OTT":ott, "indexRating.score": {"$gte": 73.2}}},
-            {"$sample": {"size": 1000}} 
+            {"$match": {"media_type": media_type,"OTT": {"$elemMatch": {"$in": ott}}, "indexRating.score": {"$gte": 73.2}}},
+            {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
         ]
 
         data = Media.collection.aggregate(pipeline)
@@ -209,7 +224,12 @@ def ott_media_list(request, ott, media_type):
         'type':media_type,
         'ott_service':ott_service
     }
-
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id=0
+    info_string='media_list'
+    logger.info(f'moochu,{info_string}', extra={'user_id': user_id})
     return render(request, 'moochu/movie_list.html', context)
 
 
@@ -245,6 +265,12 @@ def genre_filter(request, ott, media_type):
 
         data = Media.collection.aggregate(pipeline)
 
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id=0
+    info_string='media_list'
+    logger.info(f'moochu,{info_string}', extra={'user_id': user_id})
 
 
     page_obj= data_change(request,data)
@@ -278,6 +304,12 @@ def movie_detail(request, movie_id):
         }
         for movie in data
     ]
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id=0
+    info_string='movie_detail'
+    logger.info(f'{data[0]["id"]},{info_string}', extra={'user_id': user_id})
 
     average_rating = MovieRating.objects.filter(media_id=str(movie_id)).aggregate(Avg('rating'))['rating__avg']
     reviews = Review.objects.filter(media_id=str(movie_id)).order_by('-create_date')
@@ -356,7 +388,3 @@ def coming_next(request):
     
     sorted_groups = sorted(grouped_movies.items(), key=lambda x: x[0])
     return render(request, 'moochu/coming_next.html', {'sorted_groups': sorted_groups})
-
-
-
-

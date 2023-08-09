@@ -239,3 +239,6 @@ table tr > td{
     background-color: white;
     font-family: 'NanumBarunpen';
 }
+.hanja-font {
+    font-family: 'Heiti'; /* 한자용 글꼴 설정 */
+  }

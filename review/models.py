@@ -15,6 +15,7 @@ class Review(models.Model):
     def update_counter(self):
         self.n_hit += 1
         self.save()
+    
 
 
 class Review_comment(models.Model):

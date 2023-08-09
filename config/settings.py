@@ -14,7 +14,6 @@ from pathlib import Path
 import os
 from django.conf import settings
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -51,6 +50,7 @@ INSTALLED_APPS = [
     "mypage",
     "search",
     "review",
+
 ]
 
 MIDDLEWARE = [
@@ -134,7 +134,70 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'movie_verbose': { # render한 영화에 대한 로그
+            'format': '{levelname},{asctime},{user_id},{message}',
+            'style': '{',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+    },
+    'handlers': {
+        'user_action': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'user_action.log',
+            'formatter': 'movie_verbose',
+            'maxBytes': 1024*1024*10,
+            'backupCount': 10,
+        },
+        'renderMovie': { 
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'renderMV.log',  
+            'formatter': 'movie_verbose',
+            'maxBytes': 1024*1024*10,
+            'backupCount': 10, #초과한 용량의 로그파일을 백업할 횟수
+        },
+        'other_action': { 
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'renderMV.log',  
+            'formatter': 'movie_verbose',
+            'maxBytes': 1024*1024*10,
+            'backupCount': 10, #초과한 용량의 로그파일을 백업할 횟수
+        },
+    },
+    'loggers': {
+        'moochu': {
+            'handlers': ['user_action'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'board': {
+            'handlers': ['other_action'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'mypage': {
+            'handlers': ['other_action'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'review': {
+            'handlers': ['user_action'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'search': {
+            'handlers': ['user_action'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -203,3 +266,12 @@ EMAIL_USE_TLS = True
 # TLS 보안 방법
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # 사이트와 관련한 자동응답을 받을 이메일 주소,'webmaster@localhost'
+
+
+
+
+
+
+
+
+

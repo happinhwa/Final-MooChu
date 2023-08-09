@@ -8,7 +8,8 @@ from common.models import MovieRating
 from moochu.models import Media
 from review.models import Review, Review_comment, MyList
 from collections import OrderedDict
-
+import logging
+logger=logging.getLogger('mypage')
 
 ## 마이페이지에 공통으로 보낼 데이터 
 def profile_data(nickname, request):
@@ -44,7 +45,12 @@ def profile_data(nickname, request):
 @api_view(['GET'])
 def home(request, nickname):
     profile = profile_data(nickname, request)
-
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='main'
+    logger.info(f'mypage,{info_string}', extra={'user_id': user_id})
     ## 이제 인생 명작 리스트 보내기
     toplist = {"toplist":models.MyToplist.objects.filter(writer=profile['master'].id)[:5]}
     profile.update(toplist)
@@ -55,6 +61,13 @@ def home(request, nickname):
 
 @api_view(['GET'])
 def mylist(request, nickname):
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='mylist'
+    logger.info(f'mypage,{info_string}', extra={'user_id': user_id})
+    
     form = profile_data(nickname, request)
     print(request.user.id)
     mylist = MyList.objects.filter(user_id=form['master'].id)
@@ -66,6 +79,12 @@ def mylist(request, nickname):
 
 
 def reviews(request, nickname):
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='reviews'
+    logger.info(f'mypage,{info_string}', extra={'user_id': user_id})
     profile = profile_data(nickname, request)
     reviews = {"reviews": Review.objects.filter(writer_id=profile['master'].id)}
         ## 평점 데이터도 같이 보내야함
@@ -79,6 +98,12 @@ def reviews(request, nickname):
 
 @api_view(['GET','POST'])
 def guestbook(request, nickname):
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='guestbook'
+    logger.info(f'mypage,{info_string}', extra={'user_id': user_id})
     if request.method == 'POST':
         form = GuestBookForm(request.POST)
         if form.is_valid():
@@ -117,6 +142,12 @@ def guestbook_detail(request, guestbook_id):
 
 @api_view(['PUT','GET'])
 def edit(request, nickname):
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='edit'
+    logger.info(f'mypage,{info_string}', extra={'user_id': user_id})
     if request.method == 'PUT':
         form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -136,6 +167,12 @@ def edit(request, nickname):
 
 ## 사용자의 리뷰 전체 list
 def reviews_total(request, nickname):
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='reviwes_total'
+    logger.info(f'mypage,{info_string}', extra={'user_id': user_id})
     profile = profile_data(nickname, request)
     reviews = {"reviews": Review.objects.filter(writer_id=profile['master'].id)}
         ## 평점 데이터도 같이 보내야함
@@ -156,6 +193,12 @@ def votes(request, nickname):
 
 @api_view(['POST','DELETE', 'GET'])
 def follow(request, nickname):
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='follow'
+    logger.info(f'mypage,{info_string}', extra={'user_id': user_id})
     if request.method == 'POST':
         # master_id = request.POST.get('master_id')
         master = models.User.objects.get(nickname= nickname)
@@ -174,6 +217,12 @@ def follow(request, nickname):
 
 @api_view(['DELETE'])
 def follower(request, follow_id):
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='follower'
+    logger.info(f'mypage,{info_string}', extra={'user_id': user_id})
     if request.method == 'DELETE':
         models.follow.objects.get(id=follow_id).delete()
         

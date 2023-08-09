@@ -7,12 +7,10 @@ from bson import ObjectId
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.contrib import messages
 from moochu.views import convert_to_movie_dict
+import logging
+logger=logging.getLogger('review')
 
-def get_movie_data(media_id):
-    movie = Media.collection.find_one({"_id": ObjectId(media_id)})
-    return movie
 
 # 최신 리뷰 리스트 기본(최신순)
 def review(request):
@@ -35,9 +33,16 @@ def review(request):
 
     return render(request, 'review/review_all.html', context)
 
+
 # 해당 영화 리뷰 리스트 기본(최신순)
 def review_by_id(request, movie_id):
     reviews = Review.objects.filter(media_id=str(movie_id)).order_by('-create_date')
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='review_movie'
+    logger.info(f'review,{info_string}', extra={'user_id': user_id})
     
     data = convert_to_movie_dict(Media.collection.find_one({"_id": ObjectId(movie_id)}))
     movie_title = data['title']
@@ -64,13 +69,17 @@ def review_detail(request, movie_id, review_id):
     review = get_object_or_404(models.Review, pk=review_id)
     voted = review.voter.filter(id=request.user.id).exists()
     is_writer = request.user == review.writer
-
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='review_detail'
+    logger.info(f'review,{info_string}', extra={'user_id': user_id})
 
     data = list(Media.collection.find({"_id": ObjectId(movie_id)}))
     data =[
         {
             'id': str(movie['_id']),
-            'posterImageUrl': movie['poster_image_url'],
             'titleKr': movie['title_kr'],
         }
         for movie in data
@@ -112,7 +121,6 @@ def review_upload(request, movie_id):
     data =[
         {
             'id': str(movie['_id']),
-            'posterImageUrl': movie['poster_image_url'],
             'titleKr': movie['title_kr'],
         }
         for movie in data
@@ -129,6 +137,12 @@ def review_upload(request, movie_id):
 
 @login_required
 def review_edit(request, movie_id, review_id):
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='review_edit'
+    logger.info(f'review,{info_string}', extra={'user_id': user_id})
     review = get_object_or_404(models.Review, pk=review_id)
     
     if request.user != review.writer:
@@ -149,7 +163,6 @@ def review_edit(request, movie_id, review_id):
     data =[
         {
             'id': str(movie['_id']),
-            'posterImageUrl': movie['poster_image_url'],
             'titleKr': movie['title_kr'],
         }
         for movie in data

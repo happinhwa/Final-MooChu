@@ -18,7 +18,7 @@
 
     <!-- 어제 많이 조회한 미디어 TOP 10 -->
     <h1 style="color: #96FC72;font-family: Chonburi;">MooChu's <span style="color:white;">TOP 10</span> Today</h1>
-    <div class="row" style="margin-top: 20px; margin-bottom: 7%;">
+    <div class="row" style="margin-top: 20px;">
 
       <!-- 왼쪽 포스터 표시  -->
       <div class="top-ranking-left">
@@ -99,10 +99,10 @@
   
 
 {% if request.user.id %}
-    
+     
     <!-- 추천 모델에서 나온 미디어 추천 -->
     
-    <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">{{request.user.nickname}}님의 추천영화</h1>
+    <h1 style="color: #96FC72; margin-top:70px;">{{request.user.nickname}}님의 추천영화</h1>
     
     {% if recommendation %}
     <div class="poster-container">
@@ -161,8 +161,8 @@
 
 
     <!-- 최신리뷰 10개 ? -->
-    <div class="d-flex align-items-center">
-      <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">최신 리뷰 한줄평</h1>
+    <div class="d-flex align-items-center" style= margin-top:50px;">
+      <h1 style="color: #96FC72;">최신 리뷰 한줄평</h1>
       {% if reviews %}
       <a class="btn review-all" style="margin-left: auto; margin-right: 20px; margin-top:30px;" href="{% url 'review:review' %}">리뷰 <span style="color:#96FC72; font-family: Chonburi;">{{review_count}}</span>개 모두 보러 가기▶︎</a>
       {% endif %}
@@ -227,7 +227,7 @@
       
     <!-- 사용자가 최근에 본 미디어 -->
     {% if recent %}
-    <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">{{request.user.nickname}}님이 최근 본 미디어</h1>
+    <h1 style="color: #96FC72; margin-top:70px;">{{request.user.nickname}}님이 최근 본 미디어</h1>
     
     <div class="poster-container1">
       <div class="poster-slider1">
@@ -281,7 +281,7 @@
 
     <!-- 인기영화 리스트  -->
     
-    <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">인기 영화</h1>
+    <h1 style="color: #96FC72; margin-top:70px;">인기 영화</h1>
     
     <div class="poster-container3" style="margin-bottom: 10%;">
       <div class="poster-slider3">

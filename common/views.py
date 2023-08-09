@@ -106,22 +106,25 @@ def movie_selection(request):
                 rating = request.POST[rating_key]
 
                 try:
-                    movie_rating = MovieRating(user=user, media_id=media_id, rating=rating)  # 변경된 부분
-                    movie_rating.save()
+                    # 변경된 부분: get_or_create를 사용해 중복 저장을 방지합니다.
+                    movie_rating, created = MovieRating.objects.get_or_create(user=user, media_id=media_id, defaults={'rating': rating})
+
+                    # 만약 이미 존재하는 평점이라면 이전에 저장된 결과를 업데이트합니다.
+                    if not created:
+                        movie_rating.rating = rating
+                        movie_rating.save()
+
                 except ValidationError:
                     pass
 
-        return render(request, 'moochu/mainpage.html')
+        return redirect('moochu:main')
     else: # 처음에 post요청이 없을때 보여주는 용. 
-        client = MongoClient('mongodb://final:123@34.22.93.125:27017/')
-        db = client['final']
-        collection = db['movies']
         select_genres = SelectedGenre.objects.filter(user=request.user).values_list('genre', flat=True)  # 가져온 필드를 사용하여 장르를 선택
         select_genre_names = [get_genre_name(int(g)) for g in select_genres]  # 선택된 장르 번호를 이름으로 매핑
         # 수정할 부분: 선택한 장르와 관련된 영화
         pipeline = [
             {"$match": {"genres": {"$elemMatch": {"$in": select_genre_names}}, "indexRating.score": {"$gte": 73.2}}},
-            {"$sample": {"size": 1000}}
+            {"$sample": {"size": 30}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
         ]
 
         movies = Media.collection.aggregate(pipeline)

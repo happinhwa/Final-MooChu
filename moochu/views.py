@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from bson import ObjectId
@@ -7,10 +8,13 @@ from review.models import Review
 from .models import Media
 from collections import OrderedDict
 import redis
+import re
 import random
 from datetime import datetime
 from collections import defaultdict
+import logging
 
+logger=logging.getLogger('moochu')
 # Create your views here.
 def convert_to_movie_dict(media_data):
     return {
@@ -42,6 +46,12 @@ def mainpage(request):
     # Redis 클라이언트 생성
     r0 = redis.StrictRedis(host='34.22.93.125', port=6379, db=0)
 
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='main'
+    logger.info(f'moochu,{info_string}', extra={'user_id': user_id})
 
                                                   ## 오늘의 영화 TOP10 데이터 
     # Redis에서 'popularity'에 해당하는 값을 가져옴
@@ -85,13 +95,14 @@ def mainpage(request):
         media_id = review.media_id
         media_data = Media.collection.find_one({'_id': ObjectId(media_id)})
         movie = convert_to_movie_dict(media_data)
-        
-        combined_review_movie_data = {
-            'movie': movie,
-            'review': review,
-        }
-        
-        combined_data.append(combined_review_movie_data)
+        if movie is not None:  # Check if movie is not None before appending to the list
+            combined_review_movie_data = {
+                'movie': movie,
+                'review': review,
+            }
+
+            combined_data.append(combined_review_movie_data)
+
     
 
 
@@ -193,7 +204,12 @@ def ott_media_list(request, ott, media_type):
         'type':media_type,
         'ott_service':ott_service
     }
-
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id=0
+    info_string='media_list'
+    logger.info(f'moochu,{info_string}', extra={'user_id': user_id})
     return render(request, 'moochu/movie_list.html', context)
 
 
@@ -229,6 +245,12 @@ def genre_filter(request, ott, media_type):
 
         data = Media.collection.aggregate(pipeline)
 
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id=0
+    info_string='media_list'
+    logger.info(f'moochu,{info_string}', extra={'user_id': user_id})
 
 
     page_obj= data_change(request,data)
@@ -262,6 +284,12 @@ def movie_detail(request, movie_id):
         }
         for movie in data
     ]
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id=0
+    info_string='movie_detail'
+    logger.info(f'{data[0]["id"]},{info_string}', extra={'user_id': user_id})
 
     average_rating = MovieRating.objects.filter(media_id=str(movie_id)).aggregate(Avg('rating'))['rating__avg']
     reviews = Review.objects.filter(media_id=str(movie_id)).order_by('-create_date')
@@ -340,7 +368,3 @@ def coming_next(request):
     
     sorted_groups = sorted(grouped_movies.items(), key=lambda x: x[0])
     return render(request, 'moochu/coming_next.html', {'sorted_groups': sorted_groups})
-
-
-
-

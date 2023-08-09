@@ -4,16 +4,30 @@ from django.utils import timezone
 from . import models, forms
 from django.contrib import messages
 from django.http import HttpResponse
-
+import logging
 
 ############## Post 관련 ##############
 
+logger=logging.getLogger('board')
+
 def moobo(request):
     post_list = models.board.objects.order_by('-create_date')
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='main'
+    logger.info(f'board,{info_string}', extra={'user_id': user_id})
     return render(request, 'board/moobo.html', {'post_list': post_list})
 
 
 def detail(request, post_id):
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='board'
+    logger.info(f'board_detail,{info_string}', extra={'user_id': user_id})
     post = get_object_or_404(models.board, pk=post_id)
     voted = post.voter.filter(id=request.user.id).exists()
     is_writer = request.user == post.writer
@@ -36,6 +50,12 @@ def post(request):
             board.create_date = timezone.now()
             board.writer = request.user
             board.save()
+            if request.user.is_authenticated:
+                user_id = request.user.id
+            else:
+                user_id = None
+            info_string='board'
+            logger.info(f'post,{info_string}', extra={'user_id': user_id})
             return redirect('board:moobo')
     else:
         form = forms.post_form()
@@ -47,6 +67,12 @@ def post(request):
 @login_required
 def post_edit(request, post_id):
     post = get_object_or_404(models.board, pk=post_id)
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='post_edit'
+    logger.info(f'board,{info_string}', extra={'user_id': user_id})
     if request.user != post.writer:
         messages.error(request, '수정권한이 없습니다')
         return redirect('board:post_detail', post_id=post.id)
@@ -81,6 +107,12 @@ def post_delete(request, post_id):
 
 def comment(request, post_id):
     post = get_object_or_404(models.board, pk=post_id)
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='comment_detail'
+    logger.info(f'board,{info_string}', extra={'user_id': user_id})
     post.comment_set.create(content=request.POST.get('content'), create_date=timezone.now())
     return redirect('board:detail', post_id = post.id)
 
@@ -88,6 +120,12 @@ def comment(request, post_id):
 @login_required
 def comment_create(request, post_id):
     post = get_object_or_404(models.board, pk=post_id)
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='comment_create'
+    logger.info(f'board,{info_string}', extra={'user_id': user_id})
     if request.method == "POST":
         form = forms.comment_form(request.POST)
         if form.is_valid():
@@ -108,6 +146,12 @@ def comment_create(request, post_id):
 @login_required
 def comment_edit(request, comment_id):
     comment = get_object_or_404(models.comment, pk=comment_id)
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='comment_edit'
+    logger.info(f'board,{info_string}', extra={'user_id': user_id})
     if request.user != comment.writer:
         messages.error(request, '수정권한이 없습니다')
         return redirect('board:post_detail', post_id=comment.board.id)

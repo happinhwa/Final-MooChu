@@ -27,7 +27,6 @@ def data_change(request,data):
     data =[
         {
             'id': str(movie['_id']),
-            'posterImageUrl': movie['poster_image_url'],
             'titleKr': movie['title_kr'],
         }
         for movie in data
@@ -75,17 +74,19 @@ def mainpage(request):
     
 
     # 나머지 값들은 value에 저장
-    ranking = value[1:]
+    ranking = value[1:10]
     top2=[]
+
     for media in ranking:
-        data = Media.collection.find_one({'_id': ObjectId(media[0])})
-        data ={
-            'id': str(data['_id']),
-            'title': data['title_kr'],
-            'synopsis': data['synopsis']
+        media = list(media)
+        top2_data = Media.collection.find_one({'_id': ObjectId(media[0])})
+        top2_data ={
+            'id':str(top2_data['_id']),
+            'title': top2_data['title_kr'],
+            'synopsis': top2_data['synopsis']
         }
         
-        top2.append(data)
+        top2.append(top2_data)
     
                                                 ## 최신 리뷰 데이터 들고오기 
     reviews = Review.objects.order_by('-create_date')
@@ -108,23 +109,24 @@ def mainpage(request):
 
      
                                                ## 최근 본 미디어 데이터 
+    
+    value = r0.lrange(str(request.user.id), 0, 10)
+    
+    value = [(item.decode('utf-8')) for item in value]
+
+    recent=[]
     try:
-        value = r0.lrange(str(request.user.id), 1, 10)
-
-        value = [(item.decode('utf-8')) for item in value]
-
-        recent=[]
         for media in value:
             recent_data = Media.collection.find_one({'_id': ObjectId(media)})
             recent_data ={
-                'id': str(data['_id']),
-                'title': data['title_kr'],
-                'synopsis': data['synopsis']
+                'id': str(recent_data['_id']),
+                'title': recent_data['title_kr'],
+                'synopsis': recent_data['synopsis']
             }
             
             recent.append(recent_data)
     except:
-        recent = None
+        pass
 
                                                 ## 추천 결과 미디어 랜덤으로 20개 
     try:
@@ -148,11 +150,11 @@ def mainpage(request):
             {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
         ]
 
-    data = Media.collection.aggregate(pipeline)
+    recommendation_data = Media.collection.aggregate(pipeline)
 
     
 
-    page_obj= data_change(request,data)
+    page_obj= data_change(request,recommendation_data)
 
 
     context = {"top1": top1,
@@ -188,7 +190,7 @@ def ott_media_list(request, ott, media_type):
 
     else:
         pipeline = [
-            {"$match": {"media_type": media_type,"OTT": {"$elemMatch": {"$in": ott}}, "indexRating.score": {"$gte": 73.2}}},
+            {"$match": {"media_type": media_type,"OTT": {"$elemMatch": {"$in": [ott]}}, "indexRating.score": {"$gte": 73.2}}},
             {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
         ]
 
@@ -229,16 +231,11 @@ def genre_filter(request, ott, media_type):
         ]
 
 
-        movies = Media.collection.aggregate(pipeline)
-         # 중복제거
-        unique_movies = OrderedDict()
-        for movie in movies:
-            if movie['title_kr'] not in unique_movies:
-                unique_movies[movie['title_kr']] = movie
-        data = list(unique_movies.values())
+        data = Media.collection.aggregate(pipeline)
+        
     else:
         pipeline = [
-            {"$match": {"genres": {"$elemMatch": {"$in": selected_genres}}, "indexRating.score": {"$gte": 73.2}}},
+            {"$match": {"genres": {"$elemMatch": {"$in": selected_genres}},"OTT": {"$elemMatch": {"$in": [ott]}}, "indexRating.score": {"$gte": 73.2}}},
             {"$sample": {"size": 1000}} 
         ]
 
@@ -275,7 +272,6 @@ def movie_detail(request, movie_id):
     data =[
         {
             'id': str(movie['_id']),
-            'posterImageUrl': movie['poster_image_url'],
             'titleKr': movie['title_kr'],
             'age' : movie['rating'],
             'genre' : movie['genres'],

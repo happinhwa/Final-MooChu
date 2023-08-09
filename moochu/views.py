@@ -6,14 +6,10 @@ from common.models import MovieRating
 from review.models import Review
 from .models import Media
 from collections import OrderedDict
-<<<<<<< HEAD
 import redis
 import random
-=======
 from datetime import datetime
 from collections import defaultdict
-import redis
->>>>>>> f3b5f9197b1dbd715743dc25537a1c3a3f4ac705
 
 # Create your views here.
 def convert_to_movie_dict(media_data):
@@ -22,38 +18,52 @@ def convert_to_movie_dict(media_data):
         'title': media_data["title_kr"]
     }
 
-def convert_to_movie_dict(media_data):
-    return {
-        'id': str(media_data["_id"]),
-        'title': media_data["title_kr"]
-    }
+# 페이징을 위한 호출 함수
+def data_change(request,data):
+    data =[
+        {
+            'id': str(movie['_id']),
+            'posterImageUrl': movie['poster_image_url'],
+            'titleKr': movie['title_kr'],
+        }
+        for movie in data
+    ]
+
+    paginator = Paginator(data, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return page_obj
 
 
 ## mainpage 함수
 def mainpage(request):
 
     # Redis 클라이언트 생성
-    r = redis.StrictRedis(host='34.22.93.125', port=6379, db=0)
+    r0 = redis.StrictRedis(host='34.22.93.125', port=6379, db=0)
 
 
                                                   ## 오늘의 영화 TOP10 데이터 
     # Redis에서 'popularity'에 해당하는 값을 가져옴
-    value = r.zrevrange('popularity', 0, -1, withscores=True)
+    value = r0.zrevrange('popularity', 0, -1, withscores=True)
 
     # ByteArray를 디코드하여 문자열로 변환
     value = [(item[0].decode('utf-8'), item[1]) for item in value]
 
     # 첫 번째 값만 다른 변수에 저장
     top1 = list(value[0])
-    data = Media.collection.find_one({'_id': ObjectId(top1[0])})
-    reviews = Review.objects.filter(media_id=str(data['_id'])).order_by('-create_date')
-    top1_review = reviews.first()
+    top1_data = Media.collection.find_one({'_id': ObjectId(top1[0])})
+    top1_reviews = Review.objects.filter(media_id=str(top1_data['_id'])).order_by('-create_date')
+    top1_review = top1_reviews.first()
+
+
     top1 ={
-            'id': str(data['_id']),
-            'title': data['title_kr'],
-            'synopsis': data['synopsis'],
+            'id': str(top1_data['_id']),
+            'title': top1_data['title_kr'],
+            'synopsis': top1_data['synopsis'],
         }
     
+
     # 나머지 값들은 value에 저장
     ranking = value[1:]
     top2=[]
@@ -85,23 +95,27 @@ def mainpage(request):
     
 
 
-                                                ## 최근 본 미디어 데이터 
-    value = r.lrange(str(request.user.id), 1, 10)
+     
+                                               ## 최근 본 미디어 데이터 
+    try:
+        value = r0.lrange(str(request.user.id), 1, 10)
 
-    value = [(item.decode('utf-8')) for item in value]
-    print(value)
-    recent=[]
-    for media in value:
-        data = Media.collection.find_one({'_id': ObjectId(media)})
-        data ={
-            'id': str(data['_id']),
-            'title': data['title_kr'],
-            'synopsis': data['synopsis']
-        }
-        
-        recent.append(data)
+        value = [(item.decode('utf-8')) for item in value]
+
+        recent=[]
+        for media in value:
+            recent_data = Media.collection.find_one({'_id': ObjectId(media)})
+            recent_data ={
+                'id': str(data['_id']),
+                'title': data['title_kr'],
+                'synopsis': data['synopsis']
+            }
+            
+            recent.append(recent_data)
+    except:
+        recent = None
+
                                                 ## 추천 결과 미디어 랜덤으로 20개 
-<<<<<<< HEAD
     try:
         r3 = redis.StrictRedis(host='34.22.93.125', port=6379, db=3)
         if r3.lrange(str(request.user.id), 1, 100):
@@ -116,44 +130,34 @@ def mainpage(request):
         recommendation = [(item.decode('utf-8')) for item in items]
     except:
         recommendation= None
-=======
-    r = redis.StrictRedis(host='34.22.93.125', port=6379, db=2)
+
+                                                ## 인기 영화 20개 
+    pipeline = [
+            {"$match": {"media_type": "MOVIE","indexRating.score": {"$gte": 99}}},
+            {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
+        ]
+
+    data = Media.collection.aggregate(pipeline)
+
     
 
->>>>>>> f3b5f9197b1dbd715743dc25537a1c3a3f4ac705
+    page_obj= data_change(request,data)
+
+
     context = {"top1": top1,
                "top2": top2, 
                "reviews": reviews,
                'top1_review':top1_review,
                'combined_data':combined_data,
-<<<<<<< HEAD
                'recent': recent,
-                'recommendation':recommendation }
-=======
-               'recent': recent }
->>>>>>> f3b5f9197b1dbd715743dc25537a1c3a3f4ac705
+                'recommendation':recommendation,
+                 'popu' : page_obj }
     
     
     return render(request, 'moochu/mainpage.html', context)
     
 
 
-# 페이징을 위한 호출 함수
-def data_change(request,data):
-    data =[
-        {
-            'id': str(movie['_id']),
-            'posterImageUrl': movie['poster_image_url'],
-            'titleKr': movie['title_kr'],
-        }
-        for movie in data
-    ]
-
-    paginator = Paginator(data, 20)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    return page_obj
 
 
 def ott_media_list(request, ott, media_type):
@@ -173,13 +177,8 @@ def ott_media_list(request, ott, media_type):
 
     else:
         pipeline = [
-<<<<<<< HEAD
             {"$match": {"media_type": media_type,"OTT": {"$elemMatch": {"$in": ott}}, "indexRating.score": {"$gte": 73.2}}},
             {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
-=======
-            {"$match": {"media_type": media_type,"OTT":ott, "indexRating.score": {"$gte": 73.2}}},
-            {"$sample": {"size": 1000}} 
->>>>>>> f3b5f9197b1dbd715743dc25537a1c3a3f4ac705
         ]
 
         data = Media.collection.aggregate(pipeline)

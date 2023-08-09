@@ -37,12 +37,27 @@
         </div>
       </div>
     {% if data %}
-    {% for media in data %}
-        <div class="search-card">
-            <img class="search-img" src="{{ media.poster_image_url }}" alt="영화 포스터" title="{{ media.title_kr }}">
-            <span class="search-text">{{ media.title_kr}}</span>
-          </div>
-    {% endfor %}
+    <div class="search-media">
+      {% for media in data %}
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="search-card mb-4">
+          <a href="{% url 'moochu:movie_detail' movie_id=media.id %}">
+            <div class="aspect-ratio-container">
+              <div class="aspect-ratio-content">
+                <div class="image-container">
+                  <img src="https://storage.googleapis.com/end_moochu/{{media.id}}.jpg" alt="영화 포스터" title="{{ media.title }}">
+                  <div class="overlay"></div>
+                </div>
+                <div class="card-body text-center">
+                  <h5 class="card-title">{{ media.title }}</h5>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>  
+      {% endfor %}
+    </div>
     {% else %}
     <h4 style="font-family: NanumBarunpen; color: #96FC72; text-align: center;" >검색결과가 존재하지 않습니다.</h2>
     {% endif %}

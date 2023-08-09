@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "mypage",
     "search",
     "review",
+
 ]
 
 MIDDLEWARE = [

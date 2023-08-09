@@ -1,58 +1,47 @@
 import json
 from elasticsearch import Elasticsearch
+from pymongo import MongoClient
 
-
-es = Elasticsearch()
+es = Elasticsearch('34.64.147.118:9200')
 
 es.indices.create(
-    index='media',
-    body={
-        "settings": {
-            "index": {
-                "analysis": {
-                    "analyzer": {
-                        "my_analyzer": {
-                            "type": "custom",
-                            "tokenizer": "nori_tokenizer"
-                        }
-                    }
-                }
-            }
-        },
-          "mappings": {
-            "properties": {
-                "id": {
-                    "type": "keyword"
-                },
-                "title_kr": {
-                    "type": "text",
-                    "analyzer": "my_analyzer"
-                },
-                "title_En": {
-                    "type": "text",
-                    "analyzer": "my_analyzer"
+    index='media3',
+    settings={
+        "analysis": {
+            "analyzer": {
+                "my_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "nori_tokenizer"
                 }
             }
         }
-
+    },
+    mappings={
+        "properties": {
+            "id": {
+                "type": "keyword"
+            },
+            "title": {
+                "type": "text",
+                "analyzer": "my_analyzer"
+            },
+        }
     }
 )
 
+client = MongoClient('mongodb://final:123@34.22.93.125:27017/')
+db = client['final']
+collection = db['movies2']
 
-
-with open('./OTT_merged_data.json', encoding='utf-8') as json_file:
-    json_data = json.load(json_file)
 
 body = ""
-for x, item in enumerate(json_data):
-    id = item['id']
-    title_kr = item['title_kr']
-    title_En = item['title_En']
-    if x %1000==0:
-        print(x)
-
-   
-    body += json.dumps({"index": {"_index": "movies"}}) + "\n"
-    body += json.dumps({"id": id, "title_kr": title_kr,"title_En" : title_En}, ensure_ascii=False) + "\n"
+for x in collection.find():
+    id = str(x['_id'])
+    title = x['title_kr']
+    body += json.dumps({"index": {"_index": "media3"}}) + "\n"
+    body += json.dumps({"id": id, "title": title}, ensure_ascii=False) + "\n"
 
 es.bulk(body)
+
+
+   

@@ -3,313 +3,8 @@
 {% load static %}
 {% load hanja_filter %}
 {% block content %}
-<style>
-  .hanja-font {
-    font-family: 'Heiti'; /* 한자용 글꼴 설정 */
-  }
-  body {
-  font-family: "NanumBarunpen", sans-serif;
-  }
+<link rel="stylesheet" href="{% static 'mainpage.css' %}">
 
-  .top1-movie {
-    margin-bottom: 20px;
-  }
-
-
-  .main-card{
-    width: 100%;
-    height: 45%;
-    overflow:scroll; /* 넘치는 부분 감추기 */
-    text-decoration: none;
-    margin-bottom: 15px;
-  }
-
-  .top-ranking-left{
-    flex: 0 0 auto;
-    width: 65%;
-  }
-  .top-ranking-right{
-    flex: 0 0 auto;
-    width: 35%;
-  }
-  .top1-card{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    height: var(--bs-card-height);
-    word-wrap: break-word;
-    background-color: var(--bs-card-bg);
-    background-clip: border-box;
-    border: var(--bs-card-border-width) solid var(--bs-card-border-color);
-    border-radius: var(--bs-card-border-radius);
-    height: 100%;
-  }
-  .top1-card-left{
-    flex: auto;
-    width: 35%;
-    height: 100%;
-  }
-  .top1-card-right{
-    flex: 0 0 auto;
-    width: 60%;
-    height: 100%;
-    margin-left: 10px;
-  }
-  .main-row{
-    --bs-gutter-x: 1.5rem;
-    --bs-gutter-y: 0;
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: calc(-1 * var(--bs-gutter-y));
-    margin-right: calc(-0.5 * var(--bs-gutter-x));
-    margin-left: calc(-0.5 * var(--bs-gutter-x));
-    height: 100%;
-  }
-  .main-card-img{
-    width: 100%;
-    height: 100%;
-  }
-  .right-card-left{
-    flex: auto;
-    width: 30%;
-    height: 100%;
-  }
-  .right-card-right{
-    flex: auto;
-    width: 60%;
-    height: 100%;
-    margin-left: 5px;
-    padding: 5%;
-    text-decoration: none;
-  }
-  .main-card-title {
-    color:#96FC72;
-    text-decoration: none;
-
-  }
-  .main-card-text {
-    color:#96FC72;
-    margin-top: 5%;
-    text-decoration: none;
-
-  }
-  .reviews-container{
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-  }
-  .reviews-slider1{
-    display: inline-flex;
-    transition: transform 0.3s ease-in-out;
-  }
-  .review-card{
-    width: 250px;
-    height: 150px;
-    background-color: #172036;
-    display: inline-block;
-    flex-direction: column;
-    border-radius: 10px;
-    padding: 16px;
-    overflow: hidden;
-    margin-right: 15px;
-    object-fit: cover;
-    align-items: center;
-  }
-  .reviews-card-title{
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 14px;
-    letter-spacing: -.1px;
-    padding: 4px 0 6px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #98a4b7;
-  }
-  .reviews-coment{
-    font-style: normal;
-    font-weight: 600;
-    font-size: 15px;
-    line-height: 21px;
-    letter-spacing: -.1px;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    word-break: break-all;
-    color: #d4d9e1;
-  }
-  .review-user{
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    color: #98a4b7;
-    margin-top: auto;
-    height: 20px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    overflow: hidden;
-  }
-  .main-card-body{
-    align-items: center;
-  }
-  .top-review{
-    width: 60%;
-    height: 50%;
-    background-color: #172036;
-    flex-direction: column;
-    border-radius: 10px;
-    padding: 16px;
-    margin-right: 15px;
-    position: absolute;
-    bottom: 0;
-  }
-  .top-review-title{
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 14px;
-    letter-spacing: -.1px;
-    padding: 4px 0 6px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #98a4b7;
-  }
-  .top-review-coment{
-    font-style: normal;
-    font-weight: 600;
-    font-size: 15px;
-    line-height: 21px;
-    letter-spacing: -.1px;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    word-break: break-all;
-    color: #d4d9e1;
-  }
-  .top-review-user{
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    color: #98a4b7;
-    margin-top: auto;
-    height: 20px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    overflow: hidden;
-  }
-</style>
-<style>
-  .poster {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 20px;
-  }
-  .poster-container {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-  }
-  .poster-slider {
-      display: flex;
-      transition: transform 0.3s ease-in-out;
-  }
-  .poster-img {
-      width: 218px;
-      height: 316px;
-      object-fit: cover;
-      margin-right: 40px;
-      align-items: center;
-  }
-  .slider-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 24px;
-      cursor: pointer;
-      background-color: rgba(0, 0, 0, 0.5);
-      color: #fff;
-      padding: 10px;
-      border: none;
-      outline: none;
-      z-index: 1;
-  }
-  .slider-btn-prev {
-      left: 10px;
-  }
-  .slider-btn-next {
-      right: 10px;
-  }
-  .poster1 {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 20px;
-  }
-  .poster-container1 {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-  }
-  .poster-slider1 {
-      display: flex;
-      transition: transform 0.3s ease-in-out;
-  }
-  .poster-img1 {
-      width: 218px;
-      height: 316px;
-      object-fit: cover;
-      margin-right: 40px;
-      align-items: center;
-  }
-  .slider-btn1 {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 24px;
-      cursor: pointer;
-      background-color: rgba(0, 0, 0, 0.5);
-      color: #fff;
-      padding: 10px;
-      border: none;
-      outline: none;
-      z-index: 1;
-  }
-  .slider-btn-prev1 {
-      left: 10px;
-  }
-  .slider-btn-next1 {
-      right: 10px;
-  }
-  .slider-btn-prev2 {
-      left: 10px;
-  }
-  .slider-btn-next2 {
-      right: 10px;
-  }
-  .slider-btn2 {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 24px;
-      cursor: pointer;
-      background-color: rgba(0, 0, 0, 0.5);
-      color: #fff;
-      padding: 10px;
-      border: none;
-      outline: none;
-      z-index: 1;
-  }
-  .scroll-box {
-    height: 500px;
-    overflow-y: scroll;
-}
-  </style>
   <!-- slick 스타일시트 -->
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
   <!-- slick 자바스크립트 파일 -->
@@ -323,7 +18,7 @@
 
     <!-- 어제 많이 조회한 미디어 TOP 10 -->
     <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">오늘 MOOCHU의 TOP10 미디어</h1>
-    <div class="row" style="margin-top: 20px;">
+    <div class="row" style="margin-top: 20px; margin-bottom: 7%;">
 
       <!-- 왼쪽 포스터 표시  -->
       <div class="top-ranking-left">
@@ -351,8 +46,12 @@
                   {% else %}
                   <h5 class="top-review-title">{{ top1.title|safe }}</h5>
                   {% endif %}
+                  {% if top1_review %}
                   <p class="top-review-coment">{{ top1_review.content }}</p>
                   <div class="top-review-user">{{ top1_review.writer.nickname }}</div>
+                  {% else %}
+                  <p class="top-review-coment">아직 리뷰가 없습니다.</p>
+                  {% endif %}
                 </div>
               </div>            <!-- main-card-body 끝 -->
             </div>              <!-- top1-card-right 끝 -->
@@ -394,7 +93,7 @@
         
   
 
-
+{% if request.user.id %}
     
     <!-- 추천 모델에서 나온 미디어 추천 -->
     
@@ -415,7 +114,7 @@
 
       <a href="{% url 'common:genre_selection' %}"> 장르 선택하러 가기 </a>
     {% endif %}
-    
+{% endif %}  
     <!-- 미디어 추천 슬라이드 JAVA SCRIPT -->
     <script>
       const slider = document.querySelector('.poster-slider');
@@ -569,6 +268,59 @@
 
     </script>
 
+
+    <!-- 인기영화 리스트  -->
+    
+    <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">인기 영화</h1>
+    
+    <div class="poster-container3" style="margin-bottom: 10%;">
+      <div class="poster-slider3">
+        {% for media in popu %}
+          <a href="{% url 'moochu:movie_detail' movie_id=media.id %}"><img class="poster-img3" src="https://storage.googleapis.com/end_moochu/{{media.id}}.jpg" ></a>
+        {% endfor %}
+       
+      </div>
+      <button class="slider-btn3 slider-btn-prev3">&#8249;</button>
+      <button class="slider-btn3 slider-btn-next3">&#8250;</button>
+    </div>
+   
+
+    <!-- 인기 영화  슬라이드 JAVA SCRIPT -->
+    <script>
+      const slider3 = document.querySelector('.poster-slider3');
+      const prevBtn3 = document.querySelector('.slider-btn-prev3');
+      const nextBtn3 = document.querySelector('.slider-btn-next3');
+      const posterWidth3 = document.querySelector('.poster-img3').offsetWidth;
+      const posterCount3 = slider3.childElementCount; // 이미지 개수
+      let slideIndex3 = 0;
+
+      prevBtn3.addEventListener('click', () => {
+          slideIndex3 = slideIndex3 - 5;
+          if (slideIndex3 < 0) {
+              slideIndex3 = 0;
+          }
+          slideToIndex3(slideIndex3);
+      });
+
+      nextBtn3.addEventListener('click', () => {
+          slideIndex3 = slideIndex3 + 5;
+          const maxIndex3 = posterCount3 - (posterCount3 % 5 || 5); // 보여질 이미지 개수로 나눈 나머지 값이 0이 아니면 나머지 값, 0이면 보여질 이미지 개수
+          if (slideIndex3 > maxIndex3) {
+              slideIndex3 = maxIndex3;
+          }
+          slideToIndex3(slideIndex3);
+      });
+
+      function slideToIndex3(index3) {
+          const lastIndex3 = posterCount3 - 5; // 마지막 슬라이드 인덱스
+          if (index3 > lastIndex3) {
+              index3 = lastIndex3+4; // 마지막 슬라이드를 넘지 못하도록 설정
+          }
+          const translateX3 = -index3 * posterWidth3;
+          slider3.style.transform = `translateX(${translateX3}px)`;
+      }
+
+    </script>
 
   </div>       <!-- div.container-->
 </body>

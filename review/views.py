@@ -8,24 +8,28 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
+def convert_to_movie_dict(media_data):
+    return {
+        'id': str(media_data["_id"]),
+        'title': media_data["title_kr"]
+    }
 
 # 최신 리뷰 리스트 기본(최신순)
 def review(request):
+    
     reviews = Review.objects.order_by('-create_date')
-    data = []
+    review_all = []
 
     for review in reviews:
-        movie = get_movie_data(review.media_id)
-        if movie:
-            data.append({
-                'id': str(movie['_id']),
-                'posterImageUrl': movie['poster_image_url'],
-                'titleKr': movie['title_kr'],
-            })
+        media_id = review.media_id
+        media_data = Media.collection.find_one({'_id': ObjectId(media_id)})
+        movie = convert_to_movie_dict(media_data)
 
+        data1 = {'movie':movie, 'review':review }
+
+        review_all.append(data1)
     context = {
-        'reviews': reviews,
-        'movie': data,
+        'reviews': review_all,
     }
 
     return render(request, 'review/review_all.html', context)
@@ -36,26 +40,25 @@ def get_movie_data(media_id):
     return movie
 
 
+
 # 해당 영화 리뷰 리스트 기본(최신순)
 def review_by_id(request, movie_id):
     reviews = Review.objects.filter(media_id=str(movie_id)).order_by('-create_date')
     
-    data = list(Media.collection.find({"_id": ObjectId(movie_id)}))
-    data =[
-        {
-            'id': str(movie['_id']),
-            'posterImageUrl': movie['poster_image_url'],
-            'titleKr': movie['title_kr'],
-        }
-        for movie in data
-    ]
+    data = convert_to_movie_dict(Media.collection.find_one({"_id": ObjectId(movie_id)}))
+
+    review_all = []
+    for review in reviews:
+        data1={'review': review, 'movie':data}
+        review_all.append(data1)
+
     context = {
-        'reviews': reviews,
-        'movie': data[0],
+        'review_all': False, 
+        'reviews': review_all,
         'movie_id': movie_id,
         }
     
-    return render(request, 'review/review_list.html', context)
+    return render(request, 'review/review_all.html', context)
 
 
 def review_detail(request, movie_id, review_id):
@@ -69,7 +72,6 @@ def review_detail(request, movie_id, review_id):
     data =[
         {
             'id': str(movie['_id']),
-            'posterImageUrl': movie['poster_image_url'],
             'titleKr': movie['title_kr'],
         }
         for movie in data
@@ -111,7 +113,6 @@ def review_upload(request, movie_id):
     data =[
         {
             'id': str(movie['_id']),
-            'posterImageUrl': movie['poster_image_url'],
             'titleKr': movie['title_kr'],
         }
         for movie in data
@@ -148,7 +149,6 @@ def review_edit(request, movie_id, review_id):
     data =[
         {
             'id': str(movie['_id']),
-            'posterImageUrl': movie['poster_image_url'],
             'titleKr': movie['title_kr'],
         }
         for movie in data

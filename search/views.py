@@ -15,12 +15,12 @@ def trans(hits):
     for hit in hits:
         hits_list.append(hit['_source'])
 
-    return hits_list[:10]
+    return hits_list[:12]
 
 
 class SearchView(APIView):
     def get(self, request):
-        es = Elasticsearch(hosts=["34.64.147.118:9200"])
+        es = Elasticsearch(['34.64.147.118:9200'])
 
         search_word = request.GET.get('search')
 
@@ -28,19 +28,19 @@ class SearchView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': 'search word param is missing'})
 
         docs = es.search(
-            index='movies',
+            index='media3',
             body={
                 "query": {
                     "multi_match": {
                         "query": search_word,
-                        "fields": ["title_kr","title_En", "genres"]                    
+                        "fields": ["id","title"]                    
                     }
                 }
             }
         )
 
-        # data_list = trans(docs['hits']['hits'])
-        data_list = docs['hits']
+        data_list = trans(docs['hits']['hits'])
+        # data_list = docs['hits']
 
 
         # Redis 클라이언트 생성
@@ -60,15 +60,15 @@ class SearchView(APIView):
             'top5': top5,
             'top10': top10,
             }
-            return Response({'data': data_list},context)
-            #return render(request, 'search/result.html',context)
+            # return Response({'data': data_list})
+            return render(request, 'search/result.html',context)
         else:
             context = {
             'top5': top5,
             'top10': top10,
             }
-            return Response({'data': data_list},context)
-            #return render(request, 'search/result.html',context)
+            # return Response({'data': data_list})
+            return render(request, 'search/result.html',context)
 
 def data_change(request,data):
     data =[

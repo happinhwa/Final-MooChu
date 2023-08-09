@@ -3,7 +3,7 @@
 {% load static %}
 {% load board_filter %}
 {% load hanja_filter %}
-
+{% load review_movie %}
 
 {% block content %}
 
@@ -20,20 +20,24 @@
     <h2 class="border-bottom py-2"></h2>
 
     <div class="post-title">
-        <div class="image-title-container">
-            <div class="image-container">
-                {% if movie.posterImageUrl %}
-                    <img src="{{ movie.posterImageUrl }}" style="height: 100px;" alt="{{ movie.titleKr }} 포스터">
+        <a href="{% url 'moochu:movie_detail' movie.id %}" style="text-decoration: none;">
+            <div class="image-title-container">
+                <div class="image-container">
+                    {% with poster_url="https://storage.googleapis.com/end_moochu/"|add:movie.id|add:".jpg" %}
+                        {% if poster_url|url_exists %}
+                            <img src="{{ poster_url }}" style="height: 100px;" alt="{{ movie.titleKr }}">
+                        {% else %}
+                            <img src="{% static 'images/poster.png' %}" style="height: 100px;" alt="기본 사진">
+                        {% endif %}
+                    {% endwith %}
+                </div>
+                {% if movie.titleKr|hanja_style %}
+                    <div class="title-container">{{ movie.titleKr|hanja_style|safe }}</div> <!-- 한자 부분에 한자용 글꼴 적용 -->
                 {% else %}
-                    <img src="{% static 'images/poster.png' %}" style="height: 100px;" alt="기본 사진">
+                    <div class="title-container">{{ movie.titleKr|safe }}</div>
                 {% endif %}
             </div>
-            {% if movie.titleKr|hanja_style %}
-                <div class="title-container">{{ movie.titleKr|hanja_style|safe }}</div> <!-- 한자 부분에 한자용 글꼴 적용 -->
-            {% else %}
-                <div class="title-container">{{ movie.titleKr|safe }}</div>
-            {% endif %}
-        </div>
+        </a>
     </div>
     
     

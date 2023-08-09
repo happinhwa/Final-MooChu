@@ -22,7 +22,7 @@
 
       <!-- 왼쪽 포스터 표시  -->
       <div class="top-ranking-left">
-        <a href="{% url 'moochu:movie_detail' movie_id=top1.id %}" style="text-decoration: none;"></a>
+        <a href="{% url 'moochu:movie_detail' movie_id=top1.id %}" style="text-decoration: none;">
         <div class="top1-card ">
           <div class="main-row">
             <!-- 카드 안에서 왼쪽  -->
@@ -32,8 +32,6 @@
             <!-- 카드 안에서 오른쪽  -->
             <div class="top1-card-right">
               <div class="main-card-body">
-                <a href="{% url 'moochu:movie_detail' movie_id=top1.id %}" style="text-decoration: none;">
-
                   <!-- 미디어 제목 부분 -->
                   {% if top1.title|hanja_style %}
                   <h4 class="main-card-title">{{top1.title|hanja_style|safe}}</h5>
@@ -171,13 +169,15 @@
       <div class="reviews-slider1">
         {% for item in combined_data %}
         <div class="review-card">
-          {% if item.movie.title|hanja_style %}
-          <h5 class="reviews-card-title">{{ item.movie.title|hanja_style|safe }}</h5>
-          {% else %}
-          <h5 class="reviews-card-title">{{ item.movie.title|safe }}</h5>
-          {% endif %}
-          <p class="reviews-coment">{{ item.review.content }}</p>
-          <div class="review-user"> {{ item.review.writer.nickname }}</div>
+          <a class="review-content" style="text-decoration: none;" href="{% url 'review:review_detail' movie_id=item.review.media_id review_id=item.review.id %}">
+            {% if item.movie.title|hanja_style %}
+            <h5 class="reviews-card-title">{{ item.movie.title|hanja_style|safe }}</h5>
+            {% else %}
+            <h5 class="reviews-card-title">{{ item.movie.title|safe }}</h5>
+            {% endif %}
+            <p class="reviews-coment">{{ item.review.content }}</p>
+            <div class="review-user"> {{ item.review.writer.nickname }}</div>
+          </a>
         </div>
         {% endfor %}
        

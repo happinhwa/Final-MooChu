@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from bson import ObjectId
@@ -6,15 +7,14 @@ from common.models import MovieRating
 from review.models import Review
 from .models import Media
 from collections import OrderedDict
-<<<<<<< HEAD
 import redis
+import re
 import random
-=======
 from datetime import datetime
 from collections import defaultdict
-import redis
->>>>>>> f3b5f9197b1dbd715743dc25537a1c3a3f4ac705
+import logging
 
+logger=logging.getLogger('moochu')
 # Create your views here.
 def convert_to_movie_dict(media_data):
     return {
@@ -22,11 +22,6 @@ def convert_to_movie_dict(media_data):
         'title': media_data["title_kr"]
     }
 
-def convert_to_movie_dict(media_data):
-    return {
-        'id': str(media_data["_id"]),
-        'title': media_data["title_kr"]
-    }
 
 
 ## mainpage 함수
@@ -34,7 +29,12 @@ def mainpage(request):
 
     # Redis 클라이언트 생성
     r = redis.StrictRedis(host='34.22.93.125', port=6379, db=0)
-
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id = None
+    info_string='main'
+    logger.info(f'moochu,{info_string}', extra={'user_id': user_id})
 
                                                   ## 오늘의 영화 TOP10 데이터 
     # Redis에서 'popularity'에 해당하는 값을 가져옴
@@ -48,6 +48,7 @@ def mainpage(request):
     data = Media.collection.find_one({'_id': ObjectId(top1[0])})
     reviews = Review.objects.filter(media_id=str(data['_id'])).order_by('-create_date')
     top1_review = reviews.first()
+    
     top1 ={
             'id': str(data['_id']),
             'title': data['title_kr'],
@@ -75,13 +76,14 @@ def mainpage(request):
         media_id = review.media_id
         media_data = Media.collection.find_one({'_id': ObjectId(media_id)})
         movie = convert_to_movie_dict(media_data)
-        
-        combined_review_movie_data = {
-            'movie': movie,
-            'review': review,
-        }
-        
-        combined_data.append(combined_review_movie_data)
+        if movie is not None:  # Check if movie is not None before appending to the list
+            combined_review_movie_data = {
+                'movie': movie,
+                'review': review,
+            }
+
+            combined_data.append(combined_review_movie_data)
+
     
 
 
@@ -92,16 +94,18 @@ def mainpage(request):
     print(value)
     recent=[]
     for media in value:
+        print(media)
+        
         data = Media.collection.find_one({'_id': ObjectId(media)})
+
         data ={
             'id': str(data['_id']),
             'title': data['title_kr'],
             'synopsis': data['synopsis']
         }
-        
+            
         recent.append(data)
                                                 ## 추천 결과 미디어 랜덤으로 20개 
-<<<<<<< HEAD
     try:
         r3 = redis.StrictRedis(host='34.22.93.125', port=6379, db=3)
         if r3.lrange(str(request.user.id), 1, 100):
@@ -116,22 +120,14 @@ def mainpage(request):
         recommendation = [(item.decode('utf-8')) for item in items]
     except:
         recommendation= None
-=======
-    r = redis.StrictRedis(host='34.22.93.125', port=6379, db=2)
-    
 
->>>>>>> f3b5f9197b1dbd715743dc25537a1c3a3f4ac705
     context = {"top1": top1,
                "top2": top2, 
                "reviews": reviews,
                'top1_review':top1_review,
                'combined_data':combined_data,
-<<<<<<< HEAD
                'recent': recent,
                 'recommendation':recommendation }
-=======
-               'recent': recent }
->>>>>>> f3b5f9197b1dbd715743dc25537a1c3a3f4ac705
     
     
     return render(request, 'moochu/mainpage.html', context)
@@ -173,13 +169,8 @@ def ott_media_list(request, ott, media_type):
 
     else:
         pipeline = [
-<<<<<<< HEAD
             {"$match": {"media_type": media_type,"OTT": {"$elemMatch": {"$in": ott}}, "indexRating.score": {"$gte": 73.2}}},
             {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
-=======
-            {"$match": {"media_type": media_type,"OTT":ott, "indexRating.score": {"$gte": 73.2}}},
-            {"$sample": {"size": 1000}} 
->>>>>>> f3b5f9197b1dbd715743dc25537a1c3a3f4ac705
         ]
 
         data = Media.collection.aggregate(pipeline)
@@ -194,7 +185,12 @@ def ott_media_list(request, ott, media_type):
         'type':media_type,
         'ott_service':ott_service
     }
-
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id=0
+    info_string='media_list'
+    logger.info(f'moochu,{info_string}', extra={'user_id': user_id})
     return render(request, 'moochu/movie_list.html', context)
 
 
@@ -230,6 +226,12 @@ def genre_filter(request, ott, media_type):
 
         data = Media.collection.aggregate(pipeline)
 
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id=0
+    info_string='media_list'
+    logger.info(f'moochu,{info_string}', extra={'user_id': user_id})
 
 
     page_obj= data_change(request,data)
@@ -263,6 +265,12 @@ def movie_detail(request, movie_id):
         }
         for movie in data
     ]
+    if request.user.is_authenticated:
+        user_id = request.user.id
+    else:
+        user_id=0
+    info_string='movie_detail'
+    logger.info(f'{data[0]["id"]},{info_string}', extra={'user_id': user_id})
 
     average_rating = MovieRating.objects.filter(media_id=str(movie_id)).aggregate(Avg('rating'))['rating__avg']
     reviews = Review.objects.filter(media_id=str(movie_id)).order_by('-create_date')
@@ -341,6 +349,11 @@ def coming_next(request):
     
     sorted_groups = sorted(grouped_movies.items(), key=lambda x: x[0])
     return render(request, 'moochu/coming_next.html', {'sorted_groups': sorted_groups})
+
+
+
+
+
 
 
 

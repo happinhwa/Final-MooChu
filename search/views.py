@@ -9,6 +9,9 @@ from moochu.models import Media
 from collections import OrderedDict
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import redis
+import logging
+
+logger=logging.getLogger('search')
   
 def trans(hits):
     hits_list=[]
@@ -20,39 +23,45 @@ def trans(hits):
 
 class SearchView(APIView):
     def get(self, request):
-        es = Elasticsearch(hosts=["34.64.147.118:9200"])
+        es = Elasticsearch(['http://34.64.147.118:9200'])
 
         search_word = request.GET.get('search')
+        if request.user.is_authenticated:
+            user_id = request.user.id
+        else:
+            user_id = None
+        info_string='search'
+        logger.info(f'{search_word},{info_string}', extra={'user_id': user_id})
 
         if not search_word:
             return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': 'search word param is missing'})
 
         docs = es.search(
-            index='movies',
+            index='media3',
             body={
                 "query": {
                     "multi_match": {
                         "query": search_word,
-                        "fields": ["title_kr","title_En", "genres"]                    
+                        "fields": ["id","title"]                    
                     }
                 }
             }
         )
 
-        # data_list = trans(docs['hits']['hits'])
-        data_list = docs['hits']
+        data_list = trans(docs['hits']['hits'])
+        # data_list = docs['hits']
 
 
         # Redis 클라이언트 생성
         r = redis.StrictRedis(host='34.22.93.125', port=6379, db=0)
 
-        search = r.zrevrange('search', 0, -1, withscores=True)
+        search = r.zrevrange('search', 0, 11, withscores=True)
 
         # ByteArray를 디코드하여 문자열로 변환
         search = [(item[0].decode('utf-8'), item[1]) for item in search]
         search = [x[0] for x in search]
         top5 = search[:5]
-        top10 = search[5:]
+        top10 = search[5:11]
 
         if data_list:
             context = {
@@ -60,15 +69,15 @@ class SearchView(APIView):
             'top5': top5,
             'top10': top10,
             }
-            return Response({'data': data_list},context)
-            #return render(request, 'search/result.html',context)
+            #return Response({'data': data_list},context)
+            return render(request, 'search/result.html',context)
         else:
             context = {
             'top5': top5,
             'top10': top10,
             }
-            return Response({'data': data_list},context)
-            #return render(request, 'search/result.html',context)
+            #return Response({'data': data_list},context)
+            return render(request, 'search/result.html',context)
 
 def data_change(request,data):
     data =[

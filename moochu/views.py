@@ -91,6 +91,7 @@ def mainpage(request):
     
                                                 ## 최신 리뷰 데이터 들고오기 
     reviews = Review.objects.order_by('-create_date')
+    review_count = reviews.count()
     combined_data = []
 
     for review in reviews:
@@ -104,12 +105,7 @@ def mainpage(request):
             }
 
             combined_data.append(combined_review_movie_data)
-
-    
-
-
-     
-                                               ## 최근 본 미디어 데이터 
+                        ## 최근 본 미디어 데이터 
     try:
         value = r0.lrange(str(request.user.id), 1, 10)
 
@@ -156,15 +152,19 @@ def mainpage(request):
 
     page_obj= data_change(request,recommendation_data)
 
+    
 
-    context = {"top1": top1,
-               "top2": top2, 
-               "reviews": reviews,
-               'top1_review':top1_review,
-               'combined_data':combined_data,
-               'recent': recent,
-                'recommendation':recommendation,
-                 'popu' : page_obj }
+    context = {
+        "top1": top1,
+        "top2": top2, 
+        "reviews": reviews,
+        'top1_review':top1_review,
+        'combined_data':combined_data,
+        'recent': recent,
+        'recommendation':recommendation,
+        'popu' : page_obj,
+        'review_count':review_count,
+    }
     
     
     return render(request, 'moochu/mainpage.html', context)

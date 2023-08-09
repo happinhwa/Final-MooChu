@@ -62,7 +62,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <div class="vote">
                 <a href="#" data-uri="{% url 'review:vote_review' review.id %}" style="text-decoration: none;"
-                    class="recommend" data-voted="{{ voted|lower }}" data-is-writer="{{ is_writer|lower }}">
+                    class="recommend btn btn-sm" data-voted="{{ voted|lower }}" data-is-writer="{{ is_writer|lower }}">
                     <span class="icon-thumbs-up" style="color: #96fc72; font-size: 20px;"></span>
                     <span style="font-family: Chonburi; font-size: 17px; color: white;margin-left: 5px;">{{ review.voter.count }}</span>
                 </a>

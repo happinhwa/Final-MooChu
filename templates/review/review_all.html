@@ -76,11 +76,11 @@
                     <div class="my-3">
                         <a href="{% url 'review:review_detail' item.review.media_id item.review.id %}" class="btn btn-sm">
                             <span class="icon-comments" style="color: #96fc72; font-size: 20px;"></span>
-                            <span style="font-family: Chonburi; font-size: 17px; color:#96FC72;margin-left: 5px;">{{item.review.review_comments.count}}</span>
+                            <span style="font-family: Chonburi; font-size: 17px; color:white;margin-left: 5px;">{{item.review.review_comments.count}}</span>
                         </a>
 
                             <a href="#" data-uri="{% url 'review:vote_review' item.review.id %}" style="text-decoration: none;"
-                                class="recommend" data-voted="{{ voted|lower }}" data-is-writer="{{ is_writer|lower }}">
+                                class="recommend btn btn-sm" data-voted="{{ voted|lower }}" data-is-writer="{{ is_writer|lower }}">
                                 <span class="icon-thumbs-up" style="color: #96fc72; font-size: 20px;"></span>
                                 <span style="font-family: Chonburi; font-size: 17px; color: white;margin-left: 5px;">{{ item.review.voter.count }}</span>
                             </a>

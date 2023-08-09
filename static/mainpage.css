@@ -1,6 +1,14 @@
 .hanja-font {
     font-family: 'Heiti'; /* 한자용 글꼴 설정 */
   }
+  .review-all, .review-all:hover{
+    color: white;
+    font-family: NanumBarunpen;
+    text-decoration: none;
+    font-size: 20px;
+    justify-content: right;
+    border:none;
+}
   body {
   font-family: "NanumBarunpen", sans-serif;
   }

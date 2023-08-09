@@ -12,6 +12,10 @@ import logging
 logger=logging.getLogger('review')
 
 
+def get_movie_data(media_id):
+    movie = Media.collection.find_one({"_id": ObjectId(media_id)})
+    return movie
+
 # 최신 리뷰 리스트 기본(최신순)
 def review(request):
     

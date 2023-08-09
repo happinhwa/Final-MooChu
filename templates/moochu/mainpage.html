@@ -22,40 +22,28 @@
 
       <!-- 왼쪽 포스터 표시  -->
       <div class="top-ranking-left">
+        <a href="{% url 'moochu:movie_detail' movie_id=top1.id %}" style="text-decoration: none;"></a>
         <div class="top1-card ">
           <div class="main-row">
             <!-- 카드 안에서 왼쪽  -->
-            <div class="top1-card-left">
-<<<<<<< HEAD
-              <a href="#" style="text-decoration: none;">
+              <div class="top1-card-left">
                 <img src="https://storage.googleapis.com/end_moochu/{{top1.id}}.jpg" class="main-card-img" alt="Top1 영화 포스터">
-              </a>
-            </div>
-            <!-- 카드 안에서 오른쪽  -->
-            <div class="top1-card-right">
-              <a href="#" style="text-decoration: none;">
-                <div class="main-card-body">
-                  <!-- 미디어 제목 부분 -->
-                  <h5 class="main-card-title">{{top1.title}}</h5>
-                  <!-- 미디어 줄거리 넣기 -->
-                  <p class="main-card-text">{{top1.synopsis}}</p>
-              </a>
-=======
-              <img src="https://storage.googleapis.com/end_moochu/{{top1.id}}.jpg" class="main-card-img" alt="Top1 영화 포스터">
-            </div>
+              </div>
             <!-- 카드 안에서 오른쪽  -->
             <div class="top1-card-right">
               <div class="main-card-body">
-                <!-- 미디어 제목 부분 -->
-                {% if top1.title|hanja_style %}
-                <h5 class="main-card-title">{{top1.title|hanja_style|safe}}</h5>
-                {% else %}
-                <h5 class="main-card-title">{{top1.title|safe}}</h5>
-                {% endif %}
-                <!-- 미디어 줄거리 넣기 -->
-                <p class="main-card-text">{{top1.synopsis}}</p>
->>>>>>> 7ffc524a91fc2603be1a23f262d8334b2b666692
-                <!-- 미디어 최신 리뷰 1개 -->
+                <a href="{% url 'moochu:movie_detail' movie_id=top1.id %}" style="text-decoration: none;">
+
+                  <!-- 미디어 제목 부분 -->
+                  {% if top1.title|hanja_style %}
+                  <h5 class="main-card-title">{{top1.title|hanja_style|safe}}</h5>
+                  {% else %}
+                  <h5 class="main-card-title">{{top1.title|safe}}</h5>
+                  {% endif %}
+                    <!-- 미디어 줄거리 넣기 -->
+                    <p class="main-card-text">{{top1.synopsis}}</p>
+                  
+                  <!-- 미디어 최신 리뷰 1개 -->
                 <div class="top-review">
                   {% if top1.title|hanja_style %}
                   <h5 class="top-review-title">{{ top1.title|hanja_style|safe }}</h5>
@@ -73,6 +61,7 @@
             </div>              <!-- top1-card-right 끝 -->
           </div>                <!-- main-row 끝 -->
         </div>                  <!-- top1-card 끝 -->
+      </a>
       </div>                    <!-- top-ranking-left 끝 -->
 
 
@@ -172,7 +161,10 @@
 
 
     <!-- 최신리뷰 10개 ? -->
-    <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">최신 리뷰 한줄평</h1>
+    <div class="d-flex align-items-center">
+      <h1 style="color: #96FC72; /* 글자 색상 코드 입력 */">최신 리뷰 한줄평</h1>
+      <a class="btn review-all" style="margin-left: auto; margin-right: 20px; margin-top:30px;" href="{% url 'review:review' %}">리뷰 <span style="color:#96FC72; font-family: Chonburi;">{{review_count}}</span>개 모두 보러 가기▶︎</a>
+    </div>
     <div class="reviews-container">
       <div class="reviews-slider1">
         {% for item in combined_data %}

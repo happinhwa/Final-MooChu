@@ -90,6 +90,7 @@ def mainpage(request):
     
                                                 ## 최신 리뷰 데이터 들고오기 
     reviews = Review.objects.order_by('-create_date')
+    review_count = reviews.count()
     combined_data = []
 
     for review in reviews:
@@ -156,21 +157,43 @@ def mainpage(request):
 
     page_obj= data_change(request,recommendation_data)
 
+    
 
-    context = {"top1": top1,
-               "top2": top2, 
-               "reviews": reviews,
-               'top1_review':top1_review,
-               'combined_data':combined_data,
-               'recent': recent,
-                'recommendation':recommendation,
-                 'popu' : page_obj }
+    context = {
+        "top1": top1,
+        "top2": top2, 
+        "reviews": reviews,
+        'top1_review':top1_review,
+        'combined_data':combined_data,
+        'recent': recent,
+        'recommendation':recommendation,
+        'popu' : page_obj,
+        'review_count':review_count,
+    }
     
     
     return render(request, 'moochu/mainpage.html', context)
     
 
 
+
+
+# 페이징을 위한 호출 함수
+def data_change(request,data):
+    data =[
+        {
+            'id': str(movie['_id']),
+            'posterImageUrl': movie['poster_image_url'],
+            'titleKr': movie['title_kr'],
+        }
+        for movie in data
+    ]
+
+    paginator = Paginator(data, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return page_obj
 
 
 def ott_media_list(request, ott, media_type):
@@ -193,8 +216,8 @@ def ott_media_list(request, ott, media_type):
             {"$match": {"media_type": media_type,"OTT": {"$elemMatch": {"$in": [ott]}}, "indexRating.score": {"$gte": 73.2}}},
             {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
         ]
-
         data = Media.collection.aggregate(pipeline)
+
 
     
     page_obj= data_change(request,data)

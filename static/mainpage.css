@@ -1,6 +1,14 @@
 .hanja-font {
     font-family: 'Heiti'; /* 한자용 글꼴 설정 */
   }
+  .review-all, .review-all:hover{
+    color: white;
+    font-family: NanumBarunpen;
+    text-decoration: none;
+    font-size: 20px;
+    justify-content: right;
+    border:none;
+}
   body {
   font-family: "NanumBarunpen", sans-serif;
   }
@@ -49,6 +57,7 @@
     width: 60%;
     height: 100%;
     margin-left: 10px;
+    padding:10px 5px;
   }
   .main-row{
     --bs-gutter-x: 1.5rem;
@@ -80,13 +89,11 @@
   .main-card-title {
     color:#96FC72;
     text-decoration: none;
-
   }
   .main-card-text {
-    color:#96FC72;
+    color:white;
     margin-top: 5%;
     text-decoration: none;
-
   }
   .reviews-container{
     position: relative;

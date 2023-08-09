@@ -116,7 +116,8 @@ border-width: 0.2rem;
                         <div style="width: calc(5%); color:white; text-align: center; display: flex; align-items: center; margin-bottom: 10px;">
                             <!-- 버튼 리셋 -->
                             <button style="background: none; border: none; margin:0;"><a href="{% url 'moochu:ott_media_list' ott='All' media_type=type %}">
-                                <img class="back-button" src="{% static 'reset_green.png' %}" alt="Back">
+                                <!-- <img class="back-button" src="{% static 'reset_green.png' %}" alt="Back"> -->
+                                <i class="fa-solid fa-arrow-rotate-left fa-2xl" style="color: #96fc72;"></i>
                             </a></button>
                         </div>
                     {% endif %}
@@ -133,7 +134,8 @@ border-width: 0.2rem;
                     <div style="width: calc(5%); color:white; text-align: center; display: flex; align-items: center; margin-bottom: 10px;">
                         <!-- 버튼 필터 -->
                         <button style="background: none; border: none;">
-                            <img class="back-button" src="{% static 'filter_green.png' %}" alt="Filter">
+                            <i class="fa-solid fa-filter fa-2xl" style="color: #96fc72;"></i>
+                            <!-- <img class="back-button" src="{% static 'filter_green.png' %}" alt="Filter"> -->
                         </button>
                     </div>
                 {% endif %}

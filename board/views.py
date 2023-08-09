@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from . import models, forms
 from django.contrib import messages
-from django.http import HttpResponse
 import logging
 
 ############## Post 관련 ##############
@@ -205,3 +204,16 @@ def vote_comment(request, comment_id):
     else:
         comment.voter.add(request.user)
     return redirect('board:post_detail', post_id=comment.board.id)
+
+
+
+
+############## My Posts ##############
+@login_required
+def my_posts(request, user_id):
+    writer = models.User.objects.get(pk=user_id)
+    post_list = models.board.objects.filter(writer=writer).order_by('-create_date')
+    context = {
+        'post_list': post_list,
+    }
+    return render(request, 'board/moobo.html', context)

@@ -11,7 +11,9 @@
     <ul class="board-menu">
         <li><a href="{% url 'board:moobo' %}">Board</a></li>
         <li><a href="{% url 'board:post' %}">Upload</a></li>
-        <li><a href="#">My Posts</a></li>
+        {% if user.id %}
+            <li><a href="{% url 'board:my_posts' user.id %}">My Posts</a></li>
+        {% endif %}
     </ul>
 
 
@@ -42,9 +44,10 @@
     <div class="row my-3">
         <div class="d-flex justify-content-between align-items-center">
             <div class="vote"> <!-- 추천 영역 -->
-                <a href="#" data-uri="{% url 'board:vote_post' post.id %}"
+                <a href="#" data-uri="{% url 'board:vote_post' post.id %}" style="text-decoration: none;"
                     class="recommend" data-voted="{{ voted|lower }}" data-is-writer="{{ is_writer|lower }}">
-                <img src="{% static 'thumbs_orange.png' %}" style="max-height: 30px;"></a>
+                    <i class="fa-solid fa-thumbs-up fa-l" style="color: #FCA472;"></i>                
+                </a>
                   {{ post.voter.count }}
             </div>
     
@@ -81,13 +84,16 @@
                         
                         {% endif %}
                     </div>
-                    <div class="card-text comment-content" style="white-space: pre-line; margin-top: 10px; margin-left: 5px;">{{ comment.content }}</div>
-                    {% if request.user == comment.writer %}
-                    <div class="my-3">
-                        <a href="{% url 'board:comment_edit' comment.id  %}" class="btn btn-sm btn-board">수정</a>
-                        <a href="#" class="delete btn btn-sm btn-board" data-uri="{% url 'board:comment_delete' comment.id  %}">삭제</a>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="card-text comment-content" style="white-space: pre-line; margin-top: 10px; margin-left: 5px;">{{ comment.content }}</div>
+                        {% if request.user == comment.writer %}
+                        <div class="my-3">
+                            <a href="{% url 'board:comment_edit' comment.id  %}" class="btn btn-sm btn-board1">수정</a>
+                            <a href="#" class="delete btn btn-sm btn-board1" data-uri="{% url 'board:comment_delete' comment.id  %}">삭제</a>
+                        </div>
+                        {% endif %}
                     </div>
-                    {% endif %}
+                    
                     </div>
             </div>
             {% endfor %}

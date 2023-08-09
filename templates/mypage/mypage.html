@@ -44,7 +44,8 @@
                   
                   <div class="news-box">
                     <div class="follow-title">
-                      <img src="{% static 'user_orange.png' %}" style="max-height: 25px; margin-bottom: 5px; font-weight: 900;"> <span style="color: #FF8540;">Followers</span> List
+                      <img src="{% static 'user_orange.png' %}" style="max-height: 25px; margin-bottom: 5px; font-weight: 900;"> 
+                      <span style="color: #FF8540;">Followers</span> List
                     </div>
                       {% if follower %}
                       {% for follow in follower%}
@@ -71,7 +72,8 @@
 
                   <div class="update-box">
                     <div class="follow-title">
-                      <img src="{% static 'user_orange.png' %}" style="max-height: 25px; margin-bottom: 5px; font-weight: 900;"> <span style="color: #FF8540;">Following</span> List
+                      <img src="{% static 'user_orange.png' %}" style="max-height: 25px; margin-bottom: 5px; font-weight: 900;"> 
+                      <span style="color: #FF8540;">Following</span> List
                     </div>
                     {% if following %}
                     {% for follow in following%}

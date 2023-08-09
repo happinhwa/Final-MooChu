@@ -196,8 +196,8 @@ table tr > td{
     margin-bottom: 10px;
 }
 
-.comment-content{
-    color: #96FC72;
+.review_comment-content{
+    color: #C0DBB6;
     font-family: 'NanumBarunpen';
 }
 .comment-detail{
@@ -224,7 +224,7 @@ table tr > td{
 }
 .comment-body{
     background-color: #2C2E34; 
-    border:1px solid #FCA472;
+    border:1px solid #96FC72;
 }
 
 

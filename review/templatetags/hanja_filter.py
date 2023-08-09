@@ -11,6 +11,8 @@ def hanja_style(text):
     return text
 
 
+
+
 @register.filter(name='is_hanja')
 def is_hanja(text):
     if text is None:

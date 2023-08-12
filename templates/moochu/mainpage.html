@@ -64,7 +64,7 @@
 
       <!-- 오른쪽 포스터 표시  -->
       <div class="top-ranking-right">
-        <div class="scroll-box">
+        <div class="scroll-box" style="overflow-y: hidden; /* 스크롤 숨김 */">
                 <!-- Media-1 표시  -->
                 {%for media in top2 %}
           <a href="{% url 'moochu:movie_detail' movie_id=media.id %}" style="text-decoration: none;">

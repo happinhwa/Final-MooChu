@@ -255,7 +255,6 @@ body {
   color:#FF8540;
   margin: 43px 24px 43px 24px;
   white-space: nowrap; /* 줄 바꿈 방지 */
-  overflow:scroll; /* 넘치는 부분 감추기 */
 }
 
 .profile-username {

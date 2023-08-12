@@ -27,7 +27,7 @@ urlpatterns = [
     path('guestbook/<int:guestbook_id>/', views.guestbook_detail, name="book_detail"), ## 방명록 삭제
 
     ## 프로필 수정 
-    path('<str:nickname>/edit', views.edit, name="edit"),
+    path('<int:user_id>/edit', views.edit, name="edit"),
     
     ## 팔로우 신청
     path('<str:nickname>/follow/', views.follow, name="follow"),

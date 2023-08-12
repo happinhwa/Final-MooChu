@@ -141,7 +141,7 @@ def guestbook_detail(request, guestbook_id):
 
 
 @api_view(['PUT','GET'])
-def edit(request, nickname):
+def edit(request, user_id):
     if request.user.is_authenticated:
         user_id = request.user.id
     else:
@@ -153,10 +153,12 @@ def edit(request, nickname):
         if form.is_valid():
             form.save()
             nickname = form.cleaned_data['nickname']
+            print(form.cleaned_data['nickname'])
             return Response(status=200)
-            ## return redirect('mypage:home', nickname)
+             #return redirect('mypage:home', nickname)
     elif request.method == 'GET':
         form = ProfileUpdateForm(instance=request.user)
+        nickname = request.user.nickname
         context = profile_data(nickname, request)
         context.update({"form":form})
         return render(request, 'mypage/edit.html', context)
@@ -188,6 +190,7 @@ def votes(request, nickname):
     votes = {"votes": MovieRating.objects.filter(user=profile['master'].id)}
     profile.update(votes)
     return render(request, 'mypage/votes.html', profile)
+
 
 
 
@@ -230,24 +233,24 @@ def follower(request, follow_id):
         return Response(status=200)
     
 @api_view(['GET', 'POST'])
-
 def Toplist(request, nickname):
     if request.method=='GET':
-
         profile = profile_data(nickname, request)
-        reviews = {"reviews": Review.objects.filter(writer_id=profile['master'].id)}
+        reviews = Review.objects.filter(writer_id=profile['master'].id)
+
+        media_ids = set(review.media_id for review in reviews)
+
 
         toplist_media_ids = set([top.media_id for top in models.MyToplist.objects.filter(writer=profile['master'].id)])
-
-        filtered_reviews = reviews["reviews"].exclude(media_id__in=toplist_media_ids)
-
-        reviews.update({"reviews": filtered_reviews})
-
-        profile.update(reviews)
-
+        print(toplist_media_ids)
+        media = []
+        media.append(media_ids-toplist_media_ids)
+        
+        profile.update({'reviews': list(media)[0]})
         toplist = {"toplist": models.MyToplist.objects.filter(writer=profile['master'].id)}
         profile.update(toplist)
         return render(request, 'mypage/Toplist.html', profile)
+        
     
     elif request.method=='POST':
         # 사용자가 선택한 영화 id 리스트를 POST 데이터에서 추출합니다.

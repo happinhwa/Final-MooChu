@@ -11,6 +11,23 @@
     }
 </style>
 
+
+{% block scripts %}
+<script>
+function toggleSelection(event, media_id) {
+    const checkbox = document.getElementById(`checkbox-${media_id}`);
+    const img = event.target;
+    checkbox.checked = !checkbox.checked;
+
+    if (checkbox.checked) {
+        img.classList.add('selected');
+    } else {
+        img.classList.remove('selected');
+    }
+}
+</script>
+{% endblock %}
+
 <div class="bookcover">
     <div class="bookdot">
         <div class="page">
@@ -55,8 +72,8 @@
                               <button type="submit">선정하기</button><br /><br />
                               {% for media in reviews %}
                                 
-                                <input type="checkbox" id="checkbox-{{ media.media_id }}" name="media_id" value="{{ media.media_id }}" style="display:none;">
-                                <img class="poster-img" src="https://storage.googleapis.com/end_moochu/{{media.media_id}}.jpg" onclick="toggleSelection(event, '{{ media.media_id }}')">
+                                <input type="checkbox" id="checkbox-{{ media }}" name="media_id" value="{{ media }}" style="display:none;">
+                                <img class="poster-img" src="https://storage.googleapis.com/end_moochu/{{media}}.jpg" onclick="toggleSelection(event, '{{ media }}')">
                                 
                               {% endfor %}
                             </form>
@@ -82,19 +99,3 @@
 </div> <!-- bookcover --> 
 {% endblock %}
 
-
-{% block scripts %}
-<script>
-function toggleSelection(event, media_id) {
-    const checkbox = document.getElementById(`checkbox-${media_id}`);
-    const img = event.target;
-    checkbox.checked = !checkbox.checked;
-
-    if (checkbox.checked) {
-        img.classList.add('selected');
-    } else {
-        img.classList.remove('selected');
-    }
-}
-</script>
-{% endblock %}

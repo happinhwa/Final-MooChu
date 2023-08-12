@@ -13,7 +13,7 @@
       <div class="content-container">
               <!-- 오른쪽 페이지 상단 글씨  -->
         <div class="header content-title">
-          <div class="content-title-name"> <span style="color: #FF8540;">{{ user.nickname }}</span> 님의 마이페이지</div>
+          <div class="content-title-name"> <span style="color: #FF8540;">{{ master.nickname }}</span> 님의 마이페이지</div>
         </div>
               <!-- 오른쪽 페이지 구성 -->
         <div class="box content-box">
@@ -33,7 +33,7 @@
                     <a href="{% url 'moochu:movie_detail' movie_id=media.media_id %}"><img class="poster-img" src="https://storage.googleapis.com/end_moochu/{{media.media_id}}.jpg" ></a>
                   {% endfor %}
                 {% else %}
-                  <h3 class="no-note"><span style="font-weight: 900;">{{ master.nickname }}</span> 님의 인생작 목록이 존재하지 않습니다.</h3>
+                  <h3 class="no-note"><span style="color: #FF8540;">{{ master.nickname }}</span>  님의 인생작 목록이 존재하지 않습니다.</h3>
                 {% endif %}
               </div>
               <br />

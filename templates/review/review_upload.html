@@ -2,7 +2,7 @@
 {% block title %}review{% endblock %}
 {% load static %}
 {% load hanja_filter %}
-
+{% load review_movie %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'review.css' %}">
 
@@ -20,11 +20,13 @@
 
         <div class="movie-container">
             <div class="poster-image">
-                {% if movie.posterImageUrl %}
-                    <img src="{{ movie.posterImageUrl }}" alt="{{ movie.titleKr }} 포스터">
-                {% else %}
-                    <img src="{% static 'images/poster.png' %}" alt="기본 사진">
-                {% endif %}
+                {% with poster_url="https://storage.googleapis.com/end_moochu/"|add:movie.id|add:".jpg" %}
+                    {% if poster_url|url_exists %}
+                        <img src="{{ poster_url }}" alt="{{ movie.titleKr }}"> 
+                    {% else %}
+                        <img src="{% static 'images/poster.png' %}" alt="기본 사진">
+                    {% endif %}
+                {% endwith %}
             </div>
             <div class="movie-info">
             <form method="post" class="post-form">

@@ -1,3 +1,5 @@
+movie_genre.html
+
 <!-- sidebar.html -->
 
 {% load review_filters %}
@@ -115,7 +117,7 @@ border-width: 0.2rem;
                     {% if genres|length > 0 %}
                         <div style="width: calc(5%); color:white; text-align: center; display: flex; align-items: center; margin-bottom: 10px;">
                             <!-- 버튼 리셋 -->
-                            <button style="background: none; border: none; margin:0;"><a href="{% url 'moochu:ott_media_list' ott='All' media_type=type %}">
+                            <button style="background: none; border: none; margin:0;" onclick="resetFilters();"><a href="{% url 'moochu:ott_media_list' ott='All' media_type=type %}">
                                 <!-- <img class="back-button" src="{% static 'reset_green.png' %}" alt="Back"> -->
                                 <i class="fa-solid fa-arrow-rotate-left fa-2xl" style="color: #96fc72;"></i>
                             </a></button>
@@ -155,6 +157,13 @@ border-width: 0.2rem;
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    function resetFilters() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+    }
+
     // 장르 텍스트를 클릭하면 해당 장르 체크박스를 체크/언체크하는 함수
     function toggleGenre(checkboxId) {
         const checkbox = document.getElementById(checkboxId);

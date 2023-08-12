@@ -19,7 +19,7 @@ from django.urls import path, include
 from allauth.account.views import ConfirmEmailView
 from django.conf.urls.static import static
 from django.conf import settings
-from review.views import media_rating
+from common.views import protected_view
 
 
 urlpatterns = [
@@ -32,8 +32,6 @@ urlpatterns = [
     path('board/', include('board.urls', namespace='board')),  
     path('search/', include('search.urls', namespace='search')), 
     path('review/', include('review.urls', namespace='review')), 
-    
+    path('',protected_view, name='protected')
 ]
-
-
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

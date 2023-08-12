@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Movie List{% endblock %}
+{% block title %}What's New{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'coming_next.css' %}">
@@ -14,7 +14,13 @@
             {% for d_day, movies in sorted_groups %}
             <div class='coming-movie-groups'>
                 <div class='d-day-container'>
-                    <h3 class='coming-movie-groups-head'>D - {{ d_day }}</h3>
+                    <h3 class='coming-movie-groups-head'>
+                        {% if d_day == 0 %}
+                            Today! <i class="fa-solid fa-hands-clapping"></i>
+                        {% else %}
+                            D - {{ d_day }}
+                        {% endif %}
+                    </h3>
                 </div>
                 <div class="slider-container{% if movies|length > 4 %} with-buttons{% endif %}">
                   <div class="slider-wrapper">

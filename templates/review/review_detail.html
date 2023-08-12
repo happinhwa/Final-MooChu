@@ -19,7 +19,7 @@
 
     <h2 class="border-bottom py-2"></h2>
 
-    <div class="post-title">
+    <div class="post-title"> 
         <a href="{% url 'moochu:movie_detail' movie.id %}" style="text-decoration: none;">
             <div class="image-title-container">
                 <div class="image-container">
@@ -45,7 +45,7 @@
     <div class="info">
         <dl>
             <dt>작성자</dt>
-            <dd>{{review.writer}}</dd>
+            <dd><a class="nickname" href="{% url 'mypage:home' nickname=review.writer.nickname %}">{{review.writer}}</a></dd>
         </dl>
         <dl>
             <dt>작성일</dt>
@@ -91,7 +91,7 @@
 <div class="card my-3" style="border: 1px solid transparent; background-color: transparent;">
     <div class="card-body comment-body">
         <div class="badge badge-comment d-flex align-items-center">
-            <div class="mr-2" style="font-size: 15px;">@{{ review_comment.writer.username }}</div>
+            <div class="mr-2" style="font-size: 15px;"><a class="nickname" href="{% url 'mypage:home' nickname=review_comment.writer.nickname %}">@{{ review_comment.writer.username }}</a></div>
             {% if review_comment.modify_date %}
             <div style="color: lightgray;">{{ review_comment.modify_date }} (수정됨)</div>
             {% else %}

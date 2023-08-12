@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="{% static 'search.css' %}">
 
 
-
 <div class="container">
   <form action="{% url 'search:search' %}" method="GET">
     <div class="input-group">
@@ -14,9 +13,6 @@
         <button class="btn btn-search" type="submit">검색</button>
     </div>
   </form>
- 
-  
-
   <!-- 실시간 급상승 검색어 순위 -->
   <div class="row justify-content-center">
     <!-- 1위부터 5위까지 표시 -->
@@ -24,7 +20,7 @@
       <ul class="ranking-list">
         {% for search in top5 %}
         <li class="ranking-item">
-          <span class="badge" >{{ forloop.counter }}</span><a href="http://34.64.147.118:8000/search/?search={{search}}" style="text-decoration: none; color:#96FC72;">{{search}}</a>
+          <span class="badge">{{ forloop.counter }}</span><a href="http://34.64.147.118:8000/search/?search={{search}}" style="text-decoration: none; color:#96FC72;">{{search}}</a>
         </li>
         {% endfor %}
       </ul>
@@ -62,6 +58,5 @@
     {% endfor %}
   </div>
 </div>
-
 
 {% endblock %}

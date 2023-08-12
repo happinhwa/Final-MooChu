@@ -13,8 +13,27 @@ from django.contrib.auth import authenticate, login
 import logging
 from django.http import JsonResponse
 from moochu.models import Media
-
+import requests
 logger=logging.getLogger('common')
+
+
+def protected_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        next_page = request.POST.get('next')
+
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return JsonResponse({'success': True, 'next_page': next_page})
+        else:
+            return JsonResponse({'success': False, 'error': '로그인에 실패하였습니다.'})
+        
+
+    else:
+        return render(request, 'common/protected.html')
+    
 
 ## 회원가입 
 def register(request):
@@ -105,17 +124,31 @@ def movie_selection(request):
                 media_id = movie["_id"]
                 rating = request.POST[rating_key]
 
-                try:
-                    # 변경된 부분: get_or_create를 사용해 중복 저장을 방지합니다.
-                    movie_rating, created = MovieRating.objects.get_or_create(user=user, media_id=media_id, defaults={'rating': rating})
+                # === FastAPI 필요한 부분 시작 ===
+                data = {
+                    "user_id": user.pk,
+                    "media_id": movie_id,
+                    "genre_id": ",".join(movie["genres"]),
+                    "rating": float(rating),
+                }
+                response = requests.post("http://34.64.249.190:8001/user_info/", json=data)
+                if response.status_code != 200:
+                    # 에러 처리
+                    print(f"Error posting data to FastAPI: {response.text}")
 
-                    # 만약 이미 존재하는 평점이라면 이전에 저장된 결과를 업데이트합니다.
-                    if not created:
-                        movie_rating.rating = rating
-                        movie_rating.save()
+                # === FastAPI 필요한 부분 끝 ===
+                else:
+                    try:
+                        # 변경된 부분: get_or_create를 사용해 중복 저장을 방지합니다.
+                        movie_rating, created = MovieRating.objects.get_or_create(user=user, media_id=media_id, defaults={'rating': rating})
 
-                except ValidationError:
-                    pass
+                        # 만약 이미 존재하는 평점이라면 이전에 저장된 결과를 업데이트합니다.
+                        if not created:
+                            movie_rating.rating = rating
+                            movie_rating.save()
+
+                    except ValidationError:
+                        pass
 
         return redirect('moochu:main')
     else: # 처음에 post요청이 없을때 보여주는 용. 

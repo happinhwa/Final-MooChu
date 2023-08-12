@@ -61,6 +61,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # 'config.middleware.LoginRequiredMiddleware', # 동영상 로그인 페이지 통해서만 홈페이지 이용가능
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -242,9 +243,9 @@ AUTHENTICATION_BACKENDS = [
 # # ACCOUNT_AUTHENTICATION_METHOD = "email"
 # ACCOUNT_EMAIL_CONFIRMATION_EMAIL_TEMPLATE = 'account/email_confirmation.html'
 
-
+# LOGIN_URL = "/protected"
 LOGIN_REDIRECT_URL = "/moochu"
-LOGOUT_REDIRECT_URL = "/moochu"
+LOGOUT_REDIRECT_URL = ""
 ACCOUNT_LOGOUT_ON_GET = True
 
 # 기본 프로필 이미지 경로 설정

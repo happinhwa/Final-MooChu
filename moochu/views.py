@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from bson import ObjectId
@@ -27,6 +26,7 @@ def data_change(request,data):
     data =[
         {
             'id': str(movie['_id']),
+            'posterImageUrl': movie['poster_image_url'],
             'titleKr': movie['title_kr'],
         }
         for movie in data
@@ -104,15 +104,10 @@ def mainpage(request):
             }
 
             combined_data.append(combined_review_movie_data)
-
-    
-
-
-     
-                                               ## 최근 본 미디어 데이터 
+                         ## 최근 본 미디어 데이터 
     
     value = r0.lrange(str(request.user.id), 0, 10)
-    
+
     value = [(item.decode('utf-8')) for item in value]
 
     recent=[]
@@ -213,8 +208,8 @@ def ott_media_list(request, ott, media_type):
 
     else:
         pipeline = [
-            {"$match": {"media_type": media_type,"OTT": {"$elemMatch": {"$in": [ott]}}, "indexRating.score": {"$gte": 73.2}}},
-            {"$sample": {"size": 1000}}  # 임시로 충분히 큰 숫자를 지정해 무작위 순서로 문서들을 반환받는다.
+            {"$match": {"media_type": media_type, "OTT": {"$in": [ott]}, "indexRating.score": {"$gte": 73.2}}},
+            {"$sample": {"size": 1000}}
         ]
         data = Media.collection.aggregate(pipeline)
 
@@ -246,7 +241,8 @@ def genre_filter(request, ott, media_type):
                    '예능', '음악', '전쟁', '코미디', '키즈', '판타지']
     
     selected_genres = request.GET.getlist('genres')
-
+    if not selected_genres:
+        return redirect('moochu:ott_media_list', media_type=media_type, ott=ott)
     if ott=='All':
         pipeline = [
             {"$match": {"genres": {"$elemMatch": {"$in": selected_genres}}, "indexRating.score": {"$gte": 73.2}}},
@@ -258,7 +254,7 @@ def genre_filter(request, ott, media_type):
         
     else:
         pipeline = [
-            {"$match": {"genres": {"$elemMatch": {"$in": selected_genres}},"OTT": {"$elemMatch": {"$in": [ott]}}, "indexRating.score": {"$gte": 73.2}}},
+            {"$match": {"genres": {"$elemMatch": {"$in": selected_genres}}, "indexRating.score": {"$gte": 73.2}}},
             {"$sample": {"size": 1000}} 
         ]
 
@@ -295,6 +291,7 @@ def movie_detail(request, movie_id):
     data =[
         {
             'id': str(movie['_id']),
+            'posterImageUrl': movie['poster_image_url'],
             'titleKr': movie['title_kr'],
             'age' : movie['rating'],
             'genre' : movie['genres'],

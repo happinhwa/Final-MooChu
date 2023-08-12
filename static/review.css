@@ -138,7 +138,10 @@ table tr > td{
     color: #D9DFF5;
     font-family: 'NanumBarunpen'
 }
-
+.nickname, .nickname:hover{
+    color:white;
+    text-decoration: none;
+}
 /* ################################## */
 .info {
     padding: 15px;

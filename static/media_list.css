@@ -92,16 +92,13 @@
         padding-right: 10px; 
     }
 }
-
-
 .aspect-ratio-container {
     position: relative;
     width: 100%;
-    padding-top: 150%; /* 비율 2:3 (150% / 100% = 3 / 2) */
+    padding-top: 150%;
     overflow: hidden;
     border-radius: 3px;
 }
-
 .aspect-ratio-content {
     position: absolute;
     top: 0;
@@ -142,6 +139,22 @@
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
     border-radius: 0 0 3px 3px;
+}
+.card-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #96FC72;
+    color: #2C2E34;
+    padding: 10px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-family: NanumBarunpen;
+}
+
+.card:hover .card-title {
+    opacity: 1;
 }
 .pagination {
     text-align: center;

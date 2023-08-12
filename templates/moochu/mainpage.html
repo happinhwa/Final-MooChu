@@ -39,14 +39,14 @@
                   <h4 class="main-card-title">{{top1.title|safe}}</h5>
                   {% endif %}
                     <!-- 미디어 줄거리 넣기 -->
-                    <p class="main-card-text">{{top1.synopsis|truncatechars:300 }}</p>
+                    <p class="main-card-text">{{top1.synopsis|truncatechars:200 }}</p>
                   
                   <!-- 미디어 최신 리뷰 1개 -->
                 <div class="top-review">
                   {% if top1.title|hanja_style %}
-                  <h5 class="main-card-title">{{top1.title|hanja_style|safe}}</h5>
+                  <h5 class="top-review-title">{{ top1.title|hanja_style|safe }}</h5>
                   {% else %}
-                  <h5 class="main-card-title">{{top1.title|safe}}</h5>
+                  <h5 class="top-review-title">{{ top1.title|safe }}</h5>
                   {% endif %}
                   {% if top1_review %}
                   <p class="top-review-coment">{{ top1_review.content }}</p>
@@ -62,9 +62,10 @@
       </a>
       </div>                    <!-- top-ranking-left 끝 -->
 
+
       <!-- 오른쪽 포스터 표시  -->
       <div class="top-ranking-right">
-        <div class="scroll-box" style="overflow-y: hidden; /* 스크롤 숨김 */">
+        <div class="scroll-box" >
                 <!-- Media-1 표시  -->
                 {%for media in top2 %}
           <a href="{% url 'moochu:movie_detail' movie_id=media.id %}" style="text-decoration: none;">

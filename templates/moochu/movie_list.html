@@ -50,35 +50,32 @@
 
         <div class="pagination">
             <div style="display: flex; justify-content: center;">
-
+        
                 {% if data.number > 5 %}
-                    <a href="?page=1" style="margin-right: 30px; font-family: NanumBarunpen;">첫 페이지로</a>
+                    <a href="?page=1{% for genre in selected_genres %}&genres={{ genre }}{% endfor %}" style="margin-right: 30px; font-family: NanumBarunpen;">첫 페이지로</a>
                 {% endif %}
-
+        
                 {% if data.has_previous %}
-                    <a style="font-family: NanumBarunpen;" href="?page={{ data.previous_page_number }}">이전</a>
+                    <a style="font-family: NanumBarunpen;" href="?page={{ data.previous_page_number }}{% for genre in selected_genres %}&genres={{ genre }}{% endfor %}">이전</a>
                 {% endif %}
-
-                
-
+        
                 {% for i in data.paginator.page_range %}
                     {% if data.number <= 5 and i <= 10 or data.number > data.paginator.num_pages|add:'-5' and i > data.paginator.num_pages|add:'-10' or i > data.number|add:'-5' and i <= data.number|add:'5' %}
                         {% if i == data.number %}
                             <span style="font-family: NanumBarunpen;" class="current-page">{{ i }}</span>
                         {% else %}
-                            <a style="font-family: NanumBarunpen;" href="?page={{ i }}">{{ i }}</a>
+                            <a style="font-family: NanumBarunpen;" href="?page={{ i }}{% for genre in selected_genres %}&genres={{ genre }}{% endfor %}">{{ i }}</a>
                         {% endif %}
                     {% endif %}
                 {% endfor %}
-
-               
-
+        
                 {% if data.has_next %}
-                    <a style="font-family: NanumBarunpen;" href="?page={{ data.next_page_number }}">다음</a>
+                    <a style="font-family: NanumBarunpen;" href="?page={{ data.next_page_number }}{% for genre in selected_genres %}&genres={{ genre }}{% endfor %}">다음</a>
                 {% endif %}
             </div>
         </div>
+        
 </div>
 
-<script src="{% static 'js/main.js' %}"></script> <!-- JavaScript 파일 로드 -->
 {% endblock %}
+

@@ -50,7 +50,7 @@ function toggleSelection(event, media_id) {
                         <div class="poster-container">
                             <form method="POST" action="{% url 'mypage:delete' nickname=master.nickname %}">
                               {% csrf_token %}
-                              <button type="submit">삭제하기</button><br /><br />
+                              <button type="submit" class="btn-mypage">삭제하기</button><br /><br />
                               {% for media in toplist %}
                                 
                                 <input type="checkbox" id="checkbox-{{ media.media_id }}" name="media_id" value="{{ media.media_id }}" style="display:none;">
@@ -69,7 +69,7 @@ function toggleSelection(event, media_id) {
                         <div class="poster-container">
                             <form method="POST" action="{% url 'mypage:Toplist' nickname=master.nickname %}">
                               {% csrf_token %}
-                              <button type="submit">선정하기</button><br /><br />
+                              <button type="submit" class="btn-mypage">선정하기</button><br /><br />
                               {% for media in reviews %}
                                 
                                 <input type="checkbox" id="checkbox-{{ media }}" name="media_id" value="{{ media }}" style="display:none;">

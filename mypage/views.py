@@ -193,7 +193,6 @@ def votes(request, nickname):
 
 
 
-
 @api_view(['POST','DELETE', 'GET'])
 def follow(request, nickname):
     if request.user.is_authenticated:
@@ -250,7 +249,6 @@ def Toplist(request, nickname):
         toplist = {"toplist": models.MyToplist.objects.filter(writer=profile['master'].id)}
         profile.update(toplist)
         return render(request, 'mypage/Toplist.html', profile)
-        
     
     elif request.method=='POST':
         # 사용자가 선택한 영화 id 리스트를 POST 데이터에서 추출합니다.
